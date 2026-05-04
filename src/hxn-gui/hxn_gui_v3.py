@@ -963,7 +963,7 @@ class Ui(QtWidgets.QMainWindow):
                 dont_show = QCheckBox("Don't show this message again")
                 msg_box.setCheckBox(dont_show)
 
-                msg_box.exec_()
+                msg_box.exec()
 
                 if msg_box.clickedButton() == yes_button:
                     if dont_show.isChecked():
@@ -3083,7 +3083,7 @@ if __name__ == "__main__":
     if args.offline:
         window.statusBar().showMessage("OFFLINE MODE - No hardware connections", 10000)
     
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
     #app.deleteLater()
 
 
