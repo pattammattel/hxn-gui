@@ -1,0 +1,60 @@
+[workspace] # Use [project] instead of [workspace] for a single package
+authors = ["Ajith Pattammattel <pattammattel@bnl.gov>"]
+channels = ["conda-forge"]
+name = "xray-analysis-api"
+version = "0.1.0"
+
+platforms = ["osx-arm64", "linux-64", "win-64"] 
+
+[system-requirements]
+libc = { family = "glibc", version = "2.28" }
+
+# --- PLATFORM SPECIFIC TARGETS ---
+
+# Note: PyQt5 is installed via PyPI in [pypi-dependencies] below
+
+# [target.linux-64.dependencies]
+# [target.osx-arm64.pypi-dependencies]
+# [target.win-64.pypi-dependencies]
+
+# --- GLOBAL DEPENDENCIES ---
+# (Keep your python, numpy, pandas, etc. here)
+
+# --- TASKS ---
+
+[tasks]
+hxn-analysis = "ipython -i startup_all.py"
+hxn-transfer = "ipython -i hxn_data_transfer.py"
+notebook = "jupyter lab"
+hxn-gui-offline = { cmd = "python src/hxn-gui/hxn_gui_v3.py --offline", description = "Run HXN GUI in offline mode for testing (no hardware required)" }
+
+# --- GLOBAL DEPENDENCIES (Common to both) ---
+
+[dependencies]
+python = "3.12.*"
+h5py = ">=3.15.1,<4"
+numpy = ">=2.4.2,<3"
+pandas = ">=3.0.0,<4"
+scikit-image = ">=0.26.0,<0.27"
+scikit-learn = ">=1.8.0,<2"
+scipy = ">=1.17.0,<2"
+tifffile = ">=2026.1.28,<2027"
+packaging = ">=26.0,<27"
+jupyterlab = ">=4.5.5,<5"
+matplotlib = ">=3.10.8,<4"
+pims = ">=0.7,<0.8"
+doct = ">=1.1.0,<2"
+pytz = ">=2025.2,<2026"
+xarray = ">=2026.2.0,<2027"
+# REMOVED pyqt6 from here
+
+[pypi-dependencies]
+pystackreg = ">=0.2.8, <0.3"
+xraydb = ">=4.5.8, <5"
+pyqtgraph = ">=0.14.0, <0.15"
+opencv-python = ">=4.13.0.92, <5"
+hxntools = ">=0.6.5, <0.7"
+bluesky-tiled-plugins = ">=2.0.2, <3"
+pyepics = ">=3.5.0, <4"
+pyqt5 = ">=5.15.0, <6"
+

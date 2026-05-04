@@ -2,7 +2,6 @@
  __Author__: Ajith Pattammattel
  Original Date:06-23-2020
  Last Major Update: 03-07-2024
-_ethanu_ente!_$thakkol_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
  """
 
 import os
@@ -14,13 +13,46 @@ import re
 import sys
 import traceback
 import logging
+import argparse
 
 # basic logger functionality
 log = logging.getLogger(__name__)
 handler = logging.StreamHandler(stream=sys.stdout)
 log.addHandler(handler)
 
-from epics import caget, caput, Motor
+# Parse command line arguments early to determine offline mode
+parser = argparse.ArgumentParser(description='HXN GUI - Beamline Control Interface')
+parser.add_argument('--offline', action='store_true', 
+                    help='Run in offline mode without hardware connections')
+args, unknown = parser.parse_known_args()
+
+# Conditional imports based on offline mode
+OFFLINE_MODE = args.offline
+
+if OFFLINE_MODE:
+    log.info("="*60)
+    log.info("RUNNING IN OFFLINE MODE - No hardware connections")
+    log.info("="*60)
+    # Import mock module and inject it into sys.modules to prevent real epics from loading
+    import mock_epics
+    sys.modules['epics'] = mock_epics
+    from mock_epics import caget, caput, Motor
+    from mock_epics import zpssx, zpssy, zpssz, dssx, dssy, dssz
+    from mock_epics import dets_fast, dets_fast_merlin, dets_fast_fs
+else:
+    from epics import caget, caput, Motor
+    # In online mode, motor and detector objects should be available
+    # from the IPython startup environment at the beamline
+    # If running outside that environment, this will fail (as expected)
+    try:
+        # Try to use objects from the global namespace (set by beamline IPython profile)
+        # If they don't exist, let it fail - user needs to be at the beamline
+        zpssx, zpssy, zpssz, dssx, dssy, dssz
+        dets_fast, dets_fast_merlin, dets_fast_fs
+    except NameError:
+        log.warning("Hardware objects not available - must be run from beamline IPython environment")
+        log.warning("Use --offline flag to run in testing mode")
+
 from collections import deque
 
 
@@ -424,7 +456,19 @@ class Ui(QtWidgets.QMainWindow):
     def import_xrf_elem_list(self, auto = False):
 
         if auto:
-             json_param_file = "/nsls2/data/hxn/shared/config/bluesky/profile_collection/startup/plot_elems.json"
+             # Local default file in the same directory as the script
+             local_default = os.path.join(ui_path, 'default_plot_elems.json')
+             # Beamline config file (only exists at the beamline)
+             beamline_config = "/nsls2/data/hxn/shared/config/bluesky/profile_collection/startup/plot_elems.json"
+             
+             # In offline mode, use local default directly
+             # In online mode, prefer beamline config but fall back to local
+             if OFFLINE_MODE:
+                 json_param_file = local_default
+                 default_file = None
+             else:
+                 json_param_file = beamline_config
+                 default_file = local_default
 
         else:
             # Open a file dialog to select a JSON file
@@ -432,28 +476,75 @@ class Ui(QtWidgets.QMainWindow):
 
             if file_name:
                 json_param_file = file_name
+                default_file = None
             else:
                 return
 
-        with open(json_param_file, "r") as fp:
-            xrf_elems = json.load(fp)
-            fp.close()
+        try:
+            with open(json_param_file, "r") as fp:
+                xrf_elems = json.load(fp)
+                fp.close()
 
-        roi_elems = xrf_elems["roi_elems"]
-        live_plot_elems  = xrf_elems["live_plot_elems"]
-        line_plot_elem = xrf_elems["line_plot_elem"]
+            roi_elems = xrf_elems["roi_elems"]
+            live_plot_elems  = xrf_elems["live_plot_elems"]
+            line_plot_elem = xrf_elems["line_plot_elem"]
 
-        self.sb_live_elem_num.setValue(len(xrf_elems["live_plot_elems"]))
-        self.le_roi_elems.setText(str(roi_elems)[1:-1])
-        self.le_live_elems.setText(str(live_plot_elems)[1:-1])
-        self.le_line_elem.setText(str(line_plot_elem)[1:-1])
+            self.sb_live_elem_num.setValue(len(xrf_elems["live_plot_elems"]))
+            self.le_roi_elems.setText(str(roi_elems)[1:-1])
+            self.le_live_elems.setText(str(live_plot_elems)[1:-1])
+            self.le_line_elem.setText(str(line_plot_elem)[1:-1])
 
-        for elem,box in zip(roi_elems,self.xrf_combo_boxes):
-            for i in range(box.count()):
-                if elem == box.itemText(i).split(":")[0]:
-                    box.setCurrentIndex(i)
-            box.setCurrentText(elem)
-            #except:box.setCurrentText("Si")
+            for elem,box in zip(roi_elems,self.xrf_combo_boxes):
+                for i in range(box.count()):
+                    if elem == box.itemText(i).split(":")[0]:
+                        box.setCurrentIndex(i)
+                box.setCurrentText(elem)
+                #except:box.setCurrentText("Si")
+        except FileNotFoundError:
+            # Try fallback default file first, then use hardcoded defaults
+            if auto and default_file and os.path.exists(default_file):
+                log.info(f"Beamline config not found, using default file: {default_file}")
+                try:
+                    with open(default_file, "r") as fp:
+                        xrf_elems = json.load(fp)
+                    
+                    roi_elems = xrf_elems["roi_elems"]
+                    live_plot_elems = xrf_elems["live_plot_elems"]
+                    line_plot_elem = xrf_elems["line_plot_elem"]
+                    
+                    self.sb_live_elem_num.setValue(len(live_plot_elems))
+                    self.le_roi_elems.setText(str(roi_elems)[1:-1])
+                    self.le_live_elems.setText(str(live_plot_elems)[1:-1])
+                    self.le_line_elem.setText(line_plot_elem)
+                    
+                    for elem, box in zip(roi_elems, self.xrf_combo_boxes):
+                        for i in range(box.count()):
+                            if elem == box.itemText(i).split(":")[0]:
+                                box.setCurrentIndex(i)
+                        box.setCurrentText(elem)
+                    return
+                except Exception as e:
+                    log.warning(f"Could not load default file: {e}")
+            
+            # Last resort: use hardcoded defaults
+            if OFFLINE_MODE or auto:
+                log.info("Using hardcoded default XRF elements")
+                default_roi_elems = ['Fe', 'Ca', 'K', 'Ti', 'Cr', 'Mn']
+                default_live_elems = ['Fe', 'Ca', 'K']
+                default_line_elem = 'Fe'
+                
+                self.sb_live_elem_num.setValue(len(default_live_elems))
+                self.le_roi_elems.setText(str(default_roi_elems)[1:-1])
+                self.le_live_elems.setText(str(default_live_elems)[1:-1])
+                self.le_line_elem.setText(default_line_elem)
+                
+                for elem, box in zip(default_roi_elems, self.xrf_combo_boxes):
+                    for i in range(box.count()):
+                        if elem == box.itemText(i).split(":")[0]:
+                            box.setCurrentIndex(i)
+                    box.setCurrentText(elem)
+            else:
+                raise
 
     @show_error_message_box
     def export_xrf_elem_list(self, auto = False):
@@ -561,7 +652,17 @@ class Ui(QtWidgets.QMainWindow):
         all_items = [self.cb_dets.itemText(i) for i in range(self.cb_dets.count())]
 
         for i in range(self.cb_dets.count()):
-            self.cb_dets.setItemData(i,str([det.name for det in eval(all_items[i])]),QtCore.Qt.ToolTipRole)
+            try:
+                # Try to get detector names from detector objects
+                if OFFLINE_MODE:
+                    # In offline mode, just use the string representation
+                    self.cb_dets.setItemData(i, self.fly_det_dict[all_items[i]], QtCore.Qt.ToolTipRole)
+                else:
+                    # In online mode, extract detector names
+                    self.cb_dets.setItemData(i, str([det.name for det in eval(all_items[i])]), QtCore.Qt.ToolTipRole)
+            except (AttributeError, TypeError, NameError):
+                # Fallback for any issues
+                self.cb_dets.setItemData(i, all_items[i], QtCore.Qt.ToolTipRole)
 
     def getScanValues(self):
         self.det = self.cb_dets.currentText()
@@ -2327,7 +2428,17 @@ class Ui(QtWidgets.QMainWindow):
 
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
-        if reply == QMessageBox.Yes and RE.state == "idle":
+        
+        # Check RE state only if in online mode and RE is available
+        re_is_idle = True  # Default to True for offline mode
+        if not OFFLINE_MODE:
+            try:
+                re_is_idle = RE.state == "idle"
+            except NameError:
+                # RE not available, assume idle
+                re_is_idle = True
+        
+        if reply == QMessageBox.Yes and re_is_idle:
 
             event.accept()
             self.scanStatus_thread.terminate()
@@ -2338,7 +2449,8 @@ class Ui(QtWidgets.QMainWindow):
 
         else:
             event.ignore()
-            QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
+            if not re_is_idle:
+                QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
 
     def close_application(self):
 
@@ -2607,7 +2719,9 @@ class liveStatus(QThread):
 
         while True:
             try:
-                self.current_sts.emit(caget(self.PV))
+                value = caget(self.PV)
+                if value is not None:
+                    self.current_sts.emit(value)
                 #print("New positions")
                 QtTest.QTest.qWait(500)
             except:
@@ -2625,8 +2739,9 @@ class liveUpdate(QThread):
     def return_values(self):
         readings = []
         for i in self.pv_dict.values():
-
-            readings.append(caget(i))
+            value = caget(i)
+            # Use 0 as default for None values to avoid issues
+            readings.append(value if value is not None else 0)
 
         return readings
 
@@ -2657,11 +2772,14 @@ class liveThresholdUpdate(QThread):
     def run(self):
 
         while True:
-
-            if caget(self.PV)>self.threshold:
-                self.current_sts.emit(True)
-                #print("New positions")
-            else:
+            try:
+                value = caget(self.PV)
+                if value is not None and value > self.threshold:
+                    self.current_sts.emit(True)
+                    #print("New positions")
+                else:
+                    pass
+            except (TypeError, AttributeError):
                 pass
 
             QtTest.QTest.qWait(60000)
@@ -2876,11 +2994,21 @@ class MainWindow(QMainWindow):
 '''
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-
+    # Parse arguments first
+    parser = argparse.ArgumentParser(description='HXN GUI - Beamline Control Interface')
+    parser.add_argument('--offline', action='store_true',
+                        help='Run in offline mode without hardware connections')
+    args, remaining_args = parser.parse_known_args()
+    
+    # Create QApplication with remaining args
+    app = QtWidgets.QApplication([sys.argv[0]] + remaining_args)
 
     window = Ui()
     window.show()
+    
+    if args.offline:
+        window.statusBar().showMessage("OFFLINE MODE - No hardware connections", 10000)
+    
     sys.exit(app.exec_())
     #app.deleteLater()
 

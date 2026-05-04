@@ -1,0 +1,5 @@
+{
+    "roi_elems": ["Fe", "Ca", "K", "Ti", "Cr", "Mn", "Cu", "Zn"],
+    "live_plot_elems": ["Fe", "Ca", "K"],
+    "line_plot_elem": "Fe"
+}
