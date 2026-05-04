@@ -267,7 +267,7 @@ class Ui(QtWidgets.QMainWindow):
         self.pop_up = QMessageBox(self)
         self.pop_up.setWindowTitle("Please Wait")
         self.pop_up.setText("Motion is in progress...")
-        self.pop_up.setStandardButtons(QMessageBox.Close)
+        self.pop_up.setStandardButtons(QMessageBox.StandardButton.Close)
         self.pop_up.show()
 
         self.thread = WorkerThread(task, *args, **kwargs)
@@ -485,10 +485,10 @@ class Ui(QtWidgets.QMainWindow):
 
         QMessageBox.question(self, 'Copy Data',
             f"Copy data from {local_path} to {proposal_path}? This may take a while. Proceed?",
-            QMessageBox.Yes |
-            QMessageBox.No, QMessageBox.No)
+            QMessageBox.StandardButton.Yes |
+            QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         
-        if QMessageBox.Yes:
+        if QMessageBox.StandardButton.Yes:
 
             copy_data_from_proposal(proposal_num)
         else:
@@ -667,9 +667,9 @@ class Ui(QtWidgets.QMainWindow):
 
         choice = QMessageBox.question(self, 'Info',
             f"Update the list of elements? The program require reload to update the changes. Proceed?",
-            QMessageBox.Yes |
-            QMessageBox.No, QMessageBox.No)
-        if choice == QMessageBox.Yes and RE.state == "idle":
+            QMessageBox.StandardButton.Yes |
+            QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if choice == QMessageBox.StandardButton.Yes and RE.state == "idle":
             self.export_xrf_elem_list(auto = True)
             self.reload_gui()
         else:
@@ -940,10 +940,10 @@ class Ui(QtWidgets.QMainWindow):
 
         if caget("XF:03IDB-PPS{PSh}Sts:Cls-Sts") == 1:
             choice = QMessageBox.question(self, 'Warning',
-                f"Photon shutter is closed, Do you wan to open it before starting?", QMessageBox.Yes |
-                QMessageBox.No, QMessageBox.No)
+                f"Photon shutter is closed, Do you wan to open it before starting?", QMessageBox.StandardButton.Yes |
+                QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-            if choice == QMessageBox.Yes:
+            if choice == QMessageBox.StandardButton.Yes:
                 caput("XF:03IDB-PPS{PSh}Cmd:Opn-Cmd",1)
                 QtTest.QTest.qWait(2000)
 
@@ -952,11 +952,11 @@ class Ui(QtWidgets.QMainWindow):
         if caget("XF:03IDC-ES{Det:Vort-Ax:X}Mtr.VAL") > 25:
             if not getattr(self, "ignore_vortical_warning", False):
                 msg_box = QMessageBox(self)
-                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setIcon(QMessageBox.Icon.Warning)
                 msg_box.setWindowTitle("Warning")
                 msg_box.setText("Vortical detector is out, ignore and continue?")
-                yes_button = msg_box.addButton(QMessageBox.Yes)
-                no_button = msg_box.addButton(QMessageBox.No)
+                yes_button = msg_box.addButton(QMessageBox.StandardButton.Yes)
+                no_button = msg_box.addButton(QMessageBox.StandardButton.No)
                 msg_box.setDefaultButton(no_button)
 
                 # Add the checkbox
@@ -976,10 +976,10 @@ class Ui(QtWidgets.QMainWindow):
 
             if self.tot_t_1d>1.0:
                 choice = QMessageBox.question(self, 'Warning',
-                                f"Total scan time is {self.tot_t_1d :.2f}. Continue?", QMessageBox.Yes |
-                                QMessageBox.No, QMessageBox.No)
+                                f"Total scan time is {self.tot_t_1d :.2f}. Continue?", QMessageBox.StandardButton.Yes |
+                                QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-                if choice == QMessageBox.Yes:
+                if choice == QMessageBox.StandardButton.Yes:
                     #self.progress_bar_update(self.mot1_steps,int(self.dwell_t*10000))
                     # RE(fly1d(eval(self.det),
                     #          eval(self.motor1),
@@ -1022,10 +1022,10 @@ class Ui(QtWidgets.QMainWindow):
             elif self.tot_t_2d>5.0:
                     choice = QMessageBox.question(self, 'Warning',
                                 f"Total scan time is more than {self.tot_t_2d :.2f}. Continue?",
-                                QMessageBox.Yes |
-                                QMessageBox.No, QMessageBox.No)
+                                QMessageBox.StandardButton.Yes |
+                                QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-                    if choice == QMessageBox.Yes:
+                    if choice == QMessageBox.StandardButton.Yes:
 
                         #self.progress_bar_update(self.mot1_steps*self.mot2_steps,int(self.dwell_t*10000))
                         RE(fly2dpd(eval(self.det),
@@ -1362,9 +1362,9 @@ class Ui(QtWidgets.QMainWindow):
             fs_choice = QMessageBox.question(
                 self, 'Info',
                 "Do you want to insert front end fluorescence camera?",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No
             )
-            if fs_choice == QMessageBox.Yes:
+            if fs_choice == QMessageBox.StandardButton.Yes:
                 caput('XF:03IDA-OP{FS:1-Ax:Y}Mtr.VAL', -57.)
                 caput("XF:03IDA-BI{FS:1-CAM:1}cam1:Acquire", 1)
 
@@ -1372,10 +1372,10 @@ class Ui(QtWidgets.QMainWindow):
             self, 'Confirm Motion',
             f"Target energy: {target_energy:.2f} eV\n"
             f"Move mirrors: {self.cb_change_energy_only.isChecked()}\n\nContinue?",
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No
         )
 
-        if choice != QMessageBox.Yes:
+        if choice != QMessageBox.StandardButton.Yes:
             return
 
         # Show motion in progress dialog
@@ -1417,9 +1417,9 @@ class Ui(QtWidgets.QMainWindow):
 
             fs_choice = QMessageBox.question(self, 'Info',
             f"Do you want to insert front end fluorescence camera?",
-            QMessageBox.Yes |
-            QMessageBox.No, QMessageBox.No)
-            if fs_choice == QMessageBox.Yes:
+            QMessageBox.StandardButton.Yes |
+            QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+            if fs_choice == QMessageBox.StandardButton.Yes:
 
                 caput('XF:03IDA-OP{FS:1-Ax:Y}Mtr.VAL', -57.)
                 caput("XF:03IDA-BI{FS:1-CAM:1}cam1:Acquire",1)
@@ -1429,10 +1429,10 @@ class Ui(QtWidgets.QMainWindow):
 
         choice = QMessageBox.question(self, 'Info',
         f"{target_energy = :.2f}, move mirrors = self.cb_change_energy_only.isChecked(), Continue?",
-        QMessageBox.Yes |
-        QMessageBox.No, QMessageBox.No)
+        QMessageBox.StandardButton.Yes |
+        QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
 
             if self.cb_change_energy_only.isChecked():
 
@@ -1461,8 +1461,8 @@ class Ui(QtWidgets.QMainWindow):
     @with_motion_feedback(title="Energy Change", success_msg="Energy change complete.")
     def move_energy_with_sid_gui(self, sid):
 
-        QMessageBox.question(self, "Warning", f"Move energy to values from scan id {sid}?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if QMessageBox.Yes:
+        QMessageBox.question(self, "Warning", f"Move energy to values from scan id {sid}?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if QMessageBox.StandardButton.Yes:
             RE(move_energy_with_sid(sid))
 
         else:
@@ -1601,10 +1601,10 @@ class Ui(QtWidgets.QMainWindow):
     def merlinIN(self):
         self.client.open('http://10.66.17.43')
         choice = QMessageBox.question(self, 'Detector Motion Warning',
-                                      "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Make sure this motion is safe. \n Move?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(go_det('merlin'))
         else:
             pass
@@ -1615,10 +1615,10 @@ class Ui(QtWidgets.QMainWindow):
         self.client.open('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
-                                      "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Make sure this motion is safe. \n Move?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(go_det("out"))
         else:
             pass
@@ -1629,10 +1629,10 @@ class Ui(QtWidgets.QMainWindow):
         self.client.open('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
-                                      "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Make sure this motion is safe. \n Move?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(go_det("eiger_pos2"))
             #QMessageBox.information(self, "info","Eiger motion completed")
         else:
@@ -1647,18 +1647,18 @@ class Ui(QtWidgets.QMainWindow):
         QtTest.QTest.qWait(2000)
 
         choice = QMessageBox.question(self, 'Dexela Motion Warning',
-                                f"Have you removed the plastic cover?", QMessageBox.Yes |
-                                 QMessageBox.No, QMessageBox.No)
-        if choice != QMessageBox.Yes:
+                                f"Have you removed the plastic cover?", QMessageBox.StandardButton.Yes |
+                                 QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        if choice != QMessageBox.StandardButton.Yes:
             QMessageBox.information(self, "info","Please remove the plastic cover before moving Dexela. Aborting motion.")
             return
 
         choice2 = QMessageBox.question(self, 'Detector Motion Warning',
-                                f"Dexela will move to position {move_to} mm. Continue?", QMessageBox.Yes |
-                                QMessageBox.No, QMessageBox.No)
+                                f"Dexela will move to position {move_to} mm. Continue?", QMessageBox.StandardButton.Yes |
+                                QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
 
-        if choice == QMessageBox.Yes and choice2 == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes and choice2 == QMessageBox.StandardButton.Yes:
             
             RE(move_dexela(0, move_to))
 
@@ -1696,10 +1696,10 @@ class Ui(QtWidgets.QMainWindow):
         self.client.open('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
-                                      "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Make sure this motion is safe. \n Move?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(go_det('cam11'))
             self.statusbar.showMessage('CAM11 is IN')
             QMessageBox.information(self, "info","CAM11 motion in progress")
@@ -1796,10 +1796,10 @@ class Ui(QtWidgets.QMainWindow):
 
         choice = QMessageBox.question(self, "detector stage motion",
                                       f"You're moving diff stage to {delta, gamma, dist}. \n Proceed?",
-                                      QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         QtTest.QTest.qWait(500)
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             self.client.open('http://10.66.17.43')
             QtTest.QTest.qWait(5000)
             RE(mov_diff(delta, gamma, dist))
@@ -1817,10 +1817,10 @@ class Ui(QtWidgets.QMainWindow):
 
         choice = QMessageBox.question(self, "diff z stage motion",
                                 f"You're moving diff_z stage by {dist}. \n Proceed?",
-                                QMessageBox.Yes |
-                                QMessageBox.No, QMessageBox.No)
+                                QMessageBox.StandardButton.Yes |
+                                QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(bps.movr(diff_z, dist))
         else:
             pass
@@ -2034,10 +2034,10 @@ class Ui(QtWidgets.QMainWindow):
         # choice = QMessageBox.question(self, "MLL Rot Align",
         #                               f"The recommended correction is {dx = :.2f}, {dz = :.2f} and sbx = {-1*dx :.2f}"
         #                               "\n Proceed?",
-        #                               QMessageBox.Yes |
-        #                               QMessageBox.No, QMessageBox.No)
+        #                               QMessageBox.StandardButton.Yes |
+        #                               QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         # QtTest.QTest.qWait(500)
-        # if choice == QMessageBox.Yes:
+        # if choice == QMessageBox.StandardButton.Yes:
         #     RE(self.apply_mll_rot_algn_corr())
 
         # else:
@@ -2082,10 +2082,10 @@ class Ui(QtWidgets.QMainWindow):
         choice = QMessageBox.question(self, "zp Rot Align",
                                       f"The recommended correction is {dx = :.2f}, {dz = :.2f} and zpsx = {-1*dx :.2f}"
                                       "\n Proceed?",
-                                      QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         QtTest.QTest.qWait(500)
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             self.apply_zp_rot_algn_corr_()
 
         else:
@@ -2111,10 +2111,10 @@ class Ui(QtWidgets.QMainWindow):
     def zpMoveAbs(self, zpTarget):
         choice = QMessageBox.question(self, "Zone Plate Z Motion",
                                       f"You're making an Absolute motion of ZP to {zpTarget}. \n Proceed?",
-                                      QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         QtTest.QTest.qWait(500)
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(mov_zpz1(zpTarget))
 
         else:
@@ -2125,10 +2125,10 @@ class Ui(QtWidgets.QMainWindow):
         
         choice = QMessageBox.question(self, f"{mtr.name} Motion",
                                       f"You're making an Absolute motion of {mtr.name} to {value}. \n Proceed?",
-                                      QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         QtTest.QTest.qWait(500)
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             #RE(bps.mov(mtr, value))
             mtr.move(value)
 
@@ -2149,10 +2149,10 @@ class Ui(QtWidgets.QMainWindow):
     def qMessageExcecute(self,funct):
         QtTest.QTest.qWait(500)
         choice = QMessageBox.question(self, 'Sample Chamber Operation Warning',
-                                      "Make sure this action is safe. \n Proceed?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Make sure this action is safe. \n Proceed?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         QtTest.QTest.qWait(500)
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             RE(funct)
 
         else:
@@ -2385,9 +2385,9 @@ class Ui(QtWidgets.QMainWindow):
                 choice = QMessageBox.question(self, 'Warning',
                 "The requested scan id was done >100 scans ago."
                 "Please confirm the request",
-                QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
+                QMessageBox.StandardButton.Yes |QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-                if choice == QMessageBox.Yes:
+                if choice == QMessageBox.StandardButton.Yes:
 
                     sdZPZ1 = (db[int(sd)].table("baseline")["zpz1"].values)[0]
                     currentZPZ1 = zp.zpz1.position
@@ -2398,9 +2398,9 @@ class Ui(QtWidgets.QMainWindow):
                             choice = QMessageBox.question(self, 'Warning',
                             "You are recovering positions from a scan done at a different Focus."
                             "The ZPZ1 motion could cause collision. Are you sure??",
-                            QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
+                            QMessageBox.StandardButton.Yes |QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-                            if choice == QMessageBox.Yes:
+                            if choice == QMessageBox.StandardButton.Yes:
                                 RE(recover_zp_scan_pos(int(sd), zp_flag, 1))
                                 self.statusbar.showMessage(f'Positions recovered from {sd}')
                             else:
@@ -2426,9 +2426,9 @@ class Ui(QtWidgets.QMainWindow):
                 choice = QMessageBox.question(self, 'Warning',
                 "The requested scan id was done >100 scans ago."
                 "Please confirm the request",
-                QMessageBox.Yes |QMessageBox.No, QMessageBox.No)
+                QMessageBox.StandardButton.Yes |QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-                if choice == QMessageBox.Yes:
+                if choice == QMessageBox.StandardButton.Yes:
                     RE(recover_mll_scan_pos(int(sd),moveflag=True,base_moveflag=base_flag))
 
                 else:
@@ -2512,7 +2512,7 @@ class Ui(QtWidgets.QMainWindow):
                 # RE not available, assume idle
                 re_is_idle = True
         
-        if reply == QMessageBox.Yes and re_is_idle:
+        if reply == QMessageBox.StandardButton.Yes and re_is_idle:
 
             event.accept()
             self.scanStatus_thread.terminate()
@@ -2529,10 +2529,10 @@ class Ui(QtWidgets.QMainWindow):
     def close_application(self):
 
         choice = QMessageBox.question(self, 'Message',
-                                      "Are you sure to quit?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Are you sure to quit?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes and RE.state == "idle":
+        if choice == QMessageBox.StandardButton.Yes and RE.state == "idle":
             plt.close('all')
             self.scanStatus_thread.terminate()
             self.liveWorker.terminate()
@@ -2564,10 +2564,10 @@ class Ui(QtWidgets.QMainWindow):
         choice = QMessageBox.question(self, 'Start Pumping',
                                       f"HXN pumping will be excecuted with target value of {user_target_pressure}"
                                       f"Turbo starts at ~ {fast_pump_start:.1f}"
-                                      f" Please confirm.", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      f" Please confirm.", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             #zps.zero.put(1)
             #smll.zero.put(1)
             #panda_zero_all_encoders(si)
@@ -2610,10 +2610,10 @@ class Ui(QtWidgets.QMainWindow):
     def vent_in_thread(self, target_pressure = 745):
 
         choice = QMessageBox.question(self, 'Start Venting',
-                                      "Microscope chamber will be vented. Continue?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Microscope chamber will be vented. Continue?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             #zps.kill.put(1)
             #smll.kill.put(1)
             # reset the progress bar
@@ -2688,10 +2688,10 @@ class Ui(QtWidgets.QMainWindow):
     def pumping_stop(self):
 
         choice = QMessageBox.question(self, 'Stop Pumping',
-                                      "Pumping will be stopped. Continue?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Pumping will be stopped. Continue?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
 
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
 
             HXNSampleExchanger.stop_pumping()
             QtTest.QTest.qWait(3000)
@@ -3044,7 +3044,7 @@ class MainWindow(QMainWindow):
         self.pop_up = QMessageBox(self)
         self.pop_up.setWindowTitle("Please Wait")
         self.pop_up.setText("Task is in progress...")
-        self.pop_up.setStandardButtons(QMessageBox.NoButton)
+        self.pop_up.setStandardButtons(QMessageBox.StandardButton.NoButton)
         self.pop_up.show()
 
         self.thread = WorkerThread(task, *args, **kwargs)
