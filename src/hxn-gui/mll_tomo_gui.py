@@ -1,8 +1,8 @@
 import sys
 import json
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout,QMessageBox
-from PyQt5 import QtWidgets, uic,QtTest
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout,QMessageBox
+from PyQt6 import QtWidgets, uic,QtTest
 from functools import wraps
 from utilities import *
 
@@ -250,7 +250,7 @@ class MLLTomoGUI(QtWidgets.QMainWindow):
         
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
 
-        if reply == QMessageBox.Yes:
+        if reply == QMessageBox.StandardButton.Yes:
             if RE.state=="idle":
                 plt.close('all')
                 QtTest.QTest.qWait(1000)
@@ -264,4 +264,4 @@ if __name__ == "__main__":
 )
     widget = MLLTomoGUI()
     widget.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

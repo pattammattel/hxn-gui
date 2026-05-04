@@ -1,8 +1,8 @@
 import numpy as np
 from contextlib import contextmanager
 from functools import wraps
-from PyQt5.QtWidgets import QProgressDialog, QMessageBox, QApplication
-from PyQt5.QtCore import Qt, QRunnable, QThreadPool, pyqtSlot, QObject, pyqtSignal
+from PyQt6.QtWidgets import QProgressDialog, QMessageBox, QApplication
+from PyQt6.QtCore import Qt, QRunnable, QThreadPool, pyqtSlot, QObject, pyqtSignal
 
 def with_motion_feedback(title="Motion", success_msg="Motion complete.", error_msg="Motion failed"):
     def decorator(func):
@@ -69,10 +69,10 @@ def show_confirm_box(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         choice = QMessageBox.question(None,'Detector Motion Warning',
-                                      "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
-                                      QMessageBox.No, QMessageBox.No)
+                                      "Make sure this motion is safe. \n Move?", QMessageBox.StandardButton.Yes |
+                                      QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
         
-        if choice == QMessageBox.Yes:
+        if choice == QMessageBox.StandardButton.Yes:
             return func(*args, **kwargs)
         else:
             return
