@@ -155,6 +155,9 @@ class Ui(QtWidgets.QMainWindow):
         self.scanStatusThread()
         self.pump_update_thread()
         self.flytube_pressure_status()
+        
+        # Adapt window size to screen
+        self.adapt_to_screen()
         self.show()
 
     def reload_gui(self):
@@ -165,6 +168,52 @@ class Ui(QtWidgets.QMainWindow):
                                                 '--profile=collection',
                                                 '--IPCompleter.use_jedi=False',
                                               sys.argv[0])
+
+    def adapt_to_screen(self):
+        """Adapt window size to fit the screen"""
+        try:
+            # Get screen geometry
+            screen = QApplication.primaryScreen()
+            screen_geometry = screen.availableGeometry()
+            screen_width = screen_geometry.width()
+            screen_height = screen_geometry.height()
+            
+            # Get current window size
+            window_width = self.width()
+            window_height = self.height()
+            
+            log.info(f"Screen size: {screen_width}x{screen_height}")
+            log.info(f"Window size: {window_width}x{window_height}")
+            
+            # If window is larger than screen, resize to fit
+            if window_width > screen_width or window_height > screen_height:
+                # Use 90% of screen size to leave room for taskbar/dock
+                new_width = int(screen_width * 0.9)
+                new_height = int(screen_height * 0.9)
+                
+                # Maintain aspect ratio if needed
+                aspect_ratio = window_width / window_height
+                if new_width / new_height > aspect_ratio:
+                    new_width = int(new_height * aspect_ratio)
+                else:
+                    new_height = int(new_width / aspect_ratio)
+                
+                self.resize(new_width, new_height)
+                log.info(f"Resized window to: {new_width}x{new_height}")
+            
+            # Center the window on screen
+            frame_geometry = self.frameGeometry()
+            center_point = screen_geometry.center()
+            frame_geometry.moveCenter(center_point)
+            self.move(frame_geometry.topLeft())
+            
+            # Make window resizable if it wasn't already
+            self.setMinimumSize(800, 600)  # Set reasonable minimum size
+            
+        except Exception as e:
+            log.warning(f"Could not adapt window to screen: {e}")
+            # Fall back to showing maximized if adaptation fails
+            # self.showMaximized()
 
     def set_input_validators(self):
         #number only validator
