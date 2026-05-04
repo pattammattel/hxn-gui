@@ -56,9 +56,9 @@ else:
 from collections import deque
 
 
-from PyQt5 import QtWidgets, uic, QtCore, QtGui, QtTest
-from PyQt5.QtWidgets import QMessageBox, QFileDialog, QApplication, QLCDNumber, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog, QScrollArea
-from PyQt5.QtCore import QObject, QTimer, QThread, pyqtSignal, pyqtSlot, QRunnable, QThreadPool, QDate, QTime, Qt
+from PyQt6 import QtWidgets, uic, QtCore, QtGui, QtTest
+from PyQt6.QtWidgets import QMessageBox, QFileDialog, QApplication, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog, QScrollArea
+from PyQt6.QtCore import QObject, QTimer, QThread, pyqtSignal, pyqtSlot, QRunnable, QThreadPool, QDate, QTime, Qt
 
 #import custom functions
 from HXNSampleExchange import *
@@ -175,8 +175,8 @@ class Ui(QtWidgets.QMainWindow):
                 scroll_area = QScrollArea()
                 scroll_area.setWidget(central_widget)
                 scroll_area.setWidgetResizable(True)  # Allow widget to resize
-                scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-                scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+                scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+                scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
                 
                 # Set the scroll area as the new central widget
                 self.setCentralWidget(scroll_area)
@@ -730,13 +730,13 @@ class Ui(QtWidgets.QMainWindow):
                 # Try to get detector names from detector objects
                 if OFFLINE_MODE:
                     # In offline mode, just use the string representation
-                    self.cb_dets.setItemData(i, self.fly_det_dict[all_items[i]], QtCore.Qt.ToolTipRole)
+                    self.cb_dets.setItemData(i, self.fly_det_dict[all_items[i]], QtCore.Qt.ItemDataRole.ToolTipRole)
                 else:
                     # In online mode, extract detector names
-                    self.cb_dets.setItemData(i, str([det.name for det in eval(all_items[i])]), QtCore.Qt.ToolTipRole)
+                    self.cb_dets.setItemData(i, str([det.name for det in eval(all_items[i])]), QtCore.Qt.ItemDataRole.ToolTipRole)
             except (AttributeError, TypeError, NameError):
                 # Fallback for any issues
-                self.cb_dets.setItemData(i, all_items[i], QtCore.Qt.ToolTipRole)
+                self.cb_dets.setItemData(i, all_items[i], QtCore.Qt.ItemDataRole.ToolTipRole)
 
     def getScanValues(self):
         self.det = self.cb_dets.currentText()
@@ -1381,7 +1381,7 @@ class Ui(QtWidgets.QMainWindow):
         # Show motion in progress dialog
         progress = QProgressDialog("Motion in progress...", None, 0, 0, self)
         progress.setWindowTitle("Please Wait")
-        progress.setWindowModality(Qt.ApplicationModal)
+        progress.setWindowModality(Qt.WindowModality.ApplicationModal)
         progress.setCancelButton(None)
         progress.show()
         QApplication.processEvents()  # Make sure the dialog appears
@@ -2247,7 +2247,7 @@ class Ui(QtWidgets.QMainWindow):
     def print_roi_position(self, list_widget):
         item_num = list_widget.currentRow()
         # Getting the data embedded in each item from the listWidget
-        item_data = list_widget.item(item_num).data(QtCore.Qt.UserRole)
+        item_data = list_widget.item(item_num).data(QtCore.Qt.ItemDataRole.UserRole)
         print(item_data)
 
 
@@ -2268,14 +2268,14 @@ class Ui(QtWidgets.QMainWindow):
         roi_name = 'ROI' + str(list_widget.count())
         # Creates a QListWidgetItem
         item_to_add = QtWidgets.QListWidgetItem()
-        item_to_add.setFlags(item_to_add.flags() | QtCore.Qt.ItemIsEditable)
+        item_to_add.setFlags(item_to_add.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
 
 
         # Setting your QListWidgetItem Text
         item_to_add.setText(roi_name)
 
         # Setting your QListWidgetItem Data
-        item_to_add.setData(QtCore.Qt.UserRole, self.roi)
+        item_to_add.setData(QtCore.Qt.ItemDataRole.UserRole, self.roi)
 
         # Add the new rule to the QListWidget
         list_widget.addItem(item_to_add)
@@ -2290,7 +2290,7 @@ class Ui(QtWidgets.QMainWindow):
         for item_index in range(list_widget.count()):
 
             # Getting the data embedded in each item from the listWidget
-            item_data = list_widget.item(item_index).data(QtCore.Qt.UserRole)
+            item_data = list_widget.item(item_index).data(QtCore.Qt.ItemDataRole.UserRole)
 
             # Getting the datatext of each item from the listWidget
             item_text = list_widget.item(item_index).text()
@@ -2341,8 +2341,8 @@ class Ui(QtWidgets.QMainWindow):
                 item_to_add.setText(key)
 
                 # Setting your QListWidgetItem Data
-                item_to_add.setData(QtCore.Qt.UserRole, value)
-                item_to_add.setFlags(item_to_add.flags() | QtCore.Qt.ItemIsEditable)
+                item_to_add.setData(QtCore.Qt.ItemDataRole.UserRole, value)
+                item_to_add.setFlags(item_to_add.flags() | QtCore.Qt.ItemFlag.ItemIsEditable)
 
                 # Add the new rule to the QListWidget
                 list_widget.addItem(item_to_add)
@@ -2353,7 +2353,7 @@ class Ui(QtWidgets.QMainWindow):
 
     def move_stage_to_roi(self,list_widget):
         roi_num = list_widget.currentRow()
-        roi_positions = list_widget.item(roi_num).data(QtCore.Qt.UserRole)
+        roi_positions = list_widget.item(roi_num).data(QtCore.Qt.ItemDataRole.UserRole)
         for key, value in roi_positions.items():
             if not key == "zp.zpz1":
                 RE(bps.mov(eval(key), value))
@@ -2704,7 +2704,7 @@ class Ui(QtWidgets.QMainWindow):
 
         self.live_time_list.append(time_n_pressure[0])
         self.live_pressure_list.append(time_n_pressure[1])
-        pen=pg.mkPen(color='#80d5d5', style=QtCore.Qt.DashLine)
+        pen=pg.mkPen(color='#80d5d5', style=QtCore.Qt.PenStyle.DashLine)
 
         vent_line = pg.InfiniteLine(pos = 765,
                                     angle = 0,
