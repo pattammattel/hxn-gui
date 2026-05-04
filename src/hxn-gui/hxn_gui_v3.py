@@ -57,7 +57,7 @@ from collections import deque
 
 
 from PyQt5 import QtWidgets, uic, QtCore, QtGui, QtTest
-from PyQt5.QtWidgets import QMessageBox, QFileDialog, QApplication, QLCDNumber, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog
+from PyQt5.QtWidgets import QMessageBox, QFileDialog, QApplication, QLCDNumber, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog, QScrollArea
 from PyQt5.QtCore import QObject, QTimer, QThread, pyqtSignal, pyqtSlot, QRunnable, QThreadPool, QDate, QTime, Qt
 
 #import custom functions
@@ -81,6 +81,10 @@ class Ui(QtWidgets.QMainWindow):
         print("Loading UI... Please wait")
         uic.loadUi(os.path.join(ui_path,'ui_files/hxn_gui_v3.ui'), self)
         print("UI File loaded")
+        
+        # Add scroll area to make UI scrollable on smaller screens
+        self.setup_scroll_area()
+        
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
 
@@ -159,6 +163,27 @@ class Ui(QtWidgets.QMainWindow):
         # Adapt window size to screen
         self.adapt_to_screen()
         self.show()
+
+    def setup_scroll_area(self):
+        """Wrap central widget in a scroll area for better scaling on small screens"""
+        try:
+            # Get the current central widget
+            central_widget = self.centralWidget()
+            
+            if central_widget is not None:
+                # Create a scroll area
+                scroll_area = QScrollArea()
+                scroll_area.setWidget(central_widget)
+                scroll_area.setWidgetResizable(True)  # Allow widget to resize
+                scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+                scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+                
+                # Set the scroll area as the new central widget
+                self.setCentralWidget(scroll_area)
+                
+                log.info("Added scroll area for better widget scaling")
+        except Exception as e:
+            log.warning(f"Could not setup scroll area: {e}")
 
     def reload_gui(self):
         """Restarts gui"""
