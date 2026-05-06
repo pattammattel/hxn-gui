@@ -3,7 +3,11 @@
 
 import time, tqdm
 from epics import caget, caput
-from qtpy import QtWidgets, uic, QtCore, QtGui, QtTest
+from qtpy import QtWidgets, uic, QtCore, QtGui
+try:
+    from qtpy import QtTest
+except ImportError:
+    QtTest = None
 from qtpy.QtWidgets import QMessageBox, QProgressBar
 from qtpy.QtCore import QTime
 

@@ -2,7 +2,11 @@ import sys
 import json
 import os
 from qtpy.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout,QMessageBox
-from qtpy import QtWidgets, uic,QtTest
+from qtpy import QtWidgets, uic
+try:
+    from qtpy import QtTest
+except ImportError:
+    QtTest = None
 from functools import wraps
 from utilities import *
 
