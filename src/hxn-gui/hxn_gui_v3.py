@@ -118,33 +118,33 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         self.actionExit.triggered.connect(self.close_application)
 
         #some initializations
+        print("Initializing GUI parameters...")
         self.active_folder = "/data/users/current_user"
         self.client = webbrowser.get('firefox')
         self.live_plot_worker_thread = QThread()
+        
+        print("Running initParams()...")
         self.initParams()
         
-        # Defer hardware connections to avoid blocking GUI startup
-        # Use QTimer to initialize after event loop starts
-        if not globals().get('OFFLINE_MODE', False):
-            QTimer.singleShot(100, self._init_hardware_connections)
-        else:
-            print("Skipping hardware connections (offline mode)")
+        print("Creating PV dictionaries...")
+        self.create_live_pv_dict()
+        self.create_pump_pv_dict()
         
+        print("Starting live update threads...")
+        self.liveUpdateThread()
+        
+        print("Starting scan status thread...")
+        self.scanStatusThread()
+        
+        print("Starting pump update thread...")
+        self.pump_update_thread()
+        
+        print("Starting flytube pressure status...")
+        self.flytube_pressure_status()
+        
+        print("Showing window...")
         self.show()
-    
-    def _init_hardware_connections(self):
-        """Initialize hardware connections after GUI is shown"""
-        try:
-            self.create_live_pv_dict()
-            self.create_pump_pv_dict()
-            self.liveUpdateThread()
-            self.scanStatusThread()
-            self.pump_update_thread()
-            self.flytube_pressure_status()
-            print("Hardware connections initialized")
-        except Exception as e:
-            print(f"Warning: Hardware connection failed: {e}")
-            print("Running in degraded mode - some features may not work")
+        print("GUI initialization complete!")
 
     def reload_gui(self):
         """Restarts gui"""
@@ -217,46 +217,56 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         generate a dictionary of slots and signals ,
         later change to a json for flexibity ,; like mll specific?
         '''
+        print("  Building live PV dictionary...")
+        try:
+            self.live_PVs = {
 
-        self.live_PVs = {
+                self.lcd_ic3:"XF:03IDC-ES{Sclr:2}_cts1.D",
+                self.lcd_monoE:"XF:03ID{}Energy-I",
+                self.lcdPressure:"XF:03IDC-VA{VT:Chm-CM:1}P-I",
+                self.lcd_scanNumber:"XF:03IDC-ES{Status}ScanID-I",
+                self.db_smarx:"XF:03IDC-ES{SPod:1-Ax:2}Pos-I",
+                self.db_smary:"XF:03IDC-ES{SPod:1-Ax:3}Pos-I",
+                self.db_smarz:"XF:03IDC-ES{SPod:1-Ax:1}Pos-I",
+                self.db_zpsth:"XF:03IDC-ES{SC210:1-Ax:1}Mtr.RBV",
+                self.db_zpz1:"XF:03IDC-ES{MCS:1-Ax:zpz1}Mtr.RBV",
+                self.db_dsx:"XF:03IDC-ES{ANC350:6-Ax:2}Mtr.RBV",
+                self.db_dsy:"XF:03IDC-ES{MCS:1-Ax:mlldiffy}Mtr.RBV",
+                self.db_dsz:"XF:03IDC-ES{ANC350:6-Ax:3}Mtr.RBV",
+                self.db_dsth:"XF:03IDC-ES{MCS:3-Ax:diffsth}Mtr.RBV",
+                self.db_sbz:"XF:03IDC-ES{ANC350:3-Ax:2}Mtr.RBV",
+                self.db_ssa2_x:"XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.RBV",
+                self.db_ssa2_y:"XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.RBV",
+                self.db_fs:"XF:03IDA-OP{FS:1-Ax:Y}Mtr.RBV",
+                self.db_cam6:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
+                self.db_fs_det:"XF:03IDC-ES{Det:Vort-Ax:X}Mtr.RBV",
+                self.db_diffx:"XF:03IDC-ES{Diff-Ax:X}Mtr.RBV",
+                self.db_cam06x:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
+                self.db_s5_x:"XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.RBV",
+                self.db_s5_y:"XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.RBV",
+                self.db_dexela:"XF:03IDC-ES{Stg:FPDet-Ax:Y}Mtr.RBV",
+                self.db_flytube_p:"XF:03IDC-VA{ES:1-TCG:1}P-I"
 
-            self.lcd_ic3:"XF:03IDC-ES{Sclr:2}_cts1.D",
-            self.lcd_monoE:"XF:03ID{}Energy-I",
-            self.lcdPressure:"XF:03IDC-VA{VT:Chm-CM:1}P-I",
-            self.lcd_scanNumber:"XF:03IDC-ES{Status}ScanID-I",
-            self.db_smarx:"XF:03IDC-ES{SPod:1-Ax:2}Pos-I",
-            self.db_smary:"XF:03IDC-ES{SPod:1-Ax:3}Pos-I",
-            self.db_smarz:"XF:03IDC-ES{SPod:1-Ax:1}Pos-I",
-            self.db_zpsth:"XF:03IDC-ES{SC210:1-Ax:1}Mtr.RBV",
-            self.db_zpz1:"XF:03IDC-ES{MCS:1-Ax:zpz1}Mtr.RBV",
-            self.db_dsx:"XF:03IDC-ES{ANC350:6-Ax:2}Mtr.RBV",
-            self.db_dsy:"XF:03IDC-ES{MCS:1-Ax:mlldiffy}Mtr.RBV",
-            self.db_dsz:"XF:03IDC-ES{ANC350:6-Ax:3}Mtr.RBV",
-            self.db_dsth:"XF:03IDC-ES{MCS:3-Ax:diffsth}Mtr.RBV",
-            self.db_sbz:"XF:03IDC-ES{ANC350:3-Ax:2}Mtr.RBV",
-            self.db_ssa2_x:"XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.RBV",
-            self.db_ssa2_y:"XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.RBV",
-            self.db_fs:"XF:03IDA-OP{FS:1-Ax:Y}Mtr.RBV",
-            self.db_cam6:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
-            self.db_fs_det:"XF:03IDC-ES{Det:Vort-Ax:X}Mtr.RBV",
-            self.db_diffx:"XF:03IDC-ES{Diff-Ax:X}Mtr.RBV",
-            self.db_cam06x:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
-            self.db_s5_x:"XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.RBV",
-            self.db_s5_y:"XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.RBV",
-            self.db_dexela:"XF:03IDC-ES{Stg:FPDet-Ax:Y}Mtr.RBV",
-            self.db_flytube_p:"XF:03IDC-VA{ES:1-TCG:1}P-I"
-
-            }
+                }
+            print("  Live PV dictionary created successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to create live PV dictionary: {e}")
+            self.live_PVs = {}
 
     def create_pump_pv_dict(self):
+        print("  Building pump PV dictionary...")
+        try:
+            self.pump_PVs = {
 
-        self.pump_PVs = {
+                self.rb_fast_vent:"XF:03IDC-VA{ES:1-FastVtVlv:Stg3}Sts:Cls-Sts",
+                self.rb_pumpA_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:A}Sts:Cls-Sts",
+                self.rb_pumpB_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:B}Sts:Cls-Sts",
 
-            self.rb_fast_vent:"XF:03IDC-VA{ES:1-FastVtVlv:Stg3}Sts:Cls-Sts",
-            self.rb_pumpA_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:A}Sts:Cls-Sts",
-            self.rb_pumpB_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:B}Sts:Cls-Sts",
-
-            }
+                }
+            print("  Pump PV dictionary created successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to create pump PV dictionary: {e}")
+            self.pump_PVs = {}
 
     def handle_value_signals(self,pv_val_list):
         #print ("updating live values")
@@ -276,10 +286,16 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
 
 
     def flytube_pressure_status(self):
-
-        self.update_thread = liveThresholdUpdate("XF:03IDC-VA{ES:1-TCG:1}P-I",5)
-        self.update_thread.current_sts.connect(self.handle_threshold)
-        self.update_thread.start()
+        try:
+            print("  Creating flytube pressure thread...")
+            self.update_thread = liveThresholdUpdate("XF:03IDC-VA{ES:1-TCG:1}P-I",5)
+            print("  Connecting flytube pressure signals...")
+            self.update_thread.current_sts.connect(self.handle_threshold)
+            print("  Starting flytube pressure thread...")
+            self.update_thread.start()
+            print("  Flytube pressure thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start flytube pressure thread: {e}")
 
     def handle_threshold(self, sts):
 
@@ -300,23 +316,40 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
             self.label_scanStatus.setStyleSheet("background-color:rgb(255, 165, 0);color:rgb(0, 255, 0)")
 
     def scanStatusThread(self):
-
-        self.scanStatus_thread = liveStatus("XF:03IDC-ES{Status}ScanRunning-I")
-        self.scanStatus_thread.current_sts.connect(self.scanStatus)
-        self.scanStatus_thread.start()
+        try:
+            print("  Creating scan status thread...")
+            self.scanStatus_thread = liveStatus("XF:03IDC-ES{Status}ScanRunning-I")
+            print("  Connecting scan status signals...")
+            self.scanStatus_thread.current_sts.connect(self.scanStatus)
+            print("  Starting scan status thread...")
+            self.scanStatus_thread.start()
+            print("  Scan status thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start scan status thread: {e}")
 
     def liveUpdateThread(self):
-        print("Thread Started")
-
-        self.liveWorker = liveUpdate(self.live_PVs)
-        self.liveWorker.current_positions.connect(self.handle_value_signals)
-        self.liveWorker.start()
+        try:
+            print("  Creating live update worker...")
+            self.liveWorker = liveUpdate(self.live_PVs)
+            print("  Connecting live update signals...")
+            self.liveWorker.current_positions.connect(self.handle_value_signals)
+            print("  Starting live update thread...")
+            self.liveWorker.start()
+            print("  Live update thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start live update thread: {e}")
 
     def pump_update_thread(self):
-        print("Pump Update Thread Started")
-        self.pump_update_worker = liveUpdate(self.pump_PVs,update_interval_ms = 2000)
-        self.pump_update_worker.current_positions.connect(self.handle_bool_signals)
-        self.pump_update_worker.start()
+        try:
+            print("  Creating pump update worker...")
+            self.pump_update_worker = liveUpdate(self.pump_PVs,update_interval_ms = 2000)
+            print("  Connecting pump update signals...")
+            self.pump_update_worker.current_positions.connect(self.handle_bool_signals)
+            print("  Starting pump update thread...")
+            self.pump_update_worker.start()
+            print("  Pump update thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start pump update thread: {e}")
 
 
     #setup user
@@ -2897,30 +2930,23 @@ class MainWindow(QMainWindow):
 '''
 
 if __name__ == "__main__":
-    import argparse
-    
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description='HXN GUI')
-    parser.add_argument('--offline', action='store_true', 
-                       help='Run in offline mode (no hardware connections)')
-    args = parser.parse_args()
-    
-    # Set global offline flag
-    OFFLINE_MODE = args.offline
-    if OFFLINE_MODE:
-        print("Running in OFFLINE mode - no hardware connections")
+    print("Starting HXN GUI application...")
     
     # Check for an existing instance to avoid the Singleton error
     app = QtWidgets.QApplication.instance()
     if not app:
+        print("Creating QApplication instance...")
         app = QtWidgets.QApplication(sys.argv)
+    else:
+        print("Using existing QApplication instance...")
 
+    print("Creating main window...")
     window = Ui()
-    window.show()
     
+    print("Starting event loop...")
     # Use app.exec_() (or app.exec() in newer versions) 
     # and avoid sys.exit() if you're in an interactive environment
-    app.exec_()
+    sys.exit(app.exec_())
 
 
 
