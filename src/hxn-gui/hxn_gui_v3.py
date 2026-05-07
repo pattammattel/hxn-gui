@@ -45,6 +45,79 @@ det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
 
+class ThreadSettingsDialog(QtWidgets.QDialog):
+    """Dialog to configure which background threads to enable"""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Background Thread Settings")
+        self.setModal(True)
+        
+        layout = QtWidgets.QVBoxLayout()
+        
+        # Instructions
+        label = QLabel("Select which background EPICS monitoring threads to enable:\n"
+                      "(Disable all if EPICS PVs are unavailable)")
+        layout.addWidget(label)
+        
+        # Checkboxes for each thread type
+        self.cb_live_update = QCheckBox("Live PV Updates (motor positions, readings)")
+        self.cb_live_update.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_live_update)
+        
+        self.cb_scan_status = QCheckBox("Scan Status Monitor")
+        self.cb_scan_status.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_scan_status)
+        
+        self.cb_pump_update = QCheckBox("Pump Status Monitor")
+        self.cb_pump_update.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_pump_update)
+        
+        self.cb_flytube_pressure = QCheckBox("Flytube Pressure Monitor")
+        self.cb_flytube_pressure.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_flytube_pressure)
+        
+        # Quick option buttons
+        button_layout = QtWidgets.QHBoxLayout()
+        
+        btn_enable_all = QPushButton("Enable All")
+        btn_enable_all.clicked.connect(self.enable_all)
+        button_layout.addWidget(btn_enable_all)
+        
+        btn_disable_all = QPushButton("Disable All")
+        btn_disable_all.clicked.connect(self.disable_all)
+        button_layout.addWidget(btn_disable_all)
+        
+        layout.addLayout(button_layout)
+        
+        # OK button
+        btn_ok = QPushButton("Start GUI")
+        btn_ok.clicked.connect(self.accept)
+        layout.addWidget(btn_ok)
+        
+        self.setLayout(layout)
+    
+    def enable_all(self):
+        self.cb_live_update.setChecked(True)
+        self.cb_scan_status.setChecked(True)
+        self.cb_pump_update.setChecked(True)
+        self.cb_flytube_pressure.setChecked(True)
+    
+    def disable_all(self):
+        self.cb_live_update.setChecked(False)
+        self.cb_scan_status.setChecked(False)
+        self.cb_pump_update.setChecked(False)
+        self.cb_flytube_pressure.setChecked(False)
+    
+    def get_settings(self):
+        """Return dict of thread enable/disable settings"""
+        return {
+            'live_update': self.cb_live_update.isChecked(),
+            'scan_status': self.cb_scan_status.isChecked(),
+            'pump_update': self.cb_pump_update.isChecked(),
+            'flytube_pressure': self.cb_flytube_pressure.isChecked()
+        }
+
+
 class Ui(QtWidgets.QMainWindow, Ui_window):
 
     def __init__(self):
@@ -54,6 +127,13 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         # Use compiled UI with multiple inheritance
         self.setupUi(self)
         print("UI File loaded")
+        
+        # Show thread settings dialog
+        print("Showing thread settings dialog...")
+        settings_dialog = ThreadSettingsDialog(self)
+        settings_dialog.exec_()
+        self.thread_settings = settings_dialog.get_settings()
+        print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
 
@@ -158,8 +238,11 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         print("Deferring background thread startup...")
         # Use QTimer to start threads after GUI is fully loaded
         # This prevents blocking during initialization
-        QTimer.singleShot(2000, self._start_background_threads)
-        print("  Background threads will start in 2 seconds...")
+        if any(self.thread_settings.values()):
+            QTimer.singleShot(2000, self._start_background_threads)
+            print("  Background threads will start in 2 seconds...")
+        else:
+            print("  All background threads disabled by user")
         
         print("Showing window...")
         self.show()
@@ -169,42 +252,54 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
     
     def _start_background_threads(self):
         """Start background threads after GUI is fully loaded"""
-        print("Starting background threads...")
+        print("Starting background threads (based on user settings)...")
         
         # Try each thread individually with error handling
         # This prevents one failing thread from blocking others
         
         # Live update thread - often causes issues if PVs unavailable
-        try:
-            print("  Attempting to start live update thread...")
-            self.liveUpdateThread()
-            print("  Live update thread started")
-        except Exception as e:
-            print(f"  Warning: Could not start live update thread: {e}")
+        if self.thread_settings.get('live_update', False):
+            try:
+                print("  Attempting to start live update thread...")
+                self.liveUpdateThread()
+                print("  Live update thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start live update thread: {e}")
+        else:
+            print("  Live update thread disabled by user")
         
         # Scan status thread
-        try:
-            print("  Attempting to start scan status thread...")
-            self.scanStatusThread()
-            print("  Scan status thread started")
-        except Exception as e:
-            print(f"  Warning: Could not start scan status thread: {e}")
+        if self.thread_settings.get('scan_status', False):
+            try:
+                print("  Attempting to start scan status thread...")
+                self.scanStatusThread()
+                print("  Scan status thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start scan status thread: {e}")
+        else:
+            print("  Scan status thread disabled by user")
         
         # Pump update thread
-        try:
-            print("  Attempting to start pump update thread...")
-            self.pump_update_thread()
-            print("  Pump update thread started")
-        except Exception as e:
-            print(f"  Warning: Could not start pump update thread: {e}")
+        if self.thread_settings.get('pump_update', False):
+            try:
+                print("  Attempting to start pump update thread...")
+                self.pump_update_thread()
+                print("  Pump update thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start pump update thread: {e}")
+        else:
+            print("  Pump update thread disabled by user")
         
         # Flytube pressure status
-        try:
-            print("  Attempting to start flytube pressure thread...")
-            self.flytube_pressure_status()
-            print("  Flytube pressure thread started")
-        except Exception as e:
-            print(f"  Warning: Could not start flytube pressure thread: {e}")
+        if self.thread_settings.get('flytube_pressure', False):
+            try:
+                print("  Attempting to start flytube pressure thread...")
+                self.flytube_pressure_status()
+                print("  Flytube pressure thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start flytube pressure thread: {e}")
+        else:
+            print("  Flytube pressure thread disabled by user")
         
         print("Background thread initialization complete")
 
