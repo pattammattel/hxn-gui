@@ -38,7 +38,7 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
-from ui_files.hxn_gui_v3_ui import Ui_MainWindow  # Import compiled UI
+from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI
 ui_path = os.path.dirname(os.path.abspath(__file__))
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
@@ -52,7 +52,7 @@ class Ui(QtWidgets.QMainWindow):
 
         print("Loading UI... Please wait")
         # Use compiled UI instead of runtime loading
-        ui = Ui_MainWindow()
+        ui = Ui_window()
         ui.setupUi(self)
         print("UI File loaded")
         # with open(style_path, "r") as f:
