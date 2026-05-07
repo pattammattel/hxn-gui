@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 handler = logging.StreamHandler(stream=sys.stdout)
 log.addHandler(handler)
 
-from epics import caget, caput, Motor
+from epics import caget, caput, Motor, PV as EpicsPV
 from collections import deque
 
 
@@ -2717,16 +2717,22 @@ class liveStatus(QThread):
     current_sts = pyqtSignal(int)
     def __init__(self, PV):
         super().__init__()
-        self.PV = PV
+        self.PV_name = PV
+        # Create PV object once - connects asynchronously
+        try:
+            self.pv_obj = EpicsPV(PV, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create PV object for {PV}: {e}")
+            self.pv_obj = None
 
     def run(self):
-
         while True:
             try:
-                # Add timeout to prevent blocking
-                value = caget(self.PV, timeout=0.5)
-                if value is not None:
-                    self.current_sts.emit(value)
+                # Only read if connected
+                if self.pv_obj is not None and self.pv_obj.connected:
+                    value = self.pv_obj.get(timeout=0.1)
+                    if value is not None:
+                        self.current_sts.emit(value)
                 QtTest.QTest.qWait(500)
             except Exception as e:
                 # Silently continue if PV unavailable
@@ -2740,17 +2746,31 @@ class liveUpdate(QThread):
         super().__init__()
         self.pv_dict = pv_dict
         self.update_interval_ms = update_interval_ms
+        # Create PV objects once - they connect asynchronously in background
+        self.pv_objects = []
+        for pv_name in pv_dict.values():
+            try:
+                # connection_timeout: how long to wait for initial connection
+                # auto_monitor=False: we'll poll manually, don't set up callbacks
+                pv_obj = EpicsPV(pv_name, connection_timeout=1.0, auto_monitor=False)
+                self.pv_objects.append(pv_obj)
+            except Exception as e:
+                print(f"  Warning: Could not create PV object for {pv_name}: {e}")
+                self.pv_objects.append(None)
 
     def return_values(self):
         readings = []
-        for pv_name in self.pv_dict.values():
+        for pv_obj in self.pv_objects:
             try:
-                # Add timeout to prevent blocking on unavailable PVs
-                # PySide6/PyQt threading: caget blocks in thread, timeout prevents GUI freeze
-                value = caget(pv_name, timeout=0.5)
-                readings.append(value if value is not None else 0.0)
+                # Only read if PV is connected, use short timeout for actual read
+                if pv_obj is not None and pv_obj.connected:
+                    value = pv_obj.get(timeout=0.1)
+                    readings.append(value if value is not None else 0.0)
+                else:
+                    # PV not connected, use default
+                    readings.append(0.0)
             except Exception as e:
-                # If PV unavailable, use default value instead of blocking
+                # Read failed, use default value
                 readings.append(0.0)
         
         return readings
@@ -2776,18 +2796,27 @@ class liveThresholdUpdate(QThread):
     current_sts = pyqtSignal(bool)
     def __init__(self, PV, threshold):
         super().__init__()
-        self.PV = PV
+        self.PV_name = PV
         self.threshold = threshold
+        # Create PV object once
+        try:
+            self.pv_obj = EpicsPV(PV, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create PV object for {PV}: {e}")
+            self.pv_obj = None
 
     def run(self):
-
         while True:
             try:
-                # Add timeout to prevent blocking
-                value = caget(self.PV, timeout=0.5)
-                if value is not None and value > self.threshold:
-                    self.current_sts.emit(True)
+                # Only read if connected
+                if self.pv_obj is not None and self.pv_obj.connected:
+                    value = self.pv_obj.get(timeout=0.1)
+                    if value is not None and value > self.threshold:
+                        self.current_sts.emit(True)
+                    else:
+                        self.current_sts.emit(False)
                 else:
+                    # Not connected, emit False
                     self.current_sts.emit(False)
             except Exception as e:
                 # PV unavailable, emit False
@@ -2802,22 +2831,34 @@ class updateScanProgress(QThread):
 
     def __init__(self, tot_pv, update_pv, update_interval_ms):
         super().__init__()
-        self.tot_pv = tot_pv
-        self.update_pv = update_pv
+        self.tot_pv_name = tot_pv
+        self.update_pv_name = update_pv
         self.update_interval_ms = update_interval_ms
+        # Create PV objects once
+        try:
+            self.tot_pv_obj = EpicsPV(tot_pv, connection_timeout=1.0, auto_monitor=False)
+            self.update_pv_obj = EpicsPV(update_pv, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create scan progress PV objects: {e}")
+            self.tot_pv_obj = None
+            self.update_pv_obj = None
 
     def run(self):
         #signal total points to collect
         try:
-            tot = caget(self.tot_pv, timeout=0.5)
-            self.tot_scan_points.emit(tot if tot is not None else 0)
+            if self.tot_pv_obj is not None and self.tot_pv_obj.connected:
+                tot = self.tot_pv_obj.get(timeout=0.1)
+                self.tot_scan_points.emit(tot if tot is not None else 0)
+            else:
+                self.tot_scan_points.emit(0)
         except:
             self.tot_scan_points.emit(0)
 
         while True:
             try:
-                points = caget(self.update_pv, timeout=0.5)
-                self.completed_points.emit(points if points is not None else 0)
+                if self.update_pv_obj is not None and self.update_pv_obj.connected:
+                    points = self.update_pv_obj.get(timeout=0.1)
+                    self.completed_points.emit(points if points is not None else 0)
             except:
                 pass
             QtTest.QTest.qWait(self.update_interval_ms)
