@@ -2813,14 +2813,16 @@ class liveStatus(QThread):
     def __init__(self, PV):
         super().__init__()
         self.PV_name = PV
-        # Create PV object once - connects asynchronously
-        try:
-            self.pv_obj = EpicsPV(PV, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create PV object for {PV}: {e}")
-            self.pv_obj = None
+        self.pv_obj = None  # Will be created in run() to avoid blocking main thread
 
     def run(self):
+        # Create PV object in background thread - doesn't block GUI
+        try:
+            self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+            self.pv_obj = None
+        
         while True:
             try:
                 # Only read if connected
@@ -2841,17 +2843,7 @@ class liveUpdate(QThread):
         super().__init__()
         self.pv_dict = pv_dict
         self.update_interval_ms = update_interval_ms
-        # Create PV objects once - they connect asynchronously in background
-        self.pv_objects = []
-        for pv_name in pv_dict.values():
-            try:
-                # connection_timeout: how long to wait for initial connection
-                # auto_monitor=False: we'll poll manually, don't set up callbacks
-                pv_obj = EpicsPV(pv_name, connection_timeout=1.0, auto_monitor=False)
-                self.pv_objects.append(pv_obj)
-            except Exception as e:
-                print(f"  Warning: Could not create PV object for {pv_name}: {e}")
-                self.pv_objects.append(None)
+        self.pv_objects = []  # Will be created in run() to avoid blocking main thread
 
     def return_values(self):
         readings = []
@@ -2872,16 +2864,22 @@ class liveUpdate(QThread):
 
     #use moveToThread method later
     def run(self):
-
+        # Create PV objects in background thread - doesn't block GUI
+        print(f"  Creating {len(self.pv_dict)} PV objects in background...")
+        for pv_name in self.pv_dict.values():
+            try:
+                pv_obj = EpicsPV(pv_name, connection_timeout=1.0, auto_monitor=False)
+                self.pv_objects.append(pv_obj)
+            except Exception as e:
+                print(f"  Warning: Could not create PV object for {pv_name}: {e}")
+                self.pv_objects.append(None)
+        print(f"  PV objects created, starting update loop...")
+        
         while True:
             try:
                 positions = self.return_values()
-                #self.pv_list = list(self.pv_dict.values())
                 self.current_positions.emit(positions)
-                #print(list(self.pv_dict.values())[0])
-                #print(positions[0])
                 QtTest.QTest.qWait(self.update_interval_ms)
-
             except:
                 pass
 
@@ -2893,14 +2891,16 @@ class liveThresholdUpdate(QThread):
         super().__init__()
         self.PV_name = PV
         self.threshold = threshold
-        # Create PV object once
-        try:
-            self.pv_obj = EpicsPV(PV, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create PV object for {PV}: {e}")
-            self.pv_obj = None
+        self.pv_obj = None  # Will be created in run() to avoid blocking main thread
 
     def run(self):
+        # Create PV object in background thread - doesn't block GUI
+        try:
+            self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+            self.pv_obj = None
+        
         while True:
             try:
                 # Only read if connected
@@ -2929,16 +2929,19 @@ class updateScanProgress(QThread):
         self.tot_pv_name = tot_pv
         self.update_pv_name = update_pv
         self.update_interval_ms = update_interval_ms
-        # Create PV objects once
+        self.tot_pv_obj = None  # Will be created in run() to avoid blocking main thread
+        self.update_pv_obj = None
+
+    def run(self):
+        # Create PV objects in background thread - doesn't block GUI
         try:
-            self.tot_pv_obj = EpicsPV(tot_pv, connection_timeout=1.0, auto_monitor=False)
-            self.update_pv_obj = EpicsPV(update_pv, connection_timeout=1.0, auto_monitor=False)
+            self.tot_pv_obj = EpicsPV(self.tot_pv_name, connection_timeout=1.0, auto_monitor=False)
+            self.update_pv_obj = EpicsPV(self.update_pv_name, connection_timeout=1.0, auto_monitor=False)
         except Exception as e:
             print(f"  Warning: Could not create scan progress PV objects: {e}")
             self.tot_pv_obj = None
             self.update_pv_obj = None
-
-    def run(self):
+        
         #signal total points to collect
         try:
             if self.tot_pv_obj is not None and self.tot_pv_obj.connected:
@@ -3067,11 +3070,29 @@ class LivePressureValueThread(QThread):
         super().__init__()
         self.pressure_pv = pressure_pv
         self.wait_time = wait_time
+        self.pv_obj = None  # Will be created in run() to avoid blocking main thread
 
     def run(self):
+        # Create PV object in background thread - doesn't block GUI
+        try:
+            self.pv_obj = EpicsPV(self.pressure_pv, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create pressure PV object: {e}")
+            self.pv_obj = None
+        
         start_time = 0
         while True:
-            self.current_time_pressure.emit((start_time,caget(self.pressure_pv)))
+            try:
+                if self.pv_obj is not None and self.pv_obj.connected:
+                    pressure = self.pv_obj.get(timeout=0.1)
+                    if pressure is not None:
+                        self.current_time_pressure.emit((start_time, pressure))
+                else:
+                    # PV not connected, emit default value
+                    self.current_time_pressure.emit((start_time, 0.0))
+            except Exception as e:
+                self.current_time_pressure.emit((start_time, 0.0))
+            
             QtTest.QTest.qWait(int(self.wait_time))
             start_time += self.wait_time
 
@@ -3166,11 +3187,11 @@ if __name__ == "__main__":
     
     print("Starting event loop...")
     
-    # Set up a timer to print periodic status
-    from qtpy.QtCore import QTimer
-    status_timer = QTimer()
-    status_timer.timeout.connect(lambda: print("Event loop is running..."))
-    status_timer.start(5000)  # Print every 5 seconds
+    # Disabled: periodic status message clutters output
+    # from qtpy.QtCore import QTimer
+    # status_timer = QTimer()
+    # status_timer.timeout.connect(lambda: print("Event loop is running..."))
+    # status_timer.start(5000)  # Print every 5 seconds
     
     # Use app.exec_() (or app.exec() in newer versions) 
     # and avoid sys.exit() if you're in an interactive environment
