@@ -45,15 +45,14 @@ det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
 
-class Ui(QtWidgets.QMainWindow):
+class Ui(QtWidgets.QMainWindow, Ui_window):
 
     def __init__(self):
         super(Ui, self).__init__()
 
         print("Loading UI... Please wait")
-        # Use compiled UI instead of runtime loading
-        ui = Ui_window()
-        ui.setupUi(self)
+        # Use compiled UI with multiple inheritance
+        self.setupUi(self)
         print("UI File loaded")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
