@@ -149,27 +149,37 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         QApplication.processEvents()
         
         print("Creating PV dictionaries...")
-        self.create_live_pv_dict()
-        QApplication.processEvents()
+        # TEMPORARILY DISABLED FOR TESTING
+        # self.create_live_pv_dict()
+        # QApplication.processEvents()
         
-        self.create_pump_pv_dict()
-        QApplication.processEvents()
+        # self.create_pump_pv_dict()
+        # QApplication.processEvents()
+        print("  (Skipped - disabled for testing)")
         
         print("Starting live update threads...")
-        self.liveUpdateThread()
-        QApplication.processEvents()
+        # TEMPORARILY DISABLED FOR TESTING
+        # self.liveUpdateThread()
+        # QApplication.processEvents()
+        print("  (Skipped - disabled for testing)")
         
         print("Starting scan status thread...")
-        self.scanStatusThread()
-        QApplication.processEvents()
+        # TEMPORARILY DISABLED FOR TESTING
+        # self.scanStatusThread()
+        # QApplication.processEvents()
+        print("  (Skipped - disabled for testing)")
         
         print("Starting pump update thread...")
-        self.pump_update_thread()
-        QApplication.processEvents()
+        # TEMPORARILY DISABLED FOR TESTING
+        # self.pump_update_thread()
+        # QApplication.processEvents()
+        print("  (Skipped - disabled for testing)")
         
         print("Starting flytube pressure status...")
-        self.flytube_pressure_status()
-        QApplication.processEvents()
+        # TEMPORARILY DISABLED FOR TESTING
+        # self.flytube_pressure_status()
+        # QApplication.processEvents()
+        print("  (Skipped - disabled for testing)")
         
         print("Showing window...")
         self.show()
