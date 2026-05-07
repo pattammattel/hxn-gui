@@ -1,8 +1,8 @@
 import numpy as np
 from contextlib import contextmanager
 from functools import wraps
-from PyQt5.QtWidgets import QProgressDialog, QMessageBox, QApplication
-from PyQt5.QtCore import Qt, QRunnable, QThreadPool, pyqtSlot, QObject, pyqtSignal
+from qtpy.QtWidgets import QProgressDialog, QMessageBox, QApplication
+from qtpy.QtCore import Qt, QRunnable, QThreadPool, Slot as pyqtSlot, QObject, Signal as pyqtSignal
 
 def with_motion_feedback(title="Motion", success_msg="Motion complete.", error_msg="Motion failed"):
     def decorator(func):

@@ -1,8 +1,12 @@
 import sys
 import json
 import os
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout,QMessageBox
-from PyQt5 import QtWidgets, uic,QtTest
+from qtpy.QtWidgets import QApplication, QWidget, QPushButton, QFileDialog, QLabel, QVBoxLayout,QMessageBox
+from qtpy import QtWidgets, uic
+try:
+    from qtpy import QtTest
+except ImportError:
+    QtTest = None
 from functools import wraps
 from utilities import *
 

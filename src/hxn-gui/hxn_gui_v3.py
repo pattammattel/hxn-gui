@@ -24,9 +24,13 @@ from epics import caget, caput, Motor
 from collections import deque
 
 
-from PyQt5 import QtWidgets, uic, QtCore, QtGui, QtTest
-from PyQt5.QtWidgets import QMessageBox, QFileDialog, QApplication, QLCDNumber, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog
-from PyQt5.QtCore import QObject, QTimer, QThread, pyqtSignal, pyqtSlot, QRunnable, QThreadPool, QDate, QTime, Qt
+from qtpy import QtWidgets, uic, QtCore, QtGui
+try:
+    from qtpy import QtTest
+except ImportError:
+    QtTest = None
+from qtpy.QtWidgets import QMessageBox, QFileDialog, QApplication, QLCDNumber, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog
+from qtpy.QtCore import QObject, QTimer, QThread, Signal as pyqtSignal, Slot as pyqtSlot, QRunnable, QThreadPool, QDate, QTime, Qt
 
 #import custom functions
 from HXNSampleExchange import *
