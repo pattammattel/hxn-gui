@@ -2879,12 +2879,17 @@ class MainWindow(QMainWindow):
 '''
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-
+    # Check for an existing instance to avoid the Singleton error
+    app = QtWidgets.QApplication.instance()
+    if not app:
+        app = QtWidgets.QApplication(sys.argv)
 
     window = Ui()
     window.show()
-    sys.exit(app.exec_())
-    #app.deleteLater()
+    
+    # Use app.exec_() (or app.exec() in newer versions) 
+    # and avoid sys.exit() if you're in an interactive environment
+    app.exec_()
+
 
 

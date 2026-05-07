@@ -66,10 +66,11 @@ class SimpleTestWindow(QWidget):
 
 
 if __name__ == "__main__":
-    # Create QApplication
-    app = QApplication(sys.argv)
+    # Check for an existing instance before creating a new one
+    app = QApplication.instance()
+    if not app:
+        app = QApplication(sys.argv)
     
-    # Create and show window
     window = SimpleTestWindow()
     window.show()
     
@@ -77,5 +78,6 @@ if __name__ == "__main__":
     print("GUI Test Window Launched")
     print("="*50)
     
-    # Start event loop
-    sys.exit(app.exec())
+    # Use app.exec() directly to avoid crashing the kernel on exit
+    app.exec()
+
