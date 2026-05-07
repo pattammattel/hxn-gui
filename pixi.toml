@@ -22,7 +22,7 @@ hxn-transfer = "ipython -i hxn_data_transfer.py"
 notebook = "jupyter lab"
 hxn-gui-offline = { cmd = "python src/hxn-gui/hxn_gui_v3.py --offline", description = "Run HXN GUI in offline mode for testing (no hardware required)" }
 test-gui = { cmd = "python src/hxn-gui/simple_gui_for_testing.py", description = "Run simple GUI test to verify QtPy environment compatibility" }
-compile-ui = { cmd = "pyside6-uic src/hxn-gui/ui_files/hxn_gui_v3.ui -o src/hxn-gui/ui_files/hxn_gui_v3_ui.py, description = "Compile Qt Designer .ui files to Python code for faster loading" }
+compile-ui = { cmd = "pyside6-uic src/hxn-gui/ui_files/hxn_gui_v3.ui -o src/hxn-gui/ui_files/hxn_gui_v3_ui.py && sed -i.bak 's/from PySide6\\./from qtpy./g' src/hxn-gui/ui_files/hxn_gui_v3_ui.py && rm src/hxn-gui/ui_files/hxn_gui_v3_ui.py.bak", description = "Compile Qt Designer .ui files to Python code with QtPy imports for faster loading" }
 
 # --- GLOBAL DEPENDENCIES (Common to both) ---
 

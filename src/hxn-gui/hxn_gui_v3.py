@@ -23,7 +23,7 @@ from epics import caget, caput, Motor
 from collections import deque
 
 
-from qtpy import QtWidgets, uic, QtCore, QtGui
+from qtpy import QtWidgets, QtCore, QtGui
 try:
     from qtpy import QtTest
 except ImportError:
@@ -38,6 +38,7 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
+from ui_files.hxn_gui_v3_ui import Ui_MainWindow  # Import compiled UI
 ui_path = os.path.dirname(os.path.abspath(__file__))
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
@@ -50,7 +51,9 @@ class Ui(QtWidgets.QMainWindow):
         super(Ui, self).__init__()
 
         print("Loading UI... Please wait")
-        uic.loadUi(os.path.join(ui_path,'ui_files/hxn_gui_v3.ui'), self)
+        # Use compiled UI instead of runtime loading
+        ui = Ui_MainWindow()
+        ui.setupUi(self)
         print("UI File loaded")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
