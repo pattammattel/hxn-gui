@@ -43,7 +43,8 @@ doct = ">=1.1.0,<2"
 pytz = ">=2025.2,<2026"
 xarray = ">=2026.2.0,<2027"
 qtpy = ">=2.4.3,<3"
-# REMOVED pyside6 from here
+pyside6 = ">=6.11.0,<7"
+
 
 [pypi-dependencies]
 pystackreg = ">=0.2.8, <0.3"
