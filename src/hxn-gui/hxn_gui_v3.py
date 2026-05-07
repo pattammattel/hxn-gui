@@ -149,37 +149,29 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         QApplication.processEvents()
         
         print("Creating PV dictionaries...")
-        # TEMPORARILY DISABLED FOR TESTING
-        # self.create_live_pv_dict()
-        # QApplication.processEvents()
+        self.create_live_pv_dict()
+        QApplication.processEvents()
         
-        # self.create_pump_pv_dict()
-        # QApplication.processEvents()
-        print("  (Skipped - disabled for testing)")
+        self.create_pump_pv_dict()
+        QApplication.processEvents()
         
         print("Starting live update threads...")
-        # TEMPORARILY DISABLED FOR TESTING
+        # DISABLED - EPICS PVs not available, causes GUI to hang
         # self.liveUpdateThread()
-        # QApplication.processEvents()
-        print("  (Skipped - disabled for testing)")
+        print("  (Skipped - live PV update disabled)")
+        QApplication.processEvents()
         
         print("Starting scan status thread...")
-        # TEMPORARILY DISABLED FOR TESTING
-        # self.scanStatusThread()
-        # QApplication.processEvents()
-        print("  (Skipped - disabled for testing)")
+        self.scanStatusThread()
+        QApplication.processEvents()
         
         print("Starting pump update thread...")
-        # TEMPORARILY DISABLED FOR TESTING
-        # self.pump_update_thread()
-        # QApplication.processEvents()
-        print("  (Skipped - disabled for testing)")
+        self.pump_update_thread()
+        QApplication.processEvents()
         
         print("Starting flytube pressure status...")
-        # TEMPORARILY DISABLED FOR TESTING
-        # self.flytube_pressure_status()
-        # QApplication.processEvents()
-        print("  (Skipped - disabled for testing)")
+        self.flytube_pressure_status()
+        QApplication.processEvents()
         
         print("Showing window...")
         self.show()
