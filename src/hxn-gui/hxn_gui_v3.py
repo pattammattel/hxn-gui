@@ -31,10 +31,6 @@ except ImportError:
 from qtpy.QtWidgets import QMessageBox, QFileDialog, QApplication, QLCDNumber, QLabel, QErrorMessage, QPushButton, QCheckBox, QProgressDialog
 from qtpy.QtCore import QObject, QTimer, QThread, Signal as pyqtSignal, Slot as pyqtSlot, QRunnable, QThreadPool, QDate, QTime, Qt
 
-# Import uic from PySide6 directly for runtime UI loading
-from PySide6 import QtUiTools
-from PySide6.QtCore import QFile
-
 #import custom functions
 from HXNSampleExchange import *
 from hxn_data_transfer import *
@@ -42,8 +38,8 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
+from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI
 ui_path = os.path.dirname(os.path.abspath(__file__))
-ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
@@ -122,35 +118,20 @@ class ThreadSettingsDialog(QtWidgets.QDialog):
         }
 
 
-class Ui(QtWidgets.QMainWindow):
+class Ui(QtWidgets.QMainWindow, Ui_window):
 
     def __init__(self):
         super(Ui, self).__init__()
 
-        print("Loading UI from .ui file... Please wait")
-        # Load UI file at runtime
-        loader = QtUiTools.QUiLoader()
-        ui_file = QFile(ui_file_path)
-        if not ui_file.open(QFile.ReadOnly):
-            print(f"Cannot open UI file: {ui_file_path}")
-            raise RuntimeError(f"Cannot open UI file: {ui_file_path}")
-        
-        # Load and set as central widget
-        ui_widget = loader.load(ui_file, self)
-        ui_file.close()
-        self.setCentralWidget(ui_widget)
-        
-        # Copy all child widgets to self for direct access
-        for child in ui_widget.findChildren(QtCore.QObject):
-            if child.objectName():
-                setattr(self, child.objectName(), child)
-        
+        print("Loading UI... Please wait")
+        # Use compiled UI with multiple inheritance
+        self.setupUi(self)
         print("UI File loaded")
         
         # Show thread settings dialog
         print("Showing thread settings dialog...")
         settings_dialog = ThreadSettingsDialog(self)
-        settings_dialog.exec()  # PySide6 uses exec() not exec_()
+        settings_dialog.exec()
         self.thread_settings = settings_dialog.get_settings()
         print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
