@@ -95,20 +95,36 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         self.cb_motor2.addItems([name for name in self.fly_motor_dict.keys()])
         self.cb_motor2.setCurrentIndex(1)
 
+        print("Connecting signal handlers...")
         self.connect_flyscan_signals()
+        QApplication.processEvents()
+        
         self.connect_user_setup_signals()
+        QApplication.processEvents()
+        
         self.connect_shutters()
         self.connect_plotting_controls()
         self.connect_energy_change()
+        QApplication.processEvents()
+        
         self.connect_mll_stages()
         self.connect_zp_stages()
+        QApplication.processEvents()
+        
         self.connect_detectors_and_cameras()
         self.connect_sample_exchange()
+        QApplication.processEvents()
+        
         self.connect_alignment_tools()
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
+        QApplication.processEvents()
+        
         self.set_input_validators()
         self.connect_troubleshooting()
+        QApplication.processEvents()
+        
+        print("Signal handlers connected")
 
         
 
@@ -124,27 +140,42 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         self.live_plot_worker_thread = QThread()
         
         print("Running initParams()...")
-        self.initParams()
+        try:
+            self.initParams()
+        except Exception as e:
+            print(f"Warning during initParams: {e}")
+            # Set some defaults to prevent crashes
+            self.scan_plan = ""
+        QApplication.processEvents()
         
         print("Creating PV dictionaries...")
         self.create_live_pv_dict()
+        QApplication.processEvents()
+        
         self.create_pump_pv_dict()
+        QApplication.processEvents()
         
         print("Starting live update threads...")
         self.liveUpdateThread()
+        QApplication.processEvents()
         
         print("Starting scan status thread...")
         self.scanStatusThread()
+        QApplication.processEvents()
         
         print("Starting pump update thread...")
         self.pump_update_thread()
+        QApplication.processEvents()
         
         print("Starting flytube pressure status...")
         self.flytube_pressure_status()
+        QApplication.processEvents()
         
         print("Showing window...")
         self.show()
+        QApplication.processEvents()
         print("GUI initialization complete!")
+        print("Window should be visible and responsive now")
 
     def reload_gui(self):
         """Restarts gui"""
@@ -2943,7 +2974,18 @@ if __name__ == "__main__":
     print("Creating main window...")
     window = Ui()
     
+    # Force a final processEvents before entering event loop
+    print("Processing pending events...")
+    QApplication.processEvents()
+    
     print("Starting event loop...")
+    
+    # Set up a timer to print periodic status
+    from qtpy.QtCore import QTimer
+    status_timer = QTimer()
+    status_timer.timeout.connect(lambda: print("Event loop is running..."))
+    status_timer.start(5000)  # Print every 5 seconds
+    
     # Use app.exec_() (or app.exec() in newer versions) 
     # and avoid sys.exit() if you're in an interactive environment
     sys.exit(app.exec_())
