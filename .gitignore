@@ -1,8 +1,34 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+__enamlcache__/
+
+# Virtual environments
 .env/
+
+# Distribution / packaging
 *.egg-info/
 build/
 dist/
+
+# IDEs
 .vscode/
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Logs
 *.log
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Image files
+*.jpg
+*.PNG
+*.png
+*.tiff
+
+# Editor files
+*.swp
+.tags
