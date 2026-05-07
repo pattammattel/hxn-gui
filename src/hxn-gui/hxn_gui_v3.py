@@ -155,29 +155,58 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         self.create_pump_pv_dict()
         QApplication.processEvents()
         
-        print("Starting live update threads...")
-        # DISABLED - EPICS PVs not available, causes GUI to hang
-        # self.liveUpdateThread()
-        print("  (Skipped - live PV update disabled)")
-        QApplication.processEvents()
-        
-        print("Starting scan status thread...")
-        self.scanStatusThread()
-        QApplication.processEvents()
-        
-        print("Starting pump update thread...")
-        self.pump_update_thread()
-        QApplication.processEvents()
-        
-        print("Starting flytube pressure status...")
-        self.flytube_pressure_status()
-        QApplication.processEvents()
+        print("Deferring background thread startup...")
+        # Use QTimer to start threads after GUI is fully loaded
+        # This prevents blocking during initialization
+        QTimer.singleShot(2000, self._start_background_threads)
+        print("  Background threads will start in 2 seconds...")
         
         print("Showing window...")
         self.show()
         QApplication.processEvents()
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
+    
+    def _start_background_threads(self):
+        """Start background threads after GUI is fully loaded"""
+        print("Starting background threads...")
+        
+        # Try each thread individually with error handling
+        # This prevents one failing thread from blocking others
+        
+        # Live update thread - often causes issues if PVs unavailable
+        try:
+            print("  Attempting to start live update thread...")
+            self.liveUpdateThread()
+            print("  Live update thread started")
+        except Exception as e:
+            print(f"  Warning: Could not start live update thread: {e}")
+        
+        # Scan status thread
+        try:
+            print("  Attempting to start scan status thread...")
+            self.scanStatusThread()
+            print("  Scan status thread started")
+        except Exception as e:
+            print(f"  Warning: Could not start scan status thread: {e}")
+        
+        # Pump update thread
+        try:
+            print("  Attempting to start pump update thread...")
+            self.pump_update_thread()
+            print("  Pump update thread started")
+        except Exception as e:
+            print(f"  Warning: Could not start pump update thread: {e}")
+        
+        # Flytube pressure status
+        try:
+            print("  Attempting to start flytube pressure thread...")
+            self.flytube_pressure_status()
+            print("  Flytube pressure thread started")
+        except Exception as e:
+            print(f"  Warning: Could not start flytube pressure thread: {e}")
+        
+        print("Background thread initialization complete")
 
     def reload_gui(self):
         """Restarts gui"""
@@ -2694,10 +2723,13 @@ class liveStatus(QThread):
 
         while True:
             try:
-                self.current_sts.emit(caget(self.PV))
-                #print("New positions")
+                # Add timeout to prevent blocking
+                value = caget(self.PV, timeout=0.5)
+                if value is not None:
+                    self.current_sts.emit(value)
                 QtTest.QTest.qWait(500)
-            except:
+            except Exception as e:
+                # Silently continue if PV unavailable
                 pass
 
 class liveUpdate(QThread):
@@ -2711,10 +2743,16 @@ class liveUpdate(QThread):
 
     def return_values(self):
         readings = []
-        for i in self.pv_dict.values():
-
-            readings.append(caget(i))
-
+        for pv_name in self.pv_dict.values():
+            try:
+                # Add timeout to prevent blocking on unavailable PVs
+                # PySide6/PyQt threading: caget blocks in thread, timeout prevents GUI freeze
+                value = caget(pv_name, timeout=0.5)
+                readings.append(value if value is not None else 0.0)
+            except Exception as e:
+                # If PV unavailable, use default value instead of blocking
+                readings.append(0.0)
+        
         return readings
 
     #use moveToThread method later
@@ -2744,12 +2782,16 @@ class liveThresholdUpdate(QThread):
     def run(self):
 
         while True:
-
-            if caget(self.PV)>self.threshold:
-                self.current_sts.emit(True)
-                #print("New positions")
-            else:
-                pass
+            try:
+                # Add timeout to prevent blocking
+                value = caget(self.PV, timeout=0.5)
+                if value is not None and value > self.threshold:
+                    self.current_sts.emit(True)
+                else:
+                    self.current_sts.emit(False)
+            except Exception as e:
+                # PV unavailable, emit False
+                self.current_sts.emit(False)
 
             QtTest.QTest.qWait(60000)
 
@@ -2766,13 +2808,19 @@ class updateScanProgress(QThread):
 
     def run(self):
         #signal total points to collect
-        self.tot_scan_points.emit(caget(self.tot_pv))
+        try:
+            tot = caget(self.tot_pv, timeout=0.5)
+            self.tot_scan_points.emit(tot if tot is not None else 0)
+        except:
+            self.tot_scan_points.emit(0)
 
         while True:
-            self.completed_points.emit(caget(self.update_pv))
-            #print(caget(self.update_pv))
+            try:
+                points = caget(self.update_pv, timeout=0.5)
+                self.completed_points.emit(points if points is not None else 0)
+            except:
+                pass
             QtTest.QTest.qWait(self.update_interval_ms)
-            #print(caget(self.update_pv))
             if caget(self.tot_pv) == caget(self.update_pv):
                 break
 
