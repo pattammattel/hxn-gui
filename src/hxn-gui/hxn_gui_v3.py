@@ -122,13 +122,29 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         self.client = webbrowser.get('firefox')
         self.live_plot_worker_thread = QThread()
         self.initParams()
-        self.create_live_pv_dict()
-        self.create_pump_pv_dict()
-        self.liveUpdateThread()
-        self.scanStatusThread()
-        self.pump_update_thread()
-        self.flytube_pressure_status()
+        
+        # Defer hardware connections to avoid blocking GUI startup
+        # Use QTimer to initialize after event loop starts
+        if not globals().get('OFFLINE_MODE', False):
+            QTimer.singleShot(100, self._init_hardware_connections)
+        else:
+            print("Skipping hardware connections (offline mode)")
+        
         self.show()
+    
+    def _init_hardware_connections(self):
+        """Initialize hardware connections after GUI is shown"""
+        try:
+            self.create_live_pv_dict()
+            self.create_pump_pv_dict()
+            self.liveUpdateThread()
+            self.scanStatusThread()
+            self.pump_update_thread()
+            self.flytube_pressure_status()
+            print("Hardware connections initialized")
+        except Exception as e:
+            print(f"Warning: Hardware connection failed: {e}")
+            print("Running in degraded mode - some features may not work")
 
     def reload_gui(self):
         """Restarts gui"""
@@ -2881,6 +2897,19 @@ class MainWindow(QMainWindow):
 '''
 
 if __name__ == "__main__":
+    import argparse
+    
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='HXN GUI')
+    parser.add_argument('--offline', action='store_true', 
+                       help='Run in offline mode (no hardware connections)')
+    args = parser.parse_args()
+    
+    # Set global offline flag
+    OFFLINE_MODE = args.offline
+    if OFFLINE_MODE:
+        print("Running in OFFLINE mode - no hardware connections")
+    
     # Check for an existing instance to avoid the Singleton error
     app = QtWidgets.QApplication.instance()
     if not app:
