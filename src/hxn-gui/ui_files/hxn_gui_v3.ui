@@ -4248,7 +4248,7 @@ Show Scan Pos
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QGroupBox" name="groupBox">
+               <widget class="QGroupBox" name="groupBox_abort_motion">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -4343,7 +4343,7 @@ Show Scan Pos
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QGroupBox" name="groupBox">
+               <widget class="QGroupBox" name="groupBox_cam_det_in_out">
                 <property name="title">
                  <string>CAM/DET IN and OUT</string>
                 </property>
@@ -5267,7 +5267,7 @@ Show Scan Pos
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="groupBox_plotting">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -5979,7 +5979,7 @@ MLL Diff Widget
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QGroupBox" name="groupBox">
+           <widget class="QGroupBox" name="groupBox_zp">
             <property name="title">
              <string>ZP</string>
             </property>
@@ -11187,7 +11187,7 @@ Move
               </widget>
              </item>
              <item row="6" column="0" colspan="2">
-              <widget class="QGroupBox" name="groupBox">
+              <widget class="QGroupBox" name="groupBox_energy_sid">
                <layout class="QGridLayout" name="gridLayout_96">
                 <item row="1" column="0">
                  <widget class="QLabel" name="label_70">
