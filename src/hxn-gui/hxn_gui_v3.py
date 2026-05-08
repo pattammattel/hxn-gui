@@ -19,11 +19,11 @@ log = logging.getLogger(__name__)
 handler = logging.StreamHandler(stream=sys.stdout)
 log.addHandler(handler)
 
-from epics import caget, caput, Motor
+from epics import caget, caput, Motor, PV as EpicsPV
 from collections import deque
 
 
-from qtpy import QtWidgets, uic, QtCore, QtGui
+from qtpy import QtWidgets, QtCore, QtGui
 try:
     from qtpy import QtTest
 except ImportError:
@@ -38,20 +38,102 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
+from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI
 ui_path = os.path.dirname(os.path.abspath(__file__))
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
 
-class Ui(QtWidgets.QMainWindow):
+class ThreadSettingsDialog(QtWidgets.QDialog):
+    """Dialog to configure which background threads to enable"""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Background Thread Settings")
+        self.setModal(True)
+        
+        layout = QtWidgets.QVBoxLayout()
+        
+        # Instructions
+        label = QLabel("Select which background EPICS monitoring threads to enable:\n"
+                      "(Disable all if EPICS PVs are unavailable)")
+        layout.addWidget(label)
+        
+        # Checkboxes for each thread type
+        self.cb_live_update = QCheckBox("Live PV Updates (motor positions, readings)")
+        self.cb_live_update.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_live_update)
+        
+        self.cb_scan_status = QCheckBox("Scan Status Monitor")
+        self.cb_scan_status.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_scan_status)
+        
+        self.cb_pump_update = QCheckBox("Pump Status Monitor")
+        self.cb_pump_update.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_pump_update)
+        
+        self.cb_flytube_pressure = QCheckBox("Flytube Pressure Monitor")
+        self.cb_flytube_pressure.setChecked(False)  # Default OFF
+        layout.addWidget(self.cb_flytube_pressure)
+        
+        # Quick option buttons
+        button_layout = QtWidgets.QHBoxLayout()
+        
+        btn_enable_all = QPushButton("Enable All")
+        btn_enable_all.clicked.connect(self.enable_all)
+        button_layout.addWidget(btn_enable_all)
+        
+        btn_disable_all = QPushButton("Disable All")
+        btn_disable_all.clicked.connect(self.disable_all)
+        button_layout.addWidget(btn_disable_all)
+        
+        layout.addLayout(button_layout)
+        
+        # OK button
+        btn_ok = QPushButton("Start GUI")
+        btn_ok.clicked.connect(self.accept)
+        layout.addWidget(btn_ok)
+        
+        self.setLayout(layout)
+    
+    def enable_all(self):
+        self.cb_live_update.setChecked(True)
+        self.cb_scan_status.setChecked(True)
+        self.cb_pump_update.setChecked(True)
+        self.cb_flytube_pressure.setChecked(True)
+    
+    def disable_all(self):
+        self.cb_live_update.setChecked(False)
+        self.cb_scan_status.setChecked(False)
+        self.cb_pump_update.setChecked(False)
+        self.cb_flytube_pressure.setChecked(False)
+    
+    def get_settings(self):
+        """Return dict of thread enable/disable settings"""
+        return {
+            'live_update': self.cb_live_update.isChecked(),
+            'scan_status': self.cb_scan_status.isChecked(),
+            'pump_update': self.cb_pump_update.isChecked(),
+            'flytube_pressure': self.cb_flytube_pressure.isChecked()
+        }
+
+
+class Ui(QtWidgets.QMainWindow, Ui_window):
 
     def __init__(self):
         super(Ui, self).__init__()
 
         print("Loading UI... Please wait")
-        uic.loadUi(os.path.join(ui_path,'ui_files/hxn_gui_v3.ui'), self)
+        # Use compiled UI with multiple inheritance
+        self.setupUi(self)
         print("UI File loaded")
+        
+        # Show thread settings dialog
+        print("Showing thread settings dialog...")
+        settings_dialog = ThreadSettingsDialog(self)
+        settings_dialog.exec()
+        self.thread_settings = settings_dialog.get_settings()
+        print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
 
@@ -93,20 +175,36 @@ class Ui(QtWidgets.QMainWindow):
         self.cb_motor2.addItems([name for name in self.fly_motor_dict.keys()])
         self.cb_motor2.setCurrentIndex(1)
 
+        print("Connecting signal handlers...")
         self.connect_flyscan_signals()
+        QApplication.processEvents()
+        
         self.connect_user_setup_signals()
+        QApplication.processEvents()
+        
         self.connect_shutters()
         self.connect_plotting_controls()
         self.connect_energy_change()
+        QApplication.processEvents()
+        
         self.connect_mll_stages()
         self.connect_zp_stages()
+        QApplication.processEvents()
+        
         self.connect_detectors_and_cameras()
         self.connect_sample_exchange()
+        QApplication.processEvents()
+        
         self.connect_alignment_tools()
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
+        QApplication.processEvents()
+        
         self.set_input_validators()
         self.connect_troubleshooting()
+        QApplication.processEvents()
+        
+        print("Signal handlers connected")
 
         
 
@@ -116,17 +214,94 @@ class Ui(QtWidgets.QMainWindow):
         self.actionExit.triggered.connect(self.close_application)
 
         #some initializations
+        print("Initializing GUI parameters...")
         self.active_folder = "/data/users/current_user"
         self.client = webbrowser.get('firefox')
         self.live_plot_worker_thread = QThread()
-        self.initParams()
+        
+        print("Running initParams()...")
+        try:
+            self.initParams()
+        except Exception as e:
+            print(f"Warning during initParams: {e}")
+            # Set some defaults to prevent crashes
+            self.scan_plan = ""
+        QApplication.processEvents()
+        
+        print("Creating PV dictionaries...")
         self.create_live_pv_dict()
+        QApplication.processEvents()
+        
         self.create_pump_pv_dict()
-        self.liveUpdateThread()
-        self.scanStatusThread()
-        self.pump_update_thread()
-        self.flytube_pressure_status()
+        QApplication.processEvents()
+        
+        print("Deferring background thread startup...")
+        # Use QTimer to start threads after GUI is fully loaded
+        # This prevents blocking during initialization
+        if any(self.thread_settings.values()):
+            QTimer.singleShot(2000, self._start_background_threads)
+            print("  Background threads will start in 2 seconds...")
+        else:
+            print("  All background threads disabled by user")
+        
+        print("Showing window...")
         self.show()
+        QApplication.processEvents()
+        print("GUI initialization complete!")
+        print("Window should be visible and responsive now")
+    
+    def _start_background_threads(self):
+        """Start background threads after GUI is fully loaded"""
+        print("Starting background threads (based on user settings)...")
+        
+        # Try each thread individually with error handling
+        # This prevents one failing thread from blocking others
+        
+        # Live update thread - often causes issues if PVs unavailable
+        if self.thread_settings.get('live_update', False):
+            try:
+                print("  Attempting to start live update thread...")
+                self.liveUpdateThread()
+                print("  Live update thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start live update thread: {e}")
+        else:
+            print("  Live update thread disabled by user")
+        
+        # Scan status thread
+        if self.thread_settings.get('scan_status', False):
+            try:
+                print("  Attempting to start scan status thread...")
+                self.scanStatusThread()
+                print("  Scan status thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start scan status thread: {e}")
+        else:
+            print("  Scan status thread disabled by user")
+        
+        # Pump update thread
+        if self.thread_settings.get('pump_update', False):
+            try:
+                print("  Attempting to start pump update thread...")
+                self.pump_update_thread()
+                print("  Pump update thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start pump update thread: {e}")
+        else:
+            print("  Pump update thread disabled by user")
+        
+        # Flytube pressure status
+        if self.thread_settings.get('flytube_pressure', False):
+            try:
+                print("  Attempting to start flytube pressure thread...")
+                self.flytube_pressure_status()
+                print("  Flytube pressure thread started")
+            except Exception as e:
+                print(f"  Warning: Could not start flytube pressure thread: {e}")
+        else:
+            print("  Flytube pressure thread disabled by user")
+        
+        print("Background thread initialization complete")
 
     def reload_gui(self):
         """Restarts gui"""
@@ -199,46 +374,56 @@ class Ui(QtWidgets.QMainWindow):
         generate a dictionary of slots and signals ,
         later change to a json for flexibity ,; like mll specific?
         '''
+        print("  Building live PV dictionary...")
+        try:
+            self.live_PVs = {
 
-        self.live_PVs = {
+                self.lcd_ic3:"XF:03IDC-ES{Sclr:2}_cts1.D",
+                self.lcd_monoE:"XF:03ID{}Energy-I",
+                self.lcdPressure:"XF:03IDC-VA{VT:Chm-CM:1}P-I",
+                self.lcd_scanNumber:"XF:03IDC-ES{Status}ScanID-I",
+                self.db_smarx:"XF:03IDC-ES{SPod:1-Ax:2}Pos-I",
+                self.db_smary:"XF:03IDC-ES{SPod:1-Ax:3}Pos-I",
+                self.db_smarz:"XF:03IDC-ES{SPod:1-Ax:1}Pos-I",
+                self.db_zpsth:"XF:03IDC-ES{SC210:1-Ax:1}Mtr.RBV",
+                self.db_zpz1:"XF:03IDC-ES{MCS:1-Ax:zpz1}Mtr.RBV",
+                self.db_dsx:"XF:03IDC-ES{ANC350:6-Ax:2}Mtr.RBV",
+                self.db_dsy:"XF:03IDC-ES{MCS:1-Ax:mlldiffy}Mtr.RBV",
+                self.db_dsz:"XF:03IDC-ES{ANC350:6-Ax:3}Mtr.RBV",
+                self.db_dsth:"XF:03IDC-ES{MCS:3-Ax:diffsth}Mtr.RBV",
+                self.db_sbz:"XF:03IDC-ES{ANC350:3-Ax:2}Mtr.RBV",
+                self.db_ssa2_x:"XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.RBV",
+                self.db_ssa2_y:"XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.RBV",
+                self.db_fs:"XF:03IDA-OP{FS:1-Ax:Y}Mtr.RBV",
+                self.db_cam6:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
+                self.db_fs_det:"XF:03IDC-ES{Det:Vort-Ax:X}Mtr.RBV",
+                self.db_diffx:"XF:03IDC-ES{Diff-Ax:X}Mtr.RBV",
+                self.db_cam06x:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
+                self.db_s5_x:"XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.RBV",
+                self.db_s5_y:"XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.RBV",
+                self.db_dexela:"XF:03IDC-ES{Stg:FPDet-Ax:Y}Mtr.RBV",
+                self.db_flytube_p:"XF:03IDC-VA{ES:1-TCG:1}P-I"
 
-            self.lcd_ic3:"XF:03IDC-ES{Sclr:2}_cts1.D",
-            self.lcd_monoE:"XF:03ID{}Energy-I",
-            self.lcdPressure:"XF:03IDC-VA{VT:Chm-CM:1}P-I",
-            self.lcd_scanNumber:"XF:03IDC-ES{Status}ScanID-I",
-            self.db_smarx:"XF:03IDC-ES{SPod:1-Ax:2}Pos-I",
-            self.db_smary:"XF:03IDC-ES{SPod:1-Ax:3}Pos-I",
-            self.db_smarz:"XF:03IDC-ES{SPod:1-Ax:1}Pos-I",
-            self.db_zpsth:"XF:03IDC-ES{SC210:1-Ax:1}Mtr.RBV",
-            self.db_zpz1:"XF:03IDC-ES{MCS:1-Ax:zpz1}Mtr.RBV",
-            self.db_dsx:"XF:03IDC-ES{ANC350:6-Ax:2}Mtr.RBV",
-            self.db_dsy:"XF:03IDC-ES{MCS:1-Ax:mlldiffy}Mtr.RBV",
-            self.db_dsz:"XF:03IDC-ES{ANC350:6-Ax:3}Mtr.RBV",
-            self.db_dsth:"XF:03IDC-ES{MCS:3-Ax:diffsth}Mtr.RBV",
-            self.db_sbz:"XF:03IDC-ES{ANC350:3-Ax:2}Mtr.RBV",
-            self.db_ssa2_x:"XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.RBV",
-            self.db_ssa2_y:"XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.RBV",
-            self.db_fs:"XF:03IDA-OP{FS:1-Ax:Y}Mtr.RBV",
-            self.db_cam6:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
-            self.db_fs_det:"XF:03IDC-ES{Det:Vort-Ax:X}Mtr.RBV",
-            self.db_diffx:"XF:03IDC-ES{Diff-Ax:X}Mtr.RBV",
-            self.db_cam06x:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
-            self.db_s5_x:"XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.RBV",
-            self.db_s5_y:"XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.RBV",
-            self.db_dexela:"XF:03IDC-ES{Stg:FPDet-Ax:Y}Mtr.RBV",
-            self.db_flytube_p:"XF:03IDC-VA{ES:1-TCG:1}P-I"
-
-            }
+                }
+            print("  Live PV dictionary created successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to create live PV dictionary: {e}")
+            self.live_PVs = {}
 
     def create_pump_pv_dict(self):
+        print("  Building pump PV dictionary...")
+        try:
+            self.pump_PVs = {
 
-        self.pump_PVs = {
+                self.rb_fast_vent:"XF:03IDC-VA{ES:1-FastVtVlv:Stg3}Sts:Cls-Sts",
+                self.rb_pumpA_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:A}Sts:Cls-Sts",
+                self.rb_pumpB_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:B}Sts:Cls-Sts",
 
-            self.rb_fast_vent:"XF:03IDC-VA{ES:1-FastVtVlv:Stg3}Sts:Cls-Sts",
-            self.rb_pumpA_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:A}Sts:Cls-Sts",
-            self.rb_pumpB_slow:"XF:03IDC-VA{ES:1-SlowFrVlv:B}Sts:Cls-Sts",
-
-            }
+                }
+            print("  Pump PV dictionary created successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to create pump PV dictionary: {e}")
+            self.pump_PVs = {}
 
     def handle_value_signals(self,pv_val_list):
         #print ("updating live values")
@@ -258,10 +443,16 @@ class Ui(QtWidgets.QMainWindow):
 
 
     def flytube_pressure_status(self):
-
-        self.update_thread = liveThresholdUpdate("XF:03IDC-VA{ES:1-TCG:1}P-I",5)
-        self.update_thread.current_sts.connect(self.handle_threshold)
-        self.update_thread.start()
+        try:
+            print("  Creating flytube pressure thread...")
+            self.update_thread = liveThresholdUpdate("XF:03IDC-VA{ES:1-TCG:1}P-I",5)
+            print("  Connecting flytube pressure signals...")
+            self.update_thread.current_sts.connect(self.handle_threshold)
+            print("  Starting flytube pressure thread...")
+            self.update_thread.start()
+            print("  Flytube pressure thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start flytube pressure thread: {e}")
 
     def handle_threshold(self, sts):
 
@@ -282,23 +473,40 @@ class Ui(QtWidgets.QMainWindow):
             self.label_scanStatus.setStyleSheet("background-color:rgb(255, 165, 0);color:rgb(0, 255, 0)")
 
     def scanStatusThread(self):
-
-        self.scanStatus_thread = liveStatus("XF:03IDC-ES{Status}ScanRunning-I")
-        self.scanStatus_thread.current_sts.connect(self.scanStatus)
-        self.scanStatus_thread.start()
+        try:
+            print("  Creating scan status thread...")
+            self.scanStatus_thread = liveStatus("XF:03IDC-ES{Status}ScanRunning-I")
+            print("  Connecting scan status signals...")
+            self.scanStatus_thread.current_sts.connect(self.scanStatus)
+            print("  Starting scan status thread...")
+            self.scanStatus_thread.start()
+            print("  Scan status thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start scan status thread: {e}")
 
     def liveUpdateThread(self):
-        print("Thread Started")
-
-        self.liveWorker = liveUpdate(self.live_PVs)
-        self.liveWorker.current_positions.connect(self.handle_value_signals)
-        self.liveWorker.start()
+        try:
+            print("  Creating live update worker...")
+            self.liveWorker = liveUpdate(self.live_PVs)
+            print("  Connecting live update signals...")
+            self.liveWorker.current_positions.connect(self.handle_value_signals)
+            print("  Starting live update thread...")
+            self.liveWorker.start()
+            print("  Live update thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start live update thread: {e}")
 
     def pump_update_thread(self):
-        print("Pump Update Thread Started")
-        self.pump_update_worker = liveUpdate(self.pump_PVs,update_interval_ms = 2000)
-        self.pump_update_worker.current_positions.connect(self.handle_bool_signals)
-        self.pump_update_worker.start()
+        try:
+            print("  Creating pump update worker...")
+            self.pump_update_worker = liveUpdate(self.pump_PVs,update_interval_ms = 2000)
+            print("  Connecting pump update signals...")
+            self.pump_update_worker.current_positions.connect(self.handle_bool_signals)
+            print("  Starting pump update thread...")
+            self.pump_update_worker.start()
+            print("  Pump update thread started successfully")
+        except Exception as e:
+            print(f"  Warning: Failed to start pump update thread: {e}")
 
 
     #setup user
@@ -2604,16 +2812,27 @@ class liveStatus(QThread):
     current_sts = pyqtSignal(int)
     def __init__(self, PV):
         super().__init__()
-        self.PV = PV
+        self.PV_name = PV
+        self.pv_obj = None  # Will be created in run() to avoid blocking main thread
 
     def run(self):
-
+        # Create PV object in background thread - doesn't block GUI
+        try:
+            self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+            self.pv_obj = None
+        
         while True:
             try:
-                self.current_sts.emit(caget(self.PV))
-                #print("New positions")
+                # Only read if connected
+                if self.pv_obj is not None and self.pv_obj.connected:
+                    value = self.pv_obj.get(timeout=0.1)
+                    if value is not None:
+                        self.current_sts.emit(value)
                 QtTest.QTest.qWait(500)
-            except:
+            except Exception as e:
+                # Silently continue if PV unavailable
                 pass
 
 class liveUpdate(QThread):
@@ -2624,27 +2843,43 @@ class liveUpdate(QThread):
         super().__init__()
         self.pv_dict = pv_dict
         self.update_interval_ms = update_interval_ms
+        self.pv_objects = []  # Will be created in run() to avoid blocking main thread
 
     def return_values(self):
         readings = []
-        for i in self.pv_dict.values():
-
-            readings.append(caget(i))
-
+        for pv_obj in self.pv_objects:
+            try:
+                # Only read if PV is connected, use short timeout for actual read
+                if pv_obj is not None and pv_obj.connected:
+                    value = pv_obj.get(timeout=0.1)
+                    readings.append(value if value is not None else 0.0)
+                else:
+                    # PV not connected, use default
+                    readings.append(0.0)
+            except Exception as e:
+                # Read failed, use default value
+                readings.append(0.0)
+        
         return readings
 
     #use moveToThread method later
     def run(self):
-
+        # Create PV objects in background thread - doesn't block GUI
+        print(f"  Creating {len(self.pv_dict)} PV objects in background...")
+        for pv_name in self.pv_dict.values():
+            try:
+                pv_obj = EpicsPV(pv_name, connection_timeout=1.0, auto_monitor=False)
+                self.pv_objects.append(pv_obj)
+            except Exception as e:
+                print(f"  Warning: Could not create PV object for {pv_name}: {e}")
+                self.pv_objects.append(None)
+        print(f"  PV objects created, starting update loop...")
+        
         while True:
             try:
                 positions = self.return_values()
-                #self.pv_list = list(self.pv_dict.values())
                 self.current_positions.emit(positions)
-                #print(list(self.pv_dict.values())[0])
-                #print(positions[0])
                 QtTest.QTest.qWait(self.update_interval_ms)
-
             except:
                 pass
 
@@ -2654,18 +2889,33 @@ class liveThresholdUpdate(QThread):
     current_sts = pyqtSignal(bool)
     def __init__(self, PV, threshold):
         super().__init__()
-        self.PV = PV
+        self.PV_name = PV
         self.threshold = threshold
+        self.pv_obj = None  # Will be created in run() to avoid blocking main thread
 
     def run(self):
-
+        # Create PV object in background thread - doesn't block GUI
+        try:
+            self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+            self.pv_obj = None
+        
         while True:
-
-            if caget(self.PV)>self.threshold:
-                self.current_sts.emit(True)
-                #print("New positions")
-            else:
-                pass
+            try:
+                # Only read if connected
+                if self.pv_obj is not None and self.pv_obj.connected:
+                    value = self.pv_obj.get(timeout=0.1)
+                    if value is not None and value > self.threshold:
+                        self.current_sts.emit(True)
+                    else:
+                        self.current_sts.emit(False)
+                else:
+                    # Not connected, emit False
+                    self.current_sts.emit(False)
+            except Exception as e:
+                # PV unavailable, emit False
+                self.current_sts.emit(False)
 
             QtTest.QTest.qWait(60000)
 
@@ -2676,19 +2926,40 @@ class updateScanProgress(QThread):
 
     def __init__(self, tot_pv, update_pv, update_interval_ms):
         super().__init__()
-        self.tot_pv = tot_pv
-        self.update_pv = update_pv
+        self.tot_pv_name = tot_pv
+        self.update_pv_name = update_pv
         self.update_interval_ms = update_interval_ms
+        self.tot_pv_obj = None  # Will be created in run() to avoid blocking main thread
+        self.update_pv_obj = None
 
     def run(self):
+        # Create PV objects in background thread - doesn't block GUI
+        try:
+            self.tot_pv_obj = EpicsPV(self.tot_pv_name, connection_timeout=1.0, auto_monitor=False)
+            self.update_pv_obj = EpicsPV(self.update_pv_name, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create scan progress PV objects: {e}")
+            self.tot_pv_obj = None
+            self.update_pv_obj = None
+        
         #signal total points to collect
-        self.tot_scan_points.emit(caget(self.tot_pv))
+        try:
+            if self.tot_pv_obj is not None and self.tot_pv_obj.connected:
+                tot = self.tot_pv_obj.get(timeout=0.1)
+                self.tot_scan_points.emit(tot if tot is not None else 0)
+            else:
+                self.tot_scan_points.emit(0)
+        except:
+            self.tot_scan_points.emit(0)
 
         while True:
-            self.completed_points.emit(caget(self.update_pv))
-            #print(caget(self.update_pv))
+            try:
+                if self.update_pv_obj is not None and self.update_pv_obj.connected:
+                    points = self.update_pv_obj.get(timeout=0.1)
+                    self.completed_points.emit(points if points is not None else 0)
+            except:
+                pass
             QtTest.QTest.qWait(self.update_interval_ms)
-            #print(caget(self.update_pv))
             if caget(self.tot_pv) == caget(self.update_pv):
                 break
 
@@ -2799,11 +3070,29 @@ class LivePressureValueThread(QThread):
         super().__init__()
         self.pressure_pv = pressure_pv
         self.wait_time = wait_time
+        self.pv_obj = None  # Will be created in run() to avoid blocking main thread
 
     def run(self):
+        # Create PV object in background thread - doesn't block GUI
+        try:
+            self.pv_obj = EpicsPV(self.pressure_pv, connection_timeout=1.0, auto_monitor=False)
+        except Exception as e:
+            print(f"  Warning: Could not create pressure PV object: {e}")
+            self.pv_obj = None
+        
         start_time = 0
         while True:
-            self.current_time_pressure.emit((start_time,caget(self.pressure_pv)))
+            try:
+                if self.pv_obj is not None and self.pv_obj.connected:
+                    pressure = self.pv_obj.get(timeout=0.1)
+                    if pressure is not None:
+                        self.current_time_pressure.emit((start_time, pressure))
+                else:
+                    # PV not connected, emit default value
+                    self.current_time_pressure.emit((start_time, 0.0))
+            except Exception as e:
+                self.current_time_pressure.emit((start_time, 0.0))
+            
             QtTest.QTest.qWait(int(self.wait_time))
             start_time += self.wait_time
 
@@ -2879,17 +3168,33 @@ class MainWindow(QMainWindow):
 '''
 
 if __name__ == "__main__":
+    print("Starting HXN GUI application...")
+    
     # Check for an existing instance to avoid the Singleton error
     app = QtWidgets.QApplication.instance()
     if not app:
+        print("Creating QApplication instance...")
         app = QtWidgets.QApplication(sys.argv)
+    else:
+        print("Using existing QApplication instance...")
 
+    print("Creating main window...")
     window = Ui()
-    window.show()
     
-    # Use app.exec_() (or app.exec() in newer versions) 
-    # and avoid sys.exit() if you're in an interactive environment
-    app.exec_()
+    # Force a final processEvents before entering event loop
+    print("Processing pending events...")
+    QApplication.processEvents()
+    
+    print("Starting event loop...")
+    
+    # Disabled: periodic status message clutters output
+    # from qtpy.QtCore import QTimer
+    # status_timer = QTimer()
+    # status_timer.timeout.connect(lambda: print("Event loop is running..."))
+    # status_timer.start(5000)  # Print every 5 seconds
+    
+    # PySide6 uses exec() not exec_()
+    sys.exit(app.exec())
 
 
 
