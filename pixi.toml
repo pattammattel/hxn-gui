@@ -1,7 +1,7 @@
 [workspace] # Use [project] instead of [workspace] for a single package
 authors = ["Ajith Pattammattel <pattammattel@bnl.gov>"]
 channels = ["conda-forge"]
-name = "xray-analysis-api"
+name = "hxn-gui"
 version = "0.1.0"
 
 platforms = ["osx-arm64", "linux-64", "win-64"] 
@@ -17,9 +17,6 @@ libc = { family = "glibc", version = "2.28" }
 # --- TASKS ---
 
 [tasks]
-hxn-analysis = "ipython -i startup_all.py"
-hxn-transfer = "ipython -i hxn_data_transfer.py"
-notebook = "jupyter lab"
 hxn-gui-offline = { cmd = "python src/hxn-gui/hxn_gui_v3.py --offline", description = "Run HXN GUI in offline mode for testing (no hardware required)" }
 test-gui = { cmd = "python src/hxn-gui/simple_gui_for_testing.py", description = "Run simple GUI test to verify QtPy environment compatibility" }
 compile-ui = { cmd = "pyside6-uic src/hxn-gui/ui_files/hxn_gui_v3.ui -o src/hxn-gui/ui_files/hxn_gui_v3_ui.py && sed -i.bak 's/from PySide6\\./from qtpy./g' src/hxn-gui/ui_files/hxn_gui_v3_ui.py && rm src/hxn-gui/ui_files/hxn_gui_v3_ui.py.bak", description = "Compile Qt Designer .ui files to Python code with QtPy imports for faster loading" }
