@@ -45,79 +45,6 @@ det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
 
-class ThreadSettingsDialog(QtWidgets.QDialog):
-    """Dialog to configure which background threads to enable"""
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Background Thread Settings")
-        self.setModal(True)
-        
-        layout = QtWidgets.QVBoxLayout()
-        
-        # Instructions
-        label = QLabel("Select which background EPICS monitoring threads to enable:\n"
-                      "(Disable all if EPICS PVs are unavailable)")
-        layout.addWidget(label)
-        
-        # Checkboxes for each thread type
-        self.cb_live_update = QCheckBox("Live PV Updates (motor positions, readings)")
-        self.cb_live_update.setChecked(False)  # Default OFF
-        layout.addWidget(self.cb_live_update)
-        
-        self.cb_scan_status = QCheckBox("Scan Status Monitor")
-        self.cb_scan_status.setChecked(False)  # Default OFF
-        layout.addWidget(self.cb_scan_status)
-        
-        self.cb_pump_update = QCheckBox("Pump Status Monitor")
-        self.cb_pump_update.setChecked(False)  # Default OFF
-        layout.addWidget(self.cb_pump_update)
-        
-        self.cb_flytube_pressure = QCheckBox("Flytube Pressure Monitor")
-        self.cb_flytube_pressure.setChecked(False)  # Default OFF
-        layout.addWidget(self.cb_flytube_pressure)
-        
-        # Quick option buttons
-        button_layout = QtWidgets.QHBoxLayout()
-        
-        btn_enable_all = QPushButton("Enable All")
-        btn_enable_all.clicked.connect(self.enable_all)
-        button_layout.addWidget(btn_enable_all)
-        
-        btn_disable_all = QPushButton("Disable All")
-        btn_disable_all.clicked.connect(self.disable_all)
-        button_layout.addWidget(btn_disable_all)
-        
-        layout.addLayout(button_layout)
-        
-        # OK button
-        btn_ok = QPushButton("Start GUI")
-        btn_ok.clicked.connect(self.accept)
-        layout.addWidget(btn_ok)
-        
-        self.setLayout(layout)
-    
-    def enable_all(self):
-        self.cb_live_update.setChecked(True)
-        self.cb_scan_status.setChecked(True)
-        self.cb_pump_update.setChecked(True)
-        self.cb_flytube_pressure.setChecked(True)
-    
-    def disable_all(self):
-        self.cb_live_update.setChecked(False)
-        self.cb_scan_status.setChecked(False)
-        self.cb_pump_update.setChecked(False)
-        self.cb_flytube_pressure.setChecked(False)
-    
-    def get_settings(self):
-        """Return dict of thread enable/disable settings"""
-        return {
-            'live_update': self.cb_live_update.isChecked(),
-            'scan_status': self.cb_scan_status.isChecked(),
-            'pump_update': self.cb_pump_update.isChecked(),
-            'flytube_pressure': self.cb_flytube_pressure.isChecked()
-        }
-
-
 class Ui(QtWidgets.QMainWindow, Ui_window):
 
     def __init__(self):
@@ -128,11 +55,13 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         self.setupUi(self)
         print("UI File loaded")
         
-        # Show thread settings dialog
-        print("Showing thread settings dialog...")
-        settings_dialog = ThreadSettingsDialog(self)
-        settings_dialog.exec()
-        self.thread_settings = settings_dialog.get_settings()
+        # Set default thread settings (all disabled by default)
+        self.thread_settings = {
+            'live_update': False,
+            'scan_status': False,
+            'pump_update': False,
+            'flytube_pressure': False
+        }
         print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
@@ -3112,60 +3041,6 @@ class WorkerThread(QThread):
         print("task done")
         self.finished.emit()
         print("finish emitted")
-
-
-
-'''
-
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle("Task Runner")
-        self.setGeometry(100, 100, 300, 200)
-
-        self.button1 = QPushButton("Run Task 1", self)
-        self.button1.clicked.connect(lambda: self.runTask(self.longRunningTask, 5))
-
-        self.button2 = QPushButton("Run Task 2", self)
-        self.button2.clicked.connect(lambda: self.runTask(self.anotherTask, "Hello", 3))
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.button1)
-        layout.addWidget(self.button2)
-
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
-
-    def runTask(self, task, *args, **kwargs):
-        self.pop_up = QMessageBox(self)
-        self.pop_up.setWindowTitle("Please Wait")
-        self.pop_up.setText("Task is in progress...")
-        self.pop_up.setStandardButtons(QMessageBox.NoButton)
-        self.pop_up.show()
-
-        self.thread = WorkerThread(task, *args, **kwargs)
-        self.thread.finished.connect(self.onTaskFinished)
-        self.thread.start()
-
-    @pyqtSlot()
-    def onTaskFinished(self):
-        self.pop_up.close()
-        self.thread.quit()
-
-    def longRunningTask(self, duration):
-        import time
-        time.sleep(duration)
-
-    def anotherTask(self, message, duration):
-        import time
-        for _ in range(duration):
-            print(message)
-            time.sleep(1)
-'''
 
 if __name__ == "__main__":
     print("Starting HXN GUI application...")
