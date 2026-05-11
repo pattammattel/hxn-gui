@@ -17,9 +17,37 @@ We'll extract logical groups of functionality into separate mixin classes or han
 
 ---
 
-## Phase 1: Extract Motor Control Classes ✓ READY TO START
+## Phase 1: Extract Motor Control Classes ✓ IN PROGRESS
 
-### Step 1.1: Extract ZP Stage Controller
+### Step 1.1: Extract ZP Stage Controller ✓ COMPLETE
+**Status:** ✅ Completed
+**Commit:** `a313542` - "refactor: extract ZP stage controller into separate module"
+**File:** `src/hxn-gui/controllers/zp_stage_controller.py` (110 lines)
+**Main file:** Reduced from 3,075 to 3,004 lines (71 lines extracted)
+
+**Extracted methods:**
+- `connect_zp_stages()` - Signal connections for ZP stage controls
+- `move_smarx()`, `move_smary()`, `move_smarz()` - Sample stage movements
+- `move_zpth()`, `move_zpz1()` - Rotation and focus stage movements
+- `zp_to_cam11_view_()`, `zp_to_nanobeam_()` - Configuration presets
+- `ZP_OSA_OUT()`, `ZP_OSA_IN()` - Order Sorting Aperture control
+- `ZP_BS_OUT()`, `ZP_BS_IN()` - Beamstop control
+
+**Integration:** Using mixin pattern - `class Ui(QtWidgets.QMainWindow, Ui_window, ZPStageController)`
+
+**Testing checklist:**
+- [x] Syntax check passed
+- [ ] Import in offline mode works
+- [ ] ZP stage movement buttons connect properly
+- [ ] OSA/BS controls work
+- [ ] Configuration presets (cam11, nanobeam) work
+- [ ] Error decorators function correctly
+
+**Next:** Test in offline mode before proceeding to Step 1.2
+
+---
+
+### Step 1.2: Extract MLL Stage Controller ⏳ READY TO START
 **Target:** ~150 lines
 **Methods to extract:**
 - `connect_zp_stages()`
@@ -326,7 +354,9 @@ After each refactoring step:
 
 - [x] Created git branch: `refactor/modularize-gui`
 - [x] Committed baseline: Thread settings dialog removal
-- [ ] **NEXT:** Phase 1, Step 1.1 - Extract ZP Stage Controller
+- [x] **COMPLETED:** Phase 1, Step 1.1 - Extract ZP Stage Controller (✓ 71 lines extracted)
+- [ ] **NEXT:** Test Step 1.1 in offline mode
+- [ ] **THEN:** Phase 1, Step 1.2 - Extract MLL Stage Controller
 
 ---
 
