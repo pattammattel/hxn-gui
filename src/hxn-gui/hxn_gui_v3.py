@@ -57,10 +57,10 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         
         # Set default thread settings (all disabled by default)
         self.thread_settings = {
-            'live_update': False,
-            'scan_status': False,
-            'pump_update': False,
-            'flytube_pressure': False
+            'live_update': True,
+            'scan_status': True,
+            'pump_update': True,
+            'flytube_pressure': True
         }
         print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
