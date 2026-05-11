@@ -70,29 +70,31 @@ class Ui(QtWidgets.QMainWindow, Ui_window, ZPStageController):
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
 
-        self.fly_motor_dict = {'zpssx': zpssx,
-                               'zpssy': zpssy,
-                               'zpssz': zpssz,
-                               'dssx': dssx,
-                               'dssy': dssy,
-                               'dssz': dssz}
+        # Store motor/detector names as strings for offline compatibility
+        # Values can be eval'd when instruments are available
+        self.fly_motor_dict = {'zpssx': 'zpssx',
+                               'zpssy': 'zpssy',
+                               'zpssz': 'zpssz',
+                               'dssx': 'dssx',
+                               'dssy': 'dssy',
+                               'dssz': 'dssz'}
 
-        # self.fly_motor_dict = {'dssx': dssx,
-        #                        'dssy': dssy,
-        #                        'dssz': dssz,
-        #                        'zpssx': zpssx,
-        #                        'zpssy': zpssy,
-        #                        'zpssz': zpssz,}
+        # self.fly_motor_dict = {'dssx': 'dssx',
+        #                        'dssy': 'dssy',
+        #                        'dssz': 'dssz',
+        #                        'zpssx': 'zpssx',
+        #                        'zpssy': 'zpssy',
+        #                        'zpssz': 'zpssz',}
 
-        # self.fly_det_dict = {'dets1': dets1,
-        #                      'dets2': dets2,
-        #                      'dets3': dets3,
-        #                      'dets4': dets4,
-        #                      'dets_fs': dets_fs}
+        # self.fly_det_dict = {'dets1': 'dets1',
+        #                      'dets2': 'dets2',
+        #                      'dets3': 'dets3',
+        #                      'dets4': 'dets4',
+        #                      'dets_fs': 'dets_fs'}
 
-        self.fly_det_dict = {'dets_fast': dets_fast,
-                             'dets_fast_merlin': dets_fast_merlin,
-                             'dets_fast_fs': dets_fast_fs}
+        self.fly_det_dict = {'dets_fast': 'dets_fast',
+                             'dets_fast_merlin': 'dets_fast_merlin',
+                             'dets_fast_fs': 'dets_fast_fs'}
 
         # self.fly_det_dict = {'dets1': "[fs,xspress3,eiger2]",
         #                      'dets2': "[fs,xspress3,merlin1]",
@@ -702,10 +704,17 @@ class Ui(QtWidgets.QMainWindow, Ui_window, ZPStageController):
         self.set_tooltip_for_dets()
 
     def set_tooltip_for_dets(self):
+        """Set tooltips for detector comboboxes showing detector names"""
         all_items = [self.cb_dets.itemText(i) for i in range(self.cb_dets.count())]
 
         for i in range(self.cb_dets.count()):
-            self.cb_dets.setItemData(i,str([det.name for det in eval(all_items[i])]),QtCore.Qt.ToolTipRole)
+            try:
+                # Try to eval and get detector names if objects are available
+                det_names = str([det.name for det in eval(all_items[i])])
+                self.cb_dets.setItemData(i, det_names, QtCore.Qt.ToolTipRole)
+            except (NameError, AttributeError):
+                # In offline mode, objects may not exist - use the string name as tooltip
+                self.cb_dets.setItemData(i, all_items[i], QtCore.Qt.ToolTipRole)
 
     def getScanValues(self):
         self.det = self.cb_dets.currentText()
@@ -986,7 +995,7 @@ class Ui(QtWidgets.QMainWindow, Ui_window, ZPStageController):
             if self.fly_motor_dict[self.motor1] == self.fly_motor_dict[self.motor2]:
                 msg = QErrorMessage(self)
                 msg.setWindowTitle("Flyscan Motors are the same")
-                msg.showMessage(f"Choose two different motors for 2D scan. You selected {self.fly_motor_dict[self.motor1].name}")
+                msg.showMessage(f"Choose two different motors for 2D scan. You selected {self.motor1}")
                 return
             elif self.tot_t_2d>5.0:
                     choice = QMessageBox.question(self, 'Warning',
@@ -1863,7 +1872,7 @@ class Ui(QtWidgets.QMainWindow, Ui_window, ZPStageController):
         fitElem = self.cb_zp_focus_elem.currentText().split(':')[0]
         linFlag = self.cb_linearFlag_zpFocus.isChecked()
 
-        RE(zp_z_alignment(zpStart,zpEnd,zpSteps,scanMotor,scanStart,scanEnd,scanSteps,scanDwell,
+        RE(zp_z_alignment(zpStart,zpEnd,zpSteps,eval(scanMotor),scanStart,scanEnd,scanSteps,scanDwell,
                           elem= fitElem, linFlag = linFlag))
         
 
