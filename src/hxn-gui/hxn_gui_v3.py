@@ -39,13 +39,17 @@ from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
 from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI
+
+# Import controller modules
+from controllers.zp_stage_controller import ZPStageController
+
 ui_path = os.path.dirname(os.path.abspath(__file__))
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
 
-class Ui(QtWidgets.QMainWindow, Ui_window):
+class Ui(QtWidgets.QMainWindow, Ui_window, ZPStageController):
 
     def __init__(self):
         super(Ui, self).__init__()
@@ -1133,42 +1137,6 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         caput(pv_name, position+move_by * unit_conv_factor)
         self.statusbar.showMessage(f'{mot_name.name} moved by {move_by} um ')
 
-    def connect_zp_stages(self):
-        #zp navigation
-        self.pb_move_smarx_pos.clicked.connect(lambda:self.move_smarx())
-        self.pb_move_smary_pos.clicked.connect(lambda:self.move_smary())
-        self.pb_move_smarz_pos.clicked.connect(lambda:self.move_smarz())
-        self.pb_move_zpsth_pos.clicked.connect(lambda:self.move_zpth())
-        self.pb_move_zpz_pos.clicked.connect(lambda:self.move_zpz1())
-
-        self.pb_move_smarx_neg.clicked.connect(lambda: self.move_smarx(neg_=True))
-        self.pb_move_smary_neg.clicked.connect(lambda: self.move_smary(neg_=True))
-        self.pb_move_smarz_neg.clicked.connect(lambda: self.move_smarz(neg_=True))
-        self.pb_move_zpsth_pos_neg.clicked.connect(lambda: self.move_zpth(neg_=True))
-        self.pb_move_zpz_neg.clicked.connect(lambda: self.move_zpz1(neg_=True))
-        self.pb_zp_stop_all_sample.clicked.connect(lambda:stop_all_zp_motion())
-
-
-    def move_smarx(self, neg_=False):
-         self.moveAMotor(self.db_move_smarx, smarx, 1, neg=neg_)
-
-    def move_smary(self, neg_=False):
-         self.moveAMotor(self.db_move_smary, smary, 1, neg=neg_)
-
-    def move_smarz(self, neg_=False):
-         self.moveAMotor(self.db_move_smarz, smarz, 1, neg=neg_)
-
-    def move_zpth(self, neg_=False):
-        self.moveAMotor(self.db_move_zpsth, zpsth, neg=neg_)
-
-    def move_zpz1(self, neg_=False):
-        if neg_:
-
-            RE(movr_zpz1(self.db_move_zpz.value() * 0.001 * -1))
-
-        else:
-            RE(movr_zpz1(self.db_move_zpz.value() * 0.001))
-
     #mll
     def connect_mll_stages(self):
         #mll navigation
@@ -1435,16 +1403,6 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
 
         
     @show_error_message_box
-    @with_motion_feedback(title="ZP to cam 11", success_msg="ZP microscope is ready for cam11 view.")
-    def zp_to_cam11_view_(self):
-        RE(zp_to_cam11_view())
-
-    @show_error_message_box
-    @with_motion_feedback(title="ZP to nanobeam", success_msg="ZP microscope is ready for nanobeam.")
-    def zp_to_nanobeam_(self):
-        RE(zp_to_nanobeam())
-
-    @show_error_message_box
     @with_motion_feedback(title="MLL to cam11", success_msg="MLL microscope is ready for cam11 view.")
     def mll_to_cam11_view_(self):
         RE(mll_to_cam11_view())
@@ -1453,20 +1411,6 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
     @with_motion_feedback(title="ZP to nanobeam", success_msg="ZP microscope is ready for nanobeam.")
     def mll_to_nanobeam_(self):
         RE(mll_to_nanobeam())
-
-
-    @show_error_message_box
-    @with_motion_feedback(title="ZP OSA Move", success_msg="ZP OSA Y moved OUT.")
-    def ZP_OSA_OUT(self):
-        RE(zp_osa_out())
-        self.statusbar.showMessage('OSA Y moved OUT')
-
-
-    @show_error_message_box
-    @with_motion_feedback(title="ZP OSA Move", success_msg="ZP OSA Y moved IN.")
-    def ZP_OSA_IN(self):
-        RE(zp_osa_in())
-        self.statusbar.showMessage('OSA Y IN')
 
     @show_error_message_box
     def mll_osa_IN(self):
@@ -1488,21 +1432,6 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
 
         else:
             raise ValueError(f"OSA_X position not close to zero osax = {mllosa.osax.position :.1f}")
-
-        
-    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
-    @show_error_message_box
-    def ZP_BS_OUT(self):
-
-        RE(zp_bs_out())
-        self.statusbar.showMessage('BS Y moved OUT')
-
-    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
-    @show_error_message_box
-    def ZP_BS_IN(self):
-        RE(zp_bs_in())
-        self.statusbar.showMessage('BS Y moved in')
-            
 
     def connect_detectors_and_cameras(self):
 
