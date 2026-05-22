@@ -7219,7 +7219,7 @@ class Ui_window(object):
         self.pb_dexela_OUT.setText(QCoreApplication.translate("window", u"Dexela OUT", None))
         self.pb_telescope.setText(QCoreApplication.translate("window", u"   Telescope IN ", None))
         self.pb_cam6OUT.setText(QCoreApplication.translate("window", u"  CAM6 OUT  ", None))
-        self.pb_merlinOUT.setText(QCoreApplication.translate("window", u"Merlin OUT", None))
+        self.pb_merlinOUT.setText(QCoreApplication.translate("window", u"Det Tower/Merlin OUT", None))
         self.db_fs_det.setSuffix(QCoreApplication.translate("window", u" mm", None))
         self.db_cam06x.setSuffix(QCoreApplication.translate("window", u" mm", None))
         self.label_57.setText("")
