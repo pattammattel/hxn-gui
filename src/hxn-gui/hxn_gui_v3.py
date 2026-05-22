@@ -23,7 +23,7 @@ from epics import caget, caput, Motor, PV as EpicsPV
 from collections import deque
 
 
-from qtpy import QtWidgets, QtCore, QtGui
+from qtpy import QtWidgets, QtCore, QtGui, uic
 try:
     from qtpy import QtTest
 except ImportError:
@@ -38,22 +38,30 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
-from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI
+# from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
+ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
 
-class Ui(QtWidgets.QMainWindow, Ui_window):
+# class Ui(QtWidgets.QMainWindow, Ui_window):  # Multiple inheritance with compiled UI (fallback)
+class Ui(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(Ui, self).__init__()
 
         print("Loading UI... Please wait")
-        # Use compiled UI with multiple inheritance
-        self.setupUi(self)
+        # Load .ui file directly (recommended for rapid iteration)
+        uic.loadUi(ui_file_path, self)
         print("UI File loaded")
+        
+        # Fallback: Use compiled UI with multiple inheritance
+        # from ui_files.hxn_gui_v3_ui import Ui_window
+        # super(Ui, self).__init__()
+        # self.setupUi(self)
+        # print("UI File loaded (compiled)")
         
         # Set default thread settings (all disabled by default)
         self.thread_settings = {
@@ -359,8 +367,11 @@ class Ui(QtWidgets.QMainWindow, Ui_window):
         livePVs = {key:value for key, value in zip(self.live_PVs.keys(),pv_val_list)}
         for item in livePVs.items():
                 try:
-                    item[0].setValue(item[1])
-                except TypeError:
+                    # Skip update if value is None (PV disconnected/failed)
+                    if item[1] is not None:
+                        item[0].setValue(item[1])
+                except (TypeError, ValueError):
+                    # Catch both type errors and invalid value errors
                     pass
 
     def handle_bool_signals(self,pv_val_list):
@@ -2768,7 +2779,7 @@ class liveUpdate(QThread):
 
     current_positions = pyqtSignal(list)
 
-    def __init__(self, pv_dict, update_interval_ms = 500):
+    def __init__(self, pv_dict, update_interval_ms = 1000):
         super().__init__()
         self.pv_dict = pv_dict
         self.update_interval_ms = update_interval_ms
@@ -2780,14 +2791,14 @@ class liveUpdate(QThread):
             try:
                 # Only read if PV is connected, use short timeout for actual read
                 if pv_obj is not None and pv_obj.connected:
-                    value = pv_obj.get(timeout=0.1)
-                    readings.append(value if value is not None else 0.0)
+                    value = pv_obj.get(timeout=0.5)
+                    readings.append(value if value is not None else None)
                 else:
-                    # PV not connected, use default
-                    readings.append(0.0)
+                    # PV not connected, use None to indicate no data
+                    readings.append(None)
             except Exception as e:
-                # Read failed, use default value
-                readings.append(0.0)
+                # Read failed, use None to indicate no data
+                readings.append(None)
         
         return readings
 
