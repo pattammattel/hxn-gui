@@ -2034,7 +2034,7 @@ class Ui(QtWidgets.QMainWindow):
         acq_time = self.sb_zp_rot_scan_exp_time.value()
         elem = self.cb_zp_rot_elem.currentText().split(':')[0]
         move_flag=0, 
-        threshold = 0.5
+        threshold = self.sb_zp_rot_scan_elem_threshold.value()
 
 
         RE(zp_rot_alignment(a_start, 
@@ -2046,7 +2046,7 @@ class Ui(QtWidgets.QMainWindow):
                                 acq_time, 
                                 elem=elem, 
                                 move_flag=0, 
-                                threshold = 0.5))
+                                threshold =threshold))
         
         dx,dz = get_zp_rot_alignment_result(int(-1*a_num), elem=elem, threshold=threshold,
                             neg_flag=0, edge_flag=0, skip_scans=None, plot_flag=False)
