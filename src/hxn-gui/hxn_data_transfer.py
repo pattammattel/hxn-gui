@@ -62,7 +62,7 @@ def get_proposal_info(proposal_id):
 
             # --- Determine cycle ---
             if cycles:
-                current_cycle = cycles[0]
+                current_cycle = cycles[-1]
             else:
                 try:
                     cycle_r = client.get(f"{base_url}/facility/nsls2/cycles/current")

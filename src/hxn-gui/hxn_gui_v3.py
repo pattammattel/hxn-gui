@@ -1797,7 +1797,7 @@ class Ui(QtWidgets.QMainWindow):
                                 QMessageBox.No, QMessageBox.No)
         
         if choice == QMessageBox.Yes:
-            RE(bps.movr(diff_z, dist))
+            RE(bps.movr(diff.z, dist))
         else:
             pass
 
@@ -2035,7 +2035,7 @@ class Ui(QtWidgets.QMainWindow):
         elem = self.cb_zp_rot_elem.currentText().split(':')[0]
         move_flag=0, 
         #threshold = self.sb_zp_rot_scan_elem_threshold.value()
-        threshold = 0.2
+        threshold = 0.6
 
 
         RE(zp_rot_alignment(a_start, 
