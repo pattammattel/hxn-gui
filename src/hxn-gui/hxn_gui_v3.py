@@ -40,10 +40,62 @@ from element_lines import *
 from mll_tomo_gui import *
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
-ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3.ui')
+ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
+
+# Offline mode: provide dummy motors/detectors so the GUI can launch without
+# the beamline collection profile that normally injects these as globals.
+OFFLINE_MODE = "--offline" in sys.argv
+
+
+class DummyMotor:
+    """Stand-in for an ophyd motor with just the attributes the GUI reads."""
+
+    def __init__(self, name):
+        self.name = name
+        self.prefix = f"SIM:{name}"
+        self._position = 0.0
+
+    @property
+    def position(self):
+        return self._position
+
+    def move(self, value, *args, **kwargs):
+        self._position = float(value)
+
+    def set(self, value, *args, **kwargs):
+        self._position = float(value)
+
+    def __repr__(self):
+        return f"DummyMotor({self.name!r})"
+
+
+class DummyDetector:
+    """Stand-in for an ophyd detector; only its name is read by the GUI."""
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"DummyDetector({self.name!r})"
+
+
+if OFFLINE_MODE:
+    print("Running in OFFLINE mode: using dummy motors/detectors (no hardware).")
+    zpssx = DummyMotor("zpssx")
+    zpssy = DummyMotor("zpssy")
+    zpssz = DummyMotor("zpssz")
+    dssx = DummyMotor("dssx")
+    dssy = DummyMotor("dssy")
+    dssz = DummyMotor("dssz")
+    fs = DummyDetector("fs")
+    xspress3 = DummyDetector("xspress3")
+    merlin1 = DummyDetector("merlin1")
+    dets_fast = [xspress3]
+    dets_fast_merlin = [xspress3, merlin1]
+    dets_fast_fs = [fs, xspress3]
 
 
 # class Ui(QtWidgets.QMainWindow, Ui_window):  # Multiple inheritance with compiled UI (fallback)
@@ -56,6 +108,9 @@ class Ui(QtWidgets.QMainWindow):
         # Load .ui file directly (recommended for rapid iteration)
         uic.loadUi(ui_file_path, self)
         print("UI File loaded")
+
+        # Make the window adapt to the current display size
+        self._make_window_responsive()
         
         # Fallback: Use compiled UI with multiple inheritance
         # from ui_files.hxn_gui_v3_ui import Ui_window
@@ -70,6 +125,9 @@ class Ui(QtWidgets.QMainWindow):
             'pump_update': True,
             'flytube_pressure': True
         }
+        # Background threads poll EPICS PVs; skip them entirely with no hardware.
+        if OFFLINE_MODE:
+            self.thread_settings = {key: False for key in self.thread_settings}
         print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
@@ -184,9 +242,38 @@ class Ui(QtWidgets.QMainWindow):
         print("Showing window...")
         self.show()
         QApplication.processEvents()
+        self._fit_window_to_screen()
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
     
+    def _make_window_responsive(self):
+        # The .ui is designed at a fixed size; wrap the central widget in a
+        # scroll area so oversized content stays reachable on smaller displays.
+        central = self.takeCentralWidget()
+        if central is not None:
+            scroll = QtWidgets.QScrollArea(self)
+            scroll.setWidgetResizable(True)
+            scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+            scroll.setWidget(central)
+            self.setCentralWidget(scroll)
+
+        # Let the window shrink below the design size once wrapped.
+        self.setMinimumSize(0, 0)
+
+    def _fit_window_to_screen(self):
+        # Run after show() so screen and frame geometry are reliable, then
+        # clamp the window to the available area and centre it.
+        screen = self.screen() or QApplication.primaryScreen()
+        available = screen.availableGeometry()
+        frame_extra_w = self.frameGeometry().width() - self.width()
+        frame_extra_h = self.frameGeometry().height() - self.height()
+        width = min(self.width(), available.width() - frame_extra_w)
+        height = min(self.height(), available.height() - frame_extra_h)
+        self.resize(width, height)
+        x = available.x() + (available.width() - self.frameGeometry().width()) // 2
+        y = available.y() + (available.height() - self.frameGeometry().height()) // 2
+        self.move(max(available.x(), x), max(available.y(), y))
+
     def _start_background_threads(self):
         """Start background threads after GUI is fully loaded"""
         print("Starting background threads (based on user settings)...")
@@ -576,6 +663,9 @@ class Ui(QtWidgets.QMainWindow):
 
         if auto:
              json_param_file = "/nsls2/data/hxn/shared/config/bluesky/profile_collection/startup/plot_elems.json"
+             if not os.path.isfile(json_param_file):
+                 print(f"XRF element list not found at {json_param_file}; skipping auto-import.")
+                 return
 
         else:
             # Open a file dialog to select a JSON file
