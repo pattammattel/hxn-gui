@@ -49,9 +49,9 @@ det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 # Elements ordered by approximate Earth's-crust abundance (Na onward), used to
 # auto-populate the XRF list with the most likely elements for a given energy.
 ABUNDANCE_ORDER = [
-    # Na dropped (detector sensitivity too low); Ar kept as it is always
-    # visible from air.
-    "Si", "Al", "Fe", "Ca", "Mg", "K", "Ti", "P", "Mn",
+    # Na, Mg, Al dropped (detector sensitivity too low); Ar kept as it is
+    # always visible from air.
+    "Si", "Fe", "Ca", "K", "Ti", "P", "Mn",
     "Ba", "Sr", "S", "Zr", "Cl", "Ar", "V", "Cr", "Rb", "Ni", "Zn",
     "Ce", "Cu", "Y", "La", "Nd", "Co", "Sc", "Nb", "Ga", "Pb",
     "Th", "Pr", "Sm", "Gd", "Dy", "Cs", "Hf", "As", "U", "Sn",
