@@ -540,13 +540,17 @@ class Ui(QtWidgets.QMainWindow):
     def connect_user_setup_signals(self):
 
         #user setup
-        self.xrf_combo_boxes = self.xrf_elem_cb_widget.findChildren(QtWidgets.QComboBox)
+        # Fixed order 1..16 so the periodic table can map selections to boxes.
+        self.xrf_combo_boxes = [self.findChild(QtWidgets.QComboBox, f"cb_elem_{i}")
+                                for i in range(1, 17)]
 
         for cb in self.xrf_combo_boxes:
-            cb.addItems(all_elem_lines)
+            cb.addItems(list(all_elem_lines))
             cb.currentIndexChanged.connect(self.populate_elems_from_combobox)
 
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
+
+        self.build_periodic_table()
 
         self.pb_create_user.clicked.connect(lambda:self.new_user_setup())
         self.pb_update_xrf_elems.clicked.connect(self.apply_xrf_elems)
@@ -559,6 +563,126 @@ class Ui(QtWidgets.QMainWindow):
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
         self.pb_get_proposal_info.clicked.connect(lambda:self.fill_user_info())
         self.pb_move_data_to_globus.clicked.connect(lambda:self.copy_data_to_globus(self.le_proposal_num.text().strip()))
+
+    def build_periodic_table(self):
+        # Line labels available per absorption edge, keyed by element symbol.
+        # K labels are bare symbols ("Fe"); L/M labels carry a suffix ("Zn_L").
+        self._edge_label_maps = {
+            "K": {str(s): str(s) for s in elem_K_list},
+            "L": {str(l).split("_")[0].capitalize(): str(l) for l in elem_L_list},
+            "M": {str(m).split("_")[0].capitalize(): str(m) for m in elem_M_list},
+        }
+        # Map a line label (e.g. "Fe", "Zn_L") to its combo-box item index.
+        self._line_to_index = {str(t).split(":")[0]: i
+                               for i, t in enumerate(all_elem_lines)}
+        self.ptable_selected = {}  # element symbol -> line label, in click order
+        self.ptable_buttons = {}
+        self._ptable_max = len(self.xrf_combo_boxes)
+
+        # Standard periodic-table (row, col); elements before Na are omitted
+        # since the beamline cannot measure them.
+        positions = {
+            "Na": (0, 0), "Mg": (0, 1), "Al": (0, 12), "Si": (0, 13), "P": (0, 14),
+            "S": (0, 15), "Cl": (0, 16), "Ar": (0, 17),
+            "K": (1, 0), "Ca": (1, 1), "Sc": (1, 2), "Ti": (1, 3), "V": (1, 4),
+            "Cr": (1, 5), "Mn": (1, 6), "Fe": (1, 7), "Co": (1, 8), "Ni": (1, 9),
+            "Cu": (1, 10), "Zn": (1, 11), "Ga": (1, 12), "Ge": (1, 13), "As": (1, 14),
+            "Se": (1, 15), "Br": (1, 16), "Kr": (1, 17),
+            "Rb": (2, 0), "Sr": (2, 1), "Y": (2, 2), "Zr": (2, 3), "Nb": (2, 4),
+            "Mo": (2, 5), "Tc": (2, 6), "Ru": (2, 7), "Rh": (2, 8), "Pd": (2, 9),
+            "Ag": (2, 10), "Cd": (2, 11), "In": (2, 12), "Sn": (2, 13), "Sb": (2, 14),
+            "Te": (2, 15), "I": (2, 16), "Xe": (2, 17),
+            "Cs": (3, 0), "Ba": (3, 1), "La": (3, 2), "Hf": (3, 3), "Ta": (3, 4),
+            "W": (3, 5), "Re": (3, 6), "Os": (3, 7), "Ir": (3, 8), "Pt": (3, 9),
+            "Au": (3, 10), "Hg": (3, 11), "Tl": (3, 12), "Pb": (3, 13), "Bi": (3, 14),
+            "Po": (3, 15), "At": (3, 16), "Rn": (3, 17),
+            "Fr": (4, 0), "Ra": (4, 1), "Ac": (4, 2),
+            "Ce": (6, 3), "Pr": (6, 4), "Nd": (6, 5), "Pm": (6, 6), "Sm": (6, 7),
+            "Eu": (6, 8), "Gd": (6, 9), "Tb": (6, 10), "Dy": (6, 11), "Ho": (6, 12),
+            "Er": (6, 13), "Tm": (6, 14), "Yb": (6, 15), "Lu": (6, 16),
+            "Th": (7, 3), "Pa": (7, 4), "U": (7, 5), "Np": (7, 6), "Pu": (7, 7),
+            "Am": (7, 8), "Cm": (7, 9), "Bk": (7, 10), "Cf": (7, 11),
+        }
+
+        self._ptable_default_style = (
+            "QPushButton {border: 1px solid #888; border-radius: 3px; "
+            "background-color: rgb(235, 235, 235);}")
+        self._ptable_selected_style = (
+            "QPushButton {border: 1px solid #2a2; border-radius: 3px; "
+            "background-color: rgb(0, 200, 0); font-weight: bold;}")
+
+        outer = QtWidgets.QVBoxLayout(self.widget_periodictable)
+        outer.setContentsMargins(2, 2, 2, 2)
+        outer.setSpacing(4)
+
+        top = QtWidgets.QHBoxLayout()
+        top.addWidget(QtWidgets.QLabel("Edge:"))
+        self.ptable_edge_group = QtWidgets.QButtonGroup(self)
+        for edge in ("K", "L", "M"):
+            rb = QtWidgets.QRadioButton(edge)
+            rb.setChecked(edge == "K")
+            self.ptable_edge_group.addButton(rb)
+            top.addWidget(rb)
+        top.addSpacing(20)
+        self.lbl_ptable_count = QtWidgets.QLabel(f"0 / {self._ptable_max}")
+        top.addWidget(self.lbl_ptable_count)
+        self.pb_ptable_clear = QtWidgets.QPushButton("Clear")
+        self.pb_ptable_clear.clicked.connect(self.clear_ptable_selection)
+        top.addWidget(self.pb_ptable_clear)
+        top.addStretch(1)
+        outer.addLayout(top)
+
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(2)
+        for sym, (r, c) in positions.items():
+            btn = QtWidgets.QPushButton(sym)
+            btn.setStyleSheet(self._ptable_default_style)
+            btn.setMinimumSize(34, 26)
+            btn.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                              QtWidgets.QSizePolicy.Policy.Fixed)
+            btn.clicked.connect(lambda _=False, s=sym: self._ptable_element_clicked(s))
+            grid.addWidget(btn, r, c)
+            self.ptable_buttons[sym] = btn
+        outer.addLayout(grid)
+
+    def _current_ptable_edge(self):
+        btn = self.ptable_edge_group.checkedButton()
+        return btn.text() if btn else "K"
+
+    def _ptable_element_clicked(self, sym):
+        if sym in self.ptable_selected:
+            del self.ptable_selected[sym]
+            self.ptable_buttons[sym].setStyleSheet(self._ptable_default_style)
+            self._update_combos_from_ptable()
+            return
+
+        edge = self._current_ptable_edge()
+        label = self._edge_label_maps[edge].get(sym)
+        if label is None:
+            self.statusbar.showMessage(f"No {edge} line available for {sym}", 4000)
+            return
+        if len(self.ptable_selected) >= self._ptable_max:
+            self.statusbar.showMessage(
+                f"Cannot select more than {self._ptable_max} elements", 4000)
+            return
+        self.ptable_selected[sym] = label
+        self.ptable_buttons[sym].setStyleSheet(self._ptable_selected_style)
+        self._update_combos_from_ptable()
+
+    def _update_combos_from_ptable(self):
+        labels = list(self.ptable_selected.values())
+        for i, cb in enumerate(self.xrf_combo_boxes):
+            cb.blockSignals(True)
+            cb.setCurrentIndex(self._line_to_index[labels[i]] if i < len(labels) else 0)
+            cb.blockSignals(False)
+        self.lbl_ptable_count.setText(f"{len(labels)} / {self._ptable_max}")
+        self.populate_elems_from_combobox()
+
+    def clear_ptable_selection(self):
+        for sym in list(self.ptable_selected):
+            self.ptable_buttons[sym].setStyleSheet(self._ptable_default_style)
+        self.ptable_selected.clear()
+        self._update_combos_from_ptable()
 
 
     @show_error_message_box
