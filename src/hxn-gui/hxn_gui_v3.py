@@ -747,9 +747,11 @@ class Ui(QtWidgets.QMainWindow):
 
     def _update_combos_from_ptable(self):
         labels = list(self.ptable_selected.values())
+        default_index = self._line_to_index["Fe"]
         for i, cb in enumerate(self.xrf_combo_boxes):
             cb.blockSignals(True)
-            cb.setCurrentIndex(self._line_to_index[labels[i]] if i < len(labels) else 0)
+            cb.setCurrentIndex(self._line_to_index[labels[i]] if i < len(labels)
+                               else default_index)
             cb.blockSignals(False)
         self.lbl_ptable_count.setText(f"{len(labels)} / {self._ptable_max}")
         self.populate_elems_from_combobox()
