@@ -8,6 +8,7 @@ import os
 import sys
 import webbrowser
 import pyqtgraph as pg
+import xraydb
 import json
 import re
 import sys
@@ -461,6 +462,13 @@ class Ui(QtWidgets.QMainWindow):
                     # Catch both type errors and invalid value errors
                     pass
 
+        # Refresh periodic-table availability when the beam energy changes.
+        if hasattr(self, "ptable_buttons"):
+            beam_ev = self._beam_energy_ev()
+            if beam_ev != self._ptable_last_energy:
+                self._ptable_last_energy = beam_ev
+                self.update_ptable_for_energy()
+
     def handle_bool_signals(self,pv_val_list):
 
         #self.pump_PVs.keys() = pv_val_list (works?)
@@ -579,6 +587,13 @@ class Ui(QtWidgets.QMainWindow):
         self.ptable_buttons = {}
         self._ptable_max = len(self.xrf_combo_boxes)
 
+        # Absorption-edge threshold energy (eV) to excite each edge's lines;
+        # an edge is usable only when the beam energy exceeds this. L lines
+        # need the L3 edge, M lines need the M5 edge (the lowest sub-edges).
+        self._ptable_edge_names = {"K": "K", "L": "L3", "M": "M5"}
+        self._edge_energies = {"K": {}, "L": {}, "M": {}}
+        self._ptable_last_energy = None
+
         # Standard periodic-table (row, col); elements before Na are omitted
         # since the beamline cannot measure them.
         positions = {
@@ -610,6 +625,16 @@ class Ui(QtWidgets.QMainWindow):
         self._ptable_selected_style = (
             "QPushButton {border: 1px solid #2a2; border-radius: 3px; "
             "background-color: rgb(0, 200, 0); font-weight: bold;}")
+        self._ptable_unavailable_style = (
+            "QPushButton {border: 1px solid #c00; border-radius: 3px; "
+            "background-color: rgb(225, 120, 120); color: rgb(90, 0, 0);}")
+
+        for sym in positions:
+            edges = xraydb.xray_edges(sym)
+            for edge, ename in self._ptable_edge_names.items():
+                e = edges.get(ename)
+                if e is not None:
+                    self._edge_energies[edge][sym] = e.energy
 
         outer = QtWidgets.QVBoxLayout(self.widget_periodictable)
         outer.setContentsMargins(2, 2, 2, 2)
@@ -623,6 +648,8 @@ class Ui(QtWidgets.QMainWindow):
             rb.setChecked(edge == "K")
             self.ptable_edge_group.addButton(rb)
             top.addWidget(rb)
+        self.ptable_edge_group.buttonClicked.connect(
+            lambda _b: self.update_ptable_for_energy())
         top.addSpacing(20)
         self.lbl_ptable_count = QtWidgets.QLabel(f"0 / {self._ptable_max}")
         top.addWidget(self.lbl_ptable_count)
@@ -644,15 +671,40 @@ class Ui(QtWidgets.QMainWindow):
             grid.addWidget(btn, r, c)
             self.ptable_buttons[sym] = btn
         outer.addLayout(grid)
+        self.update_ptable_for_energy()
 
     def _current_ptable_edge(self):
         btn = self.ptable_edge_group.checkedButton()
         return btn.text() if btn else "K"
 
+    def _beam_energy_ev(self):
+        # lcd_monoE reads the mono energy in keV; xraydb edges are in eV.
+        return self.lcd_monoE.value() * 1000.0
+
+    def update_ptable_for_energy(self):
+        # Grey/clickable when the current edge is excitable at the beam energy,
+        # red/disabled otherwise. Selected elements stay green and clickable so
+        # they can be toggled off. A non-positive beam energy disables filtering.
+        beam_ev = self._beam_energy_ev()
+        edge = self._current_ptable_edge()
+        emap = self._edge_label_maps[edge]
+        energies = self._edge_energies[edge]
+        for sym, btn in self.ptable_buttons.items():
+            if sym in self.ptable_selected:
+                btn.setEnabled(True)
+                btn.setStyleSheet(self._ptable_selected_style)
+                continue
+            edge_e = energies.get(sym)
+            excitable = (sym in emap and edge_e is not None
+                         and (beam_ev <= 0 or edge_e <= beam_ev))
+            btn.setEnabled(excitable)
+            btn.setStyleSheet(self._ptable_default_style if excitable
+                              else self._ptable_unavailable_style)
+
     def _ptable_element_clicked(self, sym):
         if sym in self.ptable_selected:
             del self.ptable_selected[sym]
-            self.ptable_buttons[sym].setStyleSheet(self._ptable_default_style)
+            self.update_ptable_for_energy()
             self._update_combos_from_ptable()
             return
 
@@ -666,7 +718,7 @@ class Ui(QtWidgets.QMainWindow):
                 f"Cannot select more than {self._ptable_max} elements", 4000)
             return
         self.ptable_selected[sym] = label
-        self.ptable_buttons[sym].setStyleSheet(self._ptable_selected_style)
+        self.update_ptable_for_energy()
         self._update_combos_from_ptable()
 
     def _update_combos_from_ptable(self):
@@ -679,9 +731,8 @@ class Ui(QtWidgets.QMainWindow):
         self.populate_elems_from_combobox()
 
     def clear_ptable_selection(self):
-        for sym in list(self.ptable_selected):
-            self.ptable_buttons[sym].setStyleSheet(self._ptable_default_style)
         self.ptable_selected.clear()
+        self.update_ptable_for_energy()
         self._update_combos_from_ptable()
 
 
