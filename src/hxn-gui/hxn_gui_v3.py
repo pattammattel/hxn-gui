@@ -46,6 +46,18 @@ style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
+# Elements ordered by approximate Earth's-crust abundance (Na onward), used to
+# auto-populate the XRF list with the most likely elements for a given energy.
+ABUNDANCE_ORDER = [
+    "Si", "Al", "Fe", "Ca", "Na", "Mg", "K", "Ti", "P", "Mn",
+    "Ba", "Sr", "S", "Zr", "Cl", "V", "Cr", "Rb", "Ni", "Zn",
+    "Ce", "Cu", "Y", "La", "Nd", "Co", "Sc", "Nb", "Ga", "Pb",
+    "Th", "Pr", "Sm", "Gd", "Dy", "Cs", "Hf", "As", "U", "Sn",
+    "W", "Mo", "Br", "Yb", "Er", "Ho", "Eu", "Tb", "Tm", "Lu",
+    "I", "Tl", "Cd", "Sb", "Bi", "In", "Hg", "Ag", "Se", "Ge",
+    "Te", "Pd", "Pt", "Ru", "Rh", "Au", "Re", "Ir", "Os", "Ta",
+]
+
 # Offline mode: provide dummy motors/detectors so the GUI can launch without
 # the beamline collection profile that normally injects these as globals.
 OFFLINE_MODE = "--offline" in sys.argv
@@ -468,6 +480,8 @@ class Ui(QtWidgets.QMainWindow):
             if beam_ev != self._ptable_last_energy:
                 self._ptable_last_energy = beam_ev
                 self.update_ptable_for_energy()
+                if not self._ptable_user_modified:
+                    self.autofill_abundant_elements()
 
     def handle_bool_signals(self,pv_val_list):
 
@@ -593,6 +607,7 @@ class Ui(QtWidgets.QMainWindow):
         self._ptable_edge_names = {"K": "K", "L": "L3", "M": "M5"}
         self._edge_energies = {"K": {}, "L": {}, "M": {}}
         self._ptable_last_energy = None
+        self._ptable_user_modified = False
 
         # Standard periodic-table (row, col); elements before Na are omitted
         # since the beamline cannot measure them.
@@ -672,6 +687,7 @@ class Ui(QtWidgets.QMainWindow):
             self.ptable_buttons[sym] = btn
         outer.addLayout(grid)
         self.update_ptable_for_energy()
+        self.autofill_abundant_elements()
 
     def _current_ptable_edge(self):
         btn = self.ptable_edge_group.checkedButton()
@@ -702,6 +718,7 @@ class Ui(QtWidgets.QMainWindow):
                               else self._ptable_unavailable_style)
 
     def _ptable_element_clicked(self, sym):
+        self._ptable_user_modified = True
         if sym in self.ptable_selected:
             del self.ptable_selected[sym]
             self.update_ptable_for_energy()
@@ -731,7 +748,31 @@ class Ui(QtWidgets.QMainWindow):
         self.populate_elems_from_combobox()
 
     def clear_ptable_selection(self):
+        self._ptable_user_modified = True
         self.ptable_selected.clear()
+        self.update_ptable_for_energy()
+        self._update_combos_from_ptable()
+
+    def autofill_abundant_elements(self):
+        # Pick the most Earth-abundant elements excitable at the current beam
+        # energy, filling K edges first, then L, then M, up to the 16 boxes.
+        beam_ev = self._beam_energy_ev()
+        selected = {}
+        for edge in ("K", "L", "M"):
+            emap = self._edge_label_maps[edge]
+            energies = self._edge_energies[edge]
+            for sym in ABUNDANCE_ORDER:
+                if len(selected) >= self._ptable_max:
+                    break
+                if sym in selected or sym not in emap:
+                    continue
+                e = energies.get(sym)
+                if e is None or (beam_ev > 0 and e > beam_ev):
+                    continue
+                selected[sym] = emap[sym]
+            if len(selected) >= self._ptable_max:
+                break
+        self.ptable_selected = selected
         self.update_ptable_for_energy()
         self._update_combos_from_ptable()
 
@@ -870,6 +911,16 @@ class Ui(QtWidgets.QMainWindow):
                     box.setCurrentIndex(i)
             box.setCurrentText(elem)
             #except:box.setCurrentText("Si")
+
+        # Reflect the imported list on the periodic table and keep it from being
+        # overwritten by the energy-triggered auto-fill.
+        self.ptable_selected = {}
+        for elem in roi_elems:
+            sym = str(elem).split("_")[0].capitalize()
+            if sym in self.ptable_buttons and str(elem) in self._line_to_index:
+                self.ptable_selected[sym] = str(elem)
+        self._ptable_user_modified = True
+        self.update_ptable_for_energy()
 
     @show_error_message_box
     def export_xrf_elem_list(self, auto = False):
