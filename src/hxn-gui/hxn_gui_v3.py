@@ -706,7 +706,8 @@ class Ui(QtWidgets.QMainWindow):
         emap = self._edge_label_maps[edge]
         energies = self._edge_energies[edge]
         for sym, btn in self.ptable_buttons.items():
-            if sym in self.ptable_selected:
+            # Only green when the element is selected on the edge currently shown.
+            if self.ptable_selected.get(sym) == emap.get(sym) and sym in self.ptable_selected:
                 btn.setEnabled(True)
                 btn.setStyleSheet(self._ptable_selected_style)
                 continue
@@ -719,18 +720,22 @@ class Ui(QtWidgets.QMainWindow):
 
     def _ptable_element_clicked(self, sym):
         self._ptable_user_modified = True
-        if sym in self.ptable_selected:
+        edge = self._current_ptable_edge()
+        label = self._edge_label_maps[edge].get(sym)
+        # Clicking the element while it is already selected on this edge
+        # (shown green) toggles it off.
+        if self.ptable_selected.get(sym) == label and label is not None:
             del self.ptable_selected[sym]
             self.update_ptable_for_energy()
             self._update_combos_from_ptable()
             return
 
-        edge = self._current_ptable_edge()
-        label = self._edge_label_maps[edge].get(sym)
         if label is None:
             self.statusbar.showMessage(f"No {edge} line available for {sym}", 4000)
             return
-        if len(self.ptable_selected) >= self._ptable_max:
+        # Selecting on a new edge while not yet selected counts toward the limit;
+        # switching an already-selected element's edge does not.
+        if sym not in self.ptable_selected and len(self.ptable_selected) >= self._ptable_max:
             self.statusbar.showMessage(
                 f"Cannot select more than {self._ptable_max} elements", 4000)
             return
