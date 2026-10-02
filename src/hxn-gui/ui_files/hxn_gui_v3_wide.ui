@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>2066</width>
-    <height>1145</height>
+    <height>1148</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -3829,40 +3829,6 @@ QPushButton:pressed{
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="label_scan_info_calc">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Modern No. 20</family>
-                <pointsize>15</pointsize>
-                <italic>false</italic>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">color: rgb(73, 91, 255);
-font: 15pt &quot;Modern No. 20&quot;;
-
-
-</string>
-              </property>
-              <property name="text">
-               <string>Scan Info</string>
-              </property>
-              <property name="textFormat">
-               <enum>Qt::MarkdownText</enum>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QLineEdit" name="text_scan_plan">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -4450,6 +4416,19 @@ font: 15pt &quot;Modern No. 20&quot;;
              </property>
             </widget>
            </item>
+           <item row="2" column="7" colspan="2">
+            <widget class="QPushButton" name="pb_66">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string> 6umx6um, 100:100 steps, 0.005 sec</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="6">
             <widget class="QDoubleSpinBox" name="dwell">
              <property name="sizePolicy">
@@ -4860,19 +4839,6 @@ font: 15pt &quot;Modern No. 20&quot;;
              </layout>
             </widget>
            </item>
-           <item row="2" column="7" colspan="2">
-            <widget class="QPushButton" name="pb_66">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string> 6umx6um, 100:100 steps, 0.005 sec</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="7" colspan="2">
             <widget class="QPushButton" name="pb_22">
              <property name="sizePolicy">
@@ -4886,13 +4852,13 @@ font: 15pt &quot;Modern No. 20&quot;;
              </property>
             </widget>
            </item>
-           <item row="3" column="0" colspan="7">
+           <item row="4" column="0" colspan="8">
             <widget class="QProgressBar" name="pbar_flyscan">
              <property name="enabled">
               <bool>false</bool>
              </property>
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -4905,6 +4871,40 @@ font: 15pt &quot;Modern No. 20&quot;;
              </property>
              <property name="format">
               <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="7">
+            <widget class="QLabel" name="label_scan_info_calc">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Modern No. 20</family>
+               <pointsize>15</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(73, 91, 255);
+font: 15pt &quot;Modern No. 20&quot;;
+
+
+</string>
+             </property>
+             <property name="text">
+              <string>Scan Info</string>
+             </property>
+             <property name="textFormat">
+              <enum>Qt::MarkdownText</enum>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
              </property>
             </widget>
            </item>
