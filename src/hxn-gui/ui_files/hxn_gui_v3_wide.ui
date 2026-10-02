@@ -1249,6 +1249,22 @@ Create PDF and User Directory
                  </property>
                 </widget>
                </item>
+               <item row="1" column="2">
+                <widget class="QPushButton" name="pb_cam6OUT">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  CAM6 OUT  </string>
+                 </property>
+                </widget>
+               </item>
                <item row="2" column="3">
                 <widget class="QLabel" name="label_74">
                  <property name="sizePolicy">
@@ -1288,19 +1304,6 @@ Create PDF and User Directory
                  </property>
                  <property name="text">
                   <string>  CAM 11 IN   </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0" colspan="2">
-                <widget class="QPushButton" name="pb_dexela_IN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>   Dexela IN    </string>
                  </property>
                 </widget>
                </item>
@@ -1348,20 +1351,7 @@ Create PDF and User Directory
                  </property>
                 </widget>
                </item>
-               <item row="2" column="2">
-                <widget class="QPushButton" name="pb_vortexOUT">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>XRF Det OUT</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" colspan="2">
+               <item row="2" column="0">
                 <widget class="QPushButton" name="pb_vortexIN">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1374,23 +1364,7 @@ Create PDF and User Directory
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QPushButton" name="pb_cam6OUT">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM6 OUT  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0" colspan="2">
+               <item row="1" column="0">
                 <widget class="QPushButton" name="pb_cam6IN">
                  <property name="enabled">
                   <bool>true</bool>
@@ -1419,6 +1393,19 @@ Create PDF and User Directory
                  </property>
                 </widget>
                </item>
+               <item row="2" column="2">
+                <widget class="QPushButton" name="pb_vortexOUT">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>XRF Det OUT</string>
+                 </property>
+                </widget>
+               </item>
                <item row="3" column="3">
                 <widget class="QPushButton" name="pb_merlinIN">
                  <property name="sizePolicy">
@@ -1432,7 +1419,20 @@ Create PDF and User Directory
                  </property>
                 </widget>
                </item>
-               <item row="4" column="0" colspan="2">
+               <item row="3" column="0">
+                <widget class="QPushButton" name="pb_dexela_IN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>   Dexela IN    </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
                 <widget class="QPushButton" name="pb_eiger_in">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1442,6 +1442,98 @@ Create PDF and User Directory
                  </property>
                  <property name="text">
                   <string>Eiger IN</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Abort Motion</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_117">
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pb_stop_fluor">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>               Stop Fluor.             </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_55">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pb_stop_dexela">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop Dexela</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="pb_stop_cam11">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop CAM11</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QPushButton" name="pb_stop_merlin">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop Merlin/Eiger</string>
                  </property>
                 </widget>
                </item>
@@ -1485,7 +1577,7 @@ Create PDF and User Directory
                  <item>
                   <widget class="QPushButton" name="pb_move_diff_z">
                    <property name="text">
-                    <string>Move </string>
+                    <string>Move diff_z</string>
                    </property>
                   </widget>
                  </item>
@@ -1735,98 +1827,6 @@ Create PDF and User Directory
                   </layout>
                  </item>
                 </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Abort Motion</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_117">
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pb_stop_fluor">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>               Stop Fluor.             </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_55">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="pb_stop_dexela">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop Dexela</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="pb_stop_cam11">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop CAM11</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QPushButton" name="pb_stop_merlin">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop Merlin/Eiger</string>
-                 </property>
-                </widget>
                </item>
               </layout>
              </widget>
@@ -4954,7 +4954,7 @@ font: 15pt &quot;Modern No. 20&quot;;
              <item row="0" column="1" rowspan="2">
               <widget class="QPushButton" name="start">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
