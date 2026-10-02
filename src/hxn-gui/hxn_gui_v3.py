@@ -125,7 +125,7 @@ class Ui(QtWidgets.QMainWindow):
         print("UI File loaded")
 
         # Make the window adapt to the current display size
-        self._make_window_responsive()
+        #self._make_window_responsive()
         
         # Fallback: Use compiled UI with multiple inheritance
         # from ui_files.hxn_gui_v3_ui import Ui_window
@@ -257,7 +257,7 @@ class Ui(QtWidgets.QMainWindow):
         print("Showing window...")
         self.show()
         QApplication.processEvents()
-        self._fit_window_to_screen()
+        #self._fit_window_to_screen()
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
     
