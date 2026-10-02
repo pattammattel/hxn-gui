@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>2066</width>
-    <height>1148</height>
+    <height>1145</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -942,7 +942,7 @@ Create PDF and User Directory
         <item row="1" column="0" colspan="3">
          <widget class="QTabWidget" name="tabWidget_18">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1955,7 +1955,7 @@ Create PDF and User Directory
         <item row="2" column="0" colspan="2">
          <widget class="QTabWidget" name="tabWidget">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -3530,7 +3530,7 @@ Show Meta Data
         <item row="2" column="2">
          <widget class="QGroupBox" name="groupBox">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -3763,7 +3763,7 @@ ERF Fit
         <item row="0" column="2">
          <widget class="QTabWidget" name="tabWidget_10">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -4400,7 +4400,7 @@ font: 15pt &quot;Modern No. 20&quot;;
         <item row="0" column="0" colspan="2">
          <widget class="QGroupBox" name="groupBox_3">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -10839,7 +10839,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>2066</width>
-     <height>33</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
