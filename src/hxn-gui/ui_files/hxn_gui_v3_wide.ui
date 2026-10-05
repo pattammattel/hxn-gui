@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>2067</width>
-    <height>1176</height>
+    <width>2056</width>
+    <height>1157</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -45,7 +45,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -63,6 +63,9 @@ QGroupBox {
 </string>
    </property>
    <layout class="QGridLayout" name="gridLayout_32">
+    <property name="verticalSpacing">
+     <number>0</number>
+    </property>
     <item row="1" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_32">
       <item>
@@ -324,7 +327,7 @@ QGroupBox {
        <bool>true</bool>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -417,7 +420,7 @@ QRadioButton::indicator:unchecked {
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -1074,410 +1077,414 @@ Create PDF and User Directory
         <string>Data Aquisition</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_73">
-        <item row="1" column="0" colspan="3">
-         <widget class="QTabWidget" name="tabWidget_18">
+        <item row="0" column="2">
+         <widget class="QTabWidget" name="tabWidget_10">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="tabPosition">
            <enum>QTabWidget::West</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
-          <widget class="QWidget" name="tabWidget_18Page1">
+          <property name="elideMode">
+           <enum>Qt::ElideRight</enum>
+          </property>
+          <widget class="QWidget" name="tabWidget_10Page1">
            <attribute name="title">
-            <string>Detector Motion</string>
+            <string>Scan</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_31">
+           <layout class="QVBoxLayout" name="verticalLayout_30">
             <item>
-             <widget class="QGroupBox" name="groupBox">
+             <layout class="QHBoxLayout" name="horizontalLayout_5"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tabWidget_10Page2">
+           <attribute name="title">
+            <string>Queue</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_16">
+            <item row="3" column="0">
+             <widget class="QRadioButton" name="rb_mll_manual_roi">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="title">
-               <string>CAM/DET IN and OUT</string>
+              <property name="toolTip">
+               <string>select for 2D scan</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_7">
-               <item row="3" column="2">
-                <widget class="QPushButton" name="pb_dexela_OUT">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>MLL</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <property name="autoExclusive">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3" rowspan="5">
+             <widget class="QGroupBox" name="gb_queue_server_plan">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="title">
+               <string>Manual ROI</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_146">
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_196">
                  <property name="text">
-                  <string>Dexela OUT</string>
+                  <string>zpssx</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QLabel" name="label_193">
+                 <property name="text">
+                  <string>zpssy</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="3">
+                <widget class="QLabel" name="label_208">
+                 <property name="text">
+                  <string>smary</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="5">
-                <widget class="QDoubleSpinBox" name="db_dexela">
+                <widget class="QLabel" name="label_194">
+                 <property name="text">
+                  <string>zpssz</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLabel" name="label_211">
+                 <property name="text">
+                  <string>zpz1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="3">
+                <widget class="QLabel" name="label_210">
+                 <property name="text">
+                  <string>zpsth</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="6">
+                <widget class="QDoubleSpinBox" name="dsb_smarz_manual_roi">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
                  </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 <property name="prefix">
+                  <string notr="true"/>
                  </property>
                  <property name="suffix">
-                  <string> mm</string>
+                  <string> um</string>
                  </property>
                  <property name="decimals">
-                  <number>1</number>
+                  <number>2</number>
                  </property>
                  <property name="minimum">
-                  <double>-99.000000000000000</double>
+                  <double>-6000.000000000000000</double>
                  </property>
                  <property name="maximum">
-                  <double>500.000000000000000</double>
+                  <double>6000.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>100.000000000000000</double>
                  </property>
                  <property name="value">
-                  <double>1.000000000000000</double>
+                  <double>100.000000000000000</double>
                  </property>
                 </widget>
                </item>
                <item row="4" column="5">
-                <widget class="QDoubleSpinBox" name="db_diffx">
+                <widget class="QLabel" name="label_209">
+                 <property name="text">
+                  <string>smarz</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="6">
+                <widget class="QDoubleSpinBox" name="dsb_zpssz_manual_roi">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
                  </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 <property name="prefix">
+                  <string notr="true"/>
                  </property>
                  <property name="suffix">
-                  <string> mm</string>
+                  <string> um</string>
                  </property>
                  <property name="decimals">
-                  <number>1</number>
+                  <number>3</number>
                  </property>
                  <property name="minimum">
-                  <double>-1500.000000000000000</double>
+                  <double>-14.000000000000000</double>
                  </property>
                  <property name="maximum">
-                  <double>1500.000000000000000</double>
+                  <double>14.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1.000000000000000</double>
                  </property>
                  <property name="value">
-                  <double>1.000000000000000</double>
+                  <double>-5.000000000000000</double>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="5">
-                <widget class="QDoubleSpinBox" name="db_cam06x">
+               <item row="5" column="2">
+                <widget class="QDoubleSpinBox" name="dsb_zpz1_manual_roi">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
                  </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 <property name="prefix">
+                  <string notr="true"/>
                  </property>
                  <property name="suffix">
                   <string> mm</string>
                  </property>
                  <property name="decimals">
-                  <number>1</number>
+                  <number>2</number>
                  </property>
                  <property name="minimum">
-                  <double>-99.000000000000000</double>
+                  <double>-45.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>10.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>100.000000000000000</double>
                  </property>
                  <property name="value">
-                  <double>1.000000000000000</double>
+                  <double>10.000000000000000</double>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_68">
+               <item row="3" column="2">
+                <widget class="QDoubleSpinBox" name="dsb_zpssx_manual_roi">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="text">
-                  <string/>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
+                 </property>
+                 <property name="prefix">
+                  <string notr="true"/>
+                 </property>
+                 <property name="suffix">
+                  <string> um</string>
+                 </property>
+                 <property name="decimals">
+                  <number>3</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-14.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>14.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-5.000000000000000</double>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_flur_in_pos">
+               <item row="4" column="4">
+                <widget class="QDoubleSpinBox" name="dsb_smary_manual_roi">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
+                 </property>
+                 <property name="prefix">
+                  <string notr="true"/>
+                 </property>
                  <property name="suffix">
-                  <string> mm</string>
+                  <string> um</string>
                  </property>
                  <property name="decimals">
-                  <number>1</number>
+                  <number>2</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-6000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>6000.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>100.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QDoubleSpinBox" name="dsb_smarx_manual_roi">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
+                 </property>
+                 <property name="prefix">
+                  <string notr="true"/>
+                 </property>
+                 <property name="suffix">
+                  <string> um</string>
+                 </property>
+                 <property name="decimals">
+                  <number>2</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-6000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>6000.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>100.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLabel" name="label_207">
+                 <property name="text">
+                  <string>smarx</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="4">
+                <widget class="QDoubleSpinBox" name="dsb_zpssy_manual_roi">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
+                 </property>
+                 <property name="prefix">
+                  <string notr="true"/>
+                 </property>
+                 <property name="suffix">
+                  <string> um</string>
+                 </property>
+                 <property name="decimals">
+                  <number>3</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-14.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>14.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-5.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="4">
+                <widget class="QDoubleSpinBox" name="dsb_zpsth_manual_roi">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>scan range entry</string>
+                 </property>
+                 <property name="prefix">
+                  <string notr="true"/>
+                 </property>
+                 <property name="suffix">
+                  <string> deg</string>
+                 </property>
+                 <property name="decimals">
+                  <number>2</number>
                  </property>
                  <property name="minimum">
                   <double>-100.000000000000000</double>
                  </property>
                  <property name="maximum">
-                  <double>-7.000000000000000</double>
+                  <double>100.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>100.000000000000000</double>
                  </property>
                  <property name="value">
-                  <double>-9.000000000000000</double>
+                  <double>0.000000000000000</double>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QPushButton" name="pb_cam6OUT">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM6 OUT  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="3">
-                <widget class="QLabel" name="label_74">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>IN Pos. = </string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="4">
-                <widget class="QPushButton" name="pb_merlinOUT">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Det Tower OUT</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <widget class="QPushButton" name="pb_cam11IN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM 11 IN   </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="3">
-                <widget class="QPushButton" name="pb_telescope">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>   Telescope IN </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="5">
-                <widget class="QDoubleSpinBox" name="db_fs_det">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>1</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-150.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="pb_vortexIN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>XRF Det IN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pb_cam6IN">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM6 IN  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="4">
-                <widget class="QPushButton" name="pb_laser_in">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Laser IN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QPushButton" name="pb_vortexOUT">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>XRF Det OUT</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="3">
-                <widget class="QPushButton" name="pb_merlinIN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> Merlin IN  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="pb_dexela_IN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>   Dexela IN    </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QPushButton" name="pb_eiger_in">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Eiger IN</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Abort Motion</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_117">
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pb_stop_fluor">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>               Stop Fluor.             </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_55">
+               <item row="5" column="5" colspan="2">
+                <widget class="QPushButton" name="pb_get_current_position">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1485,620 +1492,88 @@ Create PDF and User Directory
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="pb_stop_dexela">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop Dexela</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="pb_stop_cam11">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop CAM11</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QPushButton" name="pb_stop_merlin">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop Merlin/Eiger</string>
+                  <string> Get curr pos  </string>
                  </property>
                 </widget>
                </item>
               </layout>
              </widget>
             </item>
-            <item>
-             <widget class="QGroupBox" name="groupBox_11">
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="cb_queue_use_curr_pos">
+              <property name="text">
+               <string>Use Current Position</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QRadioButton" name="rb_zp_manual_roi">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="title">
-               <string>Diff Stage Motion</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_42">
-               <item row="3" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_23">
-                 <item>
-                  <widget class="QLabel" name="label_73">
-                   <property name="text">
-                    <string>diff_z</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="dsb_move_diff_z_rel_value">
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="minimum">
-                    <double>-50.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>50.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_move_diff_z">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Move diff_z</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="2" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
-                 <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_2theta">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>2theta = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> deg</string>
-                   </property>
-                   <property name="decimals">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <double>25.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_r">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>r = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="maximum">
-                    <double>5000.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>500.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_9">
-                 <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_x">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>gamma = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> deg</string>
-                   </property>
-                   <property name="decimals">
-                    <number>2</number>
-                   </property>
-                   <property name="value">
-                    <double>0.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_y">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>delta = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> deg</string>
-                   </property>
-                   <property name="minimum">
-                    <double>-5.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>25.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="4" column="0">
-                <widget class="QPushButton" name="pb_pos_to_angle">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> Calculate Diff.Pos.</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_13">
-                 <item>
-                  <widget class="QPushButton" name="pb_move_diff">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Move Diff. Stage</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_abort_diff">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Abort Diff. Motion</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_copy_pos2angle">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Copy Results</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="cb_mll_theta_for_diff">
-                   <property name="text">
-                    <string>MLL User</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0" rowspan="3">
-                <layout class="QGridLayout" name="gridLayout_137">
-                 <item row="1" column="0">
-                  <widget class="QPushButton" name="pb_reset_dexela_ROI1">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Reset ROI1</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_15">
-                   <item>
-                    <widget class="QSpinBox" name="sp_dexela_xpixel">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="prefix">
-                      <string>x = </string>
-                     </property>
-                     <property name="maximum">
-                      <number>9999</number>
-                     </property>
-                     <property name="singleStep">
-                      <number>10</number>
-                     </property>
-                     <property name="value">
-                      <number>55</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QSpinBox" name="sp_dexela_ypixel">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="prefix">
-                      <string>y = </string>
-                     </property>
-                     <property name="maximum">
-                      <number>9999</number>
-                     </property>
-                     <property name="singleStep">
-                      <number>10</number>
-                     </property>
-                     <property name="value">
-                      <number>99</number>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item row="0" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
-                   <item>
-                    <widget class="QLabel" name="label_65">
-                     <property name="lineWidth">
-                      <number>0</number>
-                     </property>
-                     <property name="text">
-                      <string>Enter Dexela XY Pixels</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="pb_read_dexela_ROI1">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>Read Dexela ROI1 (top-right corner)</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tab_12">
-           <attribute name="title">
-            <string>Detector Controls</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_118">
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_54">
               <property name="text">
-               <string/>
+               <string>ZP</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_14">
-              <property name="title">
-               <string>Flatfield Corrections</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_138">
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_63">
-                 <property name="text">
-                  <string>Chosse Detector</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QPushButton" name="pb_cam11_disable_flatfield">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  Disable CAM11 FlatField  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pb_cam11_flatfield">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  Save+Enable CAM11 FlatField  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QComboBox" name="cb_dets_for_ff_corr"/>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_62">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="pushButton_12">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  Save+Enable FlatField  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QPushButton" name="pushButton_16">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> Disable FlatField  </string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <layout class="QVBoxLayout" name="verticalLayout_24">
+            <item row="2" column="0" colspan="2">
+             <layout class="QHBoxLayout" name="horizontalLayout_32">
               <item>
-               <widget class="QLabel" name="label_27">
+               <widget class="QLabel" name="label_52">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
-                 <string>Update Detector Position</string>
+                 <string>Label:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cb_det_names_for_pos">
+               <widget class="QLineEdit" name="le_qplan_name">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="pb_update_dets_pos">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
                 <property name="text">
-                 <string>Update Position</string>
+                 <string>queue_plan1</string>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
-            <item row="0" column="2" rowspan="2">
-             <widget class="QGroupBox" name="groupBox_15">
-              <property name="title">
-               <string>Misc.</string>
+            <item row="0" column="0" colspan="2">
+             <widget class="QPushButton" name="pb_flyplan_to_qserver">
+              <property name="enabled">
+               <bool>true</bool>
               </property>
-              <layout class="QGridLayout" name="gridLayout_110">
-               <item row="0" column="0">
-                <layout class="QGridLayout" name="gridLayout_125">
-                 <item row="1" column="0">
-                  <widget class="QPushButton" name="pb_merlin_filterIN">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Merlin Filter IN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QPushButton" name="pb_merlin_filterOUT">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Merlin Filter OUT</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QPushButton" name="pb_light_OFF">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Microscope Light OFF</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QPushButton" name="pb_light_ON">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Microscope Light ON</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_64">
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_17">
-                 <item>
-                  <widget class="QPushButton" name="pb_eiger_filter_a_in">
-                   <property name="text">
-                    <string>Eiger Filter-A IN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_eiger_filter_a_out">
-                   <property name="text">
-                    <string>Eiger Filter-A OUT</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="2" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_19">
-                 <item>
-                  <widget class="QPushButton" name="pb_eiger_filter_b_in">
-                   <property name="text">
-                    <string>Eiger Filter-B IN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_eiger_filter_b_out">
-                   <property name="text">
-                    <string>Eiger Filter-B OUT</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="3" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_20">
-                 <item>
-                  <widget class="QPushButton" name="pb_eiger_filter_c_in">
-                   <property name="text">
-                    <string>Eiger Filter-C IN</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_eiger_filter_c_out">
-                   <property name="text">
-                    <string>Eiger Filter-C OUT</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>
+    Send to Queue 
+</string>
+              </property>
              </widget>
             </item>
            </layout>
@@ -2108,7 +1583,7 @@ Create PDF and User Directory
         <item row="2" column="0" colspan="2">
          <widget class="QTabWidget" name="tabWidget">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -3680,746 +3155,10 @@ Show Meta Data
           </widget>
          </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QGroupBox" name="groupBox">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>Plotting</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_55">
-           <item row="0" column="0">
-            <layout class="QGridLayout" name="gridLayout_51">
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <item row="1" column="0">
-              <layout class="QGridLayout" name="gridLayout_10">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_48">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>    Elem:</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="cb_plot_elem">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_2">
-               <item row="0" column="2">
-                <widget class="QPushButton" name="pb_plot_last">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>80</width>
-                   <height>23</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Last Scan</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="le_plot_sd">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>-1</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>Scan ID</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pb_plot">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton:pressed{ 
-	background-color: rgb(255, 0, 0); 
-	}</string>
-             </property>
-             <property name="text">
-              <string>  
-Plot
-</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <layout class="QGridLayout" name="gridLayout_54">
-             <property name="rightMargin">
-              <number>10</number>
-             </property>
-             <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_5">
-               <item row="0" column="0">
-                <widget class="QPushButton" name="pb_erf_fit">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> 
-ERF Fit
-</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="cb_erf_linear_flag">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="layoutDirection">
-                  <enum>Qt::LeftToRight</enum>
-                 </property>
-                 <property name="text">
-                  <string>Linear Flag      </string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="1" column="0">
-              <layout class="QGridLayout" name="gridLayout_18">
-               <item row="0" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_14">
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <item>
-                  <widget class="QLabel" name="label_49">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Threshold</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="dsb_line_center_thre">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimum">
-                    <double>0.010000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>1.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.500000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="pb_plot_line_center">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> 
- Return Line Center 
- </string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="pb_close_all_plot">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">color: rgb(255, 0, 0);</string>
-             </property>
-             <property name="text">
-              <string>
-  Close All Plots 
-</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QTabWidget" name="tabWidget_10">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="tabPosition">
-           <enum>QTabWidget::West</enum>
-          </property>
-          <property name="currentIndex">
-           <number>1</number>
-          </property>
-          <property name="elideMode">
-           <enum>Qt::ElideRight</enum>
-          </property>
-          <widget class="QWidget" name="tabWidget_10Page1">
-           <attribute name="title">
-            <string>Scan</string>
-           </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_30">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_5"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="tabWidget_10Page2">
-           <attribute name="title">
-            <string>Queue</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_16">
-            <item row="3" column="0">
-             <widget class="QRadioButton" name="rb_mll_manual_roi">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="toolTip">
-               <string>select for 2D scan</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="text">
-               <string>MLL</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <property name="autoExclusive">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3" rowspan="5">
-             <widget class="QGroupBox" name="gb_queue_server_plan">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="title">
-               <string>Manual ROI</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_146">
-               <item row="3" column="1">
-                <widget class="QLabel" name="label_196">
-                 <property name="text">
-                  <string>zpssx</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="3">
-                <widget class="QLabel" name="label_193">
-                 <property name="text">
-                  <string>zpssy</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="3">
-                <widget class="QLabel" name="label_208">
-                 <property name="text">
-                  <string>smary</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="5">
-                <widget class="QLabel" name="label_194">
-                 <property name="text">
-                  <string>zpssz</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QLabel" name="label_211">
-                 <property name="text">
-                  <string>zpz1</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="3">
-                <widget class="QLabel" name="label_210">
-                 <property name="text">
-                  <string>zpsth</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="6">
-                <widget class="QDoubleSpinBox" name="dsb_smarz_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> um</string>
-                 </property>
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-6000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>6000.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>100.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="5">
-                <widget class="QLabel" name="label_209">
-                 <property name="text">
-                  <string>smarz</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="6">
-                <widget class="QDoubleSpinBox" name="dsb_zpssz_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> um</string>
-                 </property>
-                 <property name="decimals">
-                  <number>3</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-14.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>14.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>1.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-5.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_zpz1_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-45.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>10.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>10.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_zpssx_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> um</string>
-                 </property>
-                 <property name="decimals">
-                  <number>3</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-14.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>14.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>1.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-5.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_smary_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> um</string>
-                 </property>
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-6000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>6000.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>100.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_smarx_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> um</string>
-                 </property>
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-6000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>6000.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>100.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLabel" name="label_207">
-                 <property name="text">
-                  <string>smarx</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_zpssy_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> um</string>
-                 </property>
-                 <property name="decimals">
-                  <number>3</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-14.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>14.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>1.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-5.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_zpsth_manual_roi">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
-                 <property name="prefix">
-                  <string notr="true"/>
-                 </property>
-                 <property name="suffix">
-                  <string> deg</string>
-                 </property>
-                 <property name="decimals">
-                  <number>2</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-100.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="5" colspan="2">
-                <widget class="QPushButton" name="pb_get_current_position">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> Get curr pos  </string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QCheckBox" name="cb_queue_use_curr_pos">
-              <property name="text">
-               <string>Use Current Position</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QRadioButton" name="rb_zp_manual_roi">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>ZP</string>
-              </property>
-              <property name="checkable">
-               <bool>false</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <layout class="QHBoxLayout" name="horizontalLayout_32">
-              <item>
-               <widget class="QLabel" name="label_52">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Label:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="le_qplan_name">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>queue_plan1</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="QPushButton" name="pb_flyplan_to_qserver">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>
-    Send to Queue 
-</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
         <item row="0" column="0" colspan="2">
          <widget class="QGroupBox" name="groupBox_3">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -4430,7 +3169,7 @@ ERF Fit
           <property name="title">
            <string>FlyScans</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_52">
+          <layout class="QGridLayout" name="gridLayout_6">
            <item row="0" column="0">
             <widget class="QWidget" name="widget_2" native="true">
              <property name="sizePolicy">
@@ -4919,9 +3658,9 @@ ERF Fit
              </item>
             </layout>
            </item>
-           <item row="1" column="0" colspan="3">
-            <layout class="QGridLayout" name="gridLayout_6">
-             <item row="0" column="0">
+           <item row="1" column="0" colspan="2">
+            <layout class="QVBoxLayout" name="verticalLayout_34">
+             <item>
               <layout class="QHBoxLayout" name="horizontalLayout_27">
                <item>
                 <widget class="QLabel" name="label_scan_info_calc">
@@ -4960,7 +3699,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                <item>
                 <widget class="QLineEdit" name="text_scan_plan">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -4969,75 +3708,12 @@ font: 15pt &quot;Modern No. 20&quot;;
                </item>
               </layout>
              </item>
-             <item row="0" column="1" rowspan="2">
-              <widget class="QPushButton" name="start">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>MS Shell Dlg 2</family>
-                 <pointsize>16</pointsize>
-                 <italic>false</italic>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="toolTip">
-                <string>excetute the scan plan</string>
-               </property>
-               <property name="autoFillBackground">
-                <bool>false</bool>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-	background-color: rgb(167, 255, 180);
-	
-	font: 16pt &quot;MS Shell Dlg 2&quot;;
-	}
-
-QPushButton:hover{ 
-	background-color: rgb(255, 255, 0); 
-	}
-
-QPushButton:pressed{ 
-	background-color: rgb(0, 255, 0); 
-	}
-
-
-
-</string>
-               </property>
-               <property name="text">
-                <string>
-RUN PLAN
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2" rowspan="2">
-              <widget class="QPushButton" name="pb_abort_fly">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-Abort Scan
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
+             <item>
               <layout class="QHBoxLayout" name="horizontalLayout_40">
                <item>
                 <widget class="QPushButton" name="pb_batchscan_copy">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -5055,7 +3731,7 @@ Abort Scan
                <item>
                 <widget class="QPushButton" name="pb_scan_copy">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -5070,9 +3746,1353 @@ Copy Plan
                  </property>
                 </widget>
                </item>
+               <item>
+                <widget class="QPushButton" name="pb_abort_fly">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>        Abort Plan        </string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
             </layout>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="start">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>MS Shell Dlg 2</family>
+               <pointsize>16</pointsize>
+               <italic>false</italic>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="toolTip">
+              <string>excetute the scan plan</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+	background-color: rgb(167, 255, 180);
+	
+	font: 16pt &quot;MS Shell Dlg 2&quot;;
+	}
+
+QPushButton:hover{ 
+	background-color: rgb(255, 255, 0); 
+	}
+
+QPushButton:pressed{ 
+	background-color: rgb(0, 255, 0); 
+	}
+
+
+
+</string>
+             </property>
+             <property name="text">
+              <string>
+RUN PLAN
+</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="3">
+         <widget class="QTabWidget" name="tabWidget_18">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="tabPosition">
+           <enum>QTabWidget::West</enum>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tabWidget_18Page1">
+           <attribute name="title">
+            <string>Detector Motion</string>
+           </attribute>
+           <layout class="QHBoxLayout" name="horizontalLayout_31">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>CAM/DET IN and OUT</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="3" column="2">
+                <widget class="QPushButton" name="pb_dexela_OUT">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Dexela OUT</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="5">
+                <widget class="QDoubleSpinBox" name="db_dexela">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-99.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>500.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="5">
+                <widget class="QDoubleSpinBox" name="db_diffx">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1500.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1500.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QDoubleSpinBox" name="db_cam06x">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-99.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_68">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="4">
+                <widget class="QDoubleSpinBox" name="dsb_flur_in_pos">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-100.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>-7.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-9.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QPushButton" name="pb_cam6OUT">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  CAM6 OUT  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="3">
+                <widget class="QLabel" name="label_74">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>IN Pos. = </string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="4">
+                <widget class="QPushButton" name="pb_merlinOUT">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Det Tower OUT</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QPushButton" name="pb_cam11IN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  CAM 11 IN   </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="3">
+                <widget class="QPushButton" name="pb_telescope">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>   Telescope IN </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="5">
+                <widget class="QDoubleSpinBox" name="db_fs_det">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-150.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pb_vortexIN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>XRF Det IN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pb_cam6IN">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  CAM6 IN  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QPushButton" name="pb_laser_in">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Laser IN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QPushButton" name="pb_vortexOUT">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>XRF Det OUT</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QPushButton" name="pb_merlinIN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> Merlin IN  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="pb_dexela_IN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>   Dexela IN    </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QPushButton" name="pb_eiger_in">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Eiger IN</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Abort Motion</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_117">
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pb_stop_fluor">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>               Stop Fluor.             </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_55">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pb_stop_dexela">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop Dexela</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="pb_stop_cam11">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop CAM11</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QPushButton" name="pb_stop_merlin">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop Merlin/Eiger</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="groupBox_11">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Diff Stage Motion</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_42">
+               <item row="3" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_23">
+                 <item>
+                  <widget class="QLabel" name="label_73">
+                   <property name="text">
+                    <string>diff_z</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="dsb_move_diff_z_rel_value">
+                   <property name="suffix">
+                    <string> mm</string>
+                   </property>
+                   <property name="minimum">
+                    <double>-50.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>50.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_move_diff_z">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Move diff_z</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="2" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_2theta">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>2theta = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> deg</string>
+                   </property>
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <double>25.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_r">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>r = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> mm</string>
+                   </property>
+                   <property name="maximum">
+                    <double>5000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>500.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_x">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>gamma = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> deg</string>
+                   </property>
+                   <property name="decimals">
+                    <number>2</number>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_y">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>delta = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> deg</string>
+                   </property>
+                   <property name="minimum">
+                    <double>-5.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>25.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="4" column="0">
+                <widget class="QPushButton" name="pb_pos_to_angle">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> Calculate Diff.Pos.</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <item>
+                  <widget class="QPushButton" name="pb_move_diff">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Move Diff. Stage</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_abort_diff">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Abort Diff. Motion</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_copy_pos2angle">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Copy Results</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_mll_theta_for_diff">
+                   <property name="text">
+                    <string>MLL User</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0" rowspan="3">
+                <layout class="QGridLayout" name="gridLayout_137">
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="pb_reset_dexela_ROI1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Reset ROI1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_15">
+                   <item>
+                    <widget class="QSpinBox" name="sp_dexela_xpixel">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="prefix">
+                      <string>x = </string>
+                     </property>
+                     <property name="maximum">
+                      <number>9999</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>10</number>
+                     </property>
+                     <property name="value">
+                      <number>55</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="sp_dexela_ypixel">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="prefix">
+                      <string>y = </string>
+                     </property>
+                     <property name="maximum">
+                      <number>9999</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>10</number>
+                     </property>
+                     <property name="value">
+                      <number>99</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_21">
+                   <item>
+                    <widget class="QLabel" name="label_65">
+                     <property name="lineWidth">
+                      <number>0</number>
+                     </property>
+                     <property name="text">
+                      <string>Enter Dexela XY Pixels</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pb_read_dexela_ROI1">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Read Dexela ROI1 (top-right corner)</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_12">
+           <attribute name="title">
+            <string>Detector Controls</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_118">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_54">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QGroupBox" name="groupBox_14">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Flatfield Corrections</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_138">
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_63">
+                 <property name="text">
+                  <string>Chosse Detector</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pb_cam11_disable_flatfield">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  Disable CAM11 FlatField  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pb_cam11_flatfield">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  Save+Enable CAM11 FlatField  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QComboBox" name="cb_dets_for_ff_corr"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_62">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="pushButton_12">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  Save+Enable FlatField  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QPushButton" name="pushButton_16">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> Disable FlatField  </string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_24">
+              <item>
+               <widget class="QLabel" name="label_27">
+                <property name="text">
+                 <string>Update Detector Position</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cb_det_names_for_pos">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pb_update_dets_pos">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Update Position</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="2" rowspan="2">
+             <widget class="QGroupBox" name="groupBox_15">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Misc.</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_110">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_125">
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="pb_merlin_filterIN">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Merlin Filter IN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QPushButton" name="pb_merlin_filterOUT">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Merlin Filter OUT</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QPushButton" name="pb_light_OFF">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Microscope Light OFF</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QPushButton" name="pb_light_ON">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Microscope Light ON</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_64">
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_17">
+                 <item>
+                  <widget class="QPushButton" name="pb_eiger_filter_a_in">
+                   <property name="text">
+                    <string>Eiger Filter-A IN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_eiger_filter_a_out">
+                   <property name="text">
+                    <string>Eiger Filter-A OUT</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="2" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_19">
+                 <item>
+                  <widget class="QPushButton" name="pb_eiger_filter_b_in">
+                   <property name="text">
+                    <string>Eiger Filter-B IN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_eiger_filter_b_out">
+                   <property name="text">
+                    <string>Eiger Filter-B OUT</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="3" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_20">
+                 <item>
+                  <widget class="QPushButton" name="pb_eiger_filter_c_in">
+                   <property name="text">
+                    <string>Eiger Filter-C IN</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_eiger_filter_c_out">
+                   <property name="text">
+                    <string>Eiger Filter-C OUT</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Plotting</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_55">
+           <item row="3" column="0">
+            <layout class="QGridLayout" name="gridLayout_54">
+             <property name="rightMargin">
+              <number>10</number>
+             </property>
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pb_erf_fit">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> 
+ERF Fit
+</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="cb_erf_linear_flag">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="text">
+                  <string>Linear Flag      </string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <layout class="QGridLayout" name="gridLayout_18">
+               <item row="0" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_14">
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="label_49">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Threshold</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="dsb_line_center_thre">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimum">
+                    <double>0.010000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.500000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pb_plot_line_center">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> 
+ Return Line Center 
+ </string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="pb_plot">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton:pressed{ 
+	background-color: rgb(255, 0, 0); 
+	}</string>
+             </property>
+             <property name="text">
+              <string>  
+Plot
+</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <layout class="QGridLayout" name="gridLayout_51">
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item row="1" column="0">
+              <layout class="QGridLayout" name="gridLayout_10">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_48">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>    Elem:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="cb_plot_elem">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="2">
+                <widget class="QPushButton" name="pb_plot_last">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>80</width>
+                   <height>23</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Last Scan</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="le_plot_sd">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>-1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Scan ID</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="pb_close_all_plot">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>
+  Close All Plots 
+</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -6051,7 +6071,7 @@ ZP Tomo Widget
           <item row="0" column="0" colspan="2">
            <widget class="GraphicsLayoutWidget" name="pressure_plot_canvas">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -6186,13 +6206,13 @@ color:rgb(51, 184, 141)</string>
         <item row="0" column="0">
          <widget class="QTabWidget" name="sample_ex_tabs">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_6">
            <attribute name="title">
@@ -6207,6 +6227,12 @@ color:rgb(51, 184, 141)</string>
               <layout class="QGridLayout" name="gridLayout_103">
                <item row="1" column="0">
                 <widget class="QCheckBox" name="cb_sample_ex_det_out">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Move Dets Out</string>
                  </property>
@@ -6361,7 +6387,7 @@ EVAC
               <property name="text">
                <string>
 Open He Valve
-</string>
+ (Cylinder side)</string>
               </property>
              </widget>
             </item>
@@ -6391,7 +6417,7 @@ Open He Valve
               <property name="text">
                <string>
 Close He Valve
-</string>
+(Cylinder side)</string>
               </property>
              </widget>
             </item>
@@ -6432,7 +6458,7 @@ Stop Venting
         <item row="0" column="2">
          <widget class="QTextEdit" name="textEdit">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -6472,6 +6498,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="enabled">
            <bool>true</bool>
           </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Status</string>
           </property>
@@ -6491,6 +6523,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
            </item>
            <item row="3" column="0">
             <widget class="QGroupBox" name="groupBox_28">
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
              <property name="title">
               <string>Vents</string>
              </property>
@@ -6540,7 +6575,7 @@ indicator {
                  </sizepolicy>
                 </property>
                 <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
+                 <enum>Qt::RightToLeft</enum>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">color: rgb(245, 121, 0);</string>
@@ -6687,6 +6722,12 @@ font: 18pt &quot;Cantarell&quot;;</string>
            <layout class="QGridLayout" name="gridLayout_81">
             <item row="1" column="0">
              <widget class="QGroupBox" name="groupBox_26">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="title">
                <string>S5 (mm)</string>
               </property>
@@ -6711,7 +6752,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                    <item>
                     <widget class="QPushButton" name="pb_S5_Open">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
@@ -6726,7 +6767,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                    <item>
                     <widget class="QPushButton" name="pb_S5_VClose">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
@@ -6741,7 +6782,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                    <item>
                     <widget class="QPushButton" name="pb_S5_HClose">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
@@ -6756,7 +6797,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                    <item>
                     <widget class="QPushButton" name="pb_S5_Close">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
@@ -7131,8 +7172,16 @@ font: 18pt &quot;Cantarell&quot;;</string>
                </item>
                <item row="2" column="0" rowspan="2" colspan="4">
                 <widget class="QPushButton" name="pb_move_s5">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
-                  <string>Move Gap to Set Value</string>
+                  <string>
+Move Gap to Set Value
+</string>
                  </property>
                 </widget>
                </item>
@@ -7148,6 +7197,12 @@ font: 18pt &quot;Cantarell&quot;;</string>
             </item>
             <item row="2" column="0">
              <widget class="QGroupBox" name="groupBox_12">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="title">
                <string>Troubleshooting</string>
               </property>
@@ -7201,6 +7256,12 @@ font: 18pt &quot;Cantarell&quot;;</string>
             </item>
             <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_19">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="title">
                <string>SSA2 (mm)</string>
               </property>
@@ -7560,13 +7621,27 @@ font: 18pt &quot;Cantarell&quot;;</string>
                </item>
                <item row="2" column="0" colspan="3">
                 <widget class="QPushButton" name="pb_move_ssa2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
-                  <string>Move Gap to Set Value</string>
+                  <string>
+Move Gap to Set Value
+</string>
                  </property>
                 </widget>
                </item>
                <item row="2" column="3" colspan="2">
                 <widget class="QPushButton" name="pb_center_ssa2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Center SSA2 (Auto)</string>
                  </property>
@@ -7577,7 +7652,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                  <item>
                   <widget class="QLabel" name="label_134">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -7599,9 +7674,7 @@ Preset Positions</string>
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>
-     Fully Open
-       </string>
+                      <string>Fully Open   </string>
                      </property>
                     </widget>
                    </item>
@@ -7614,9 +7687,7 @@ Preset Positions</string>
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>
-  0.1x2.1  
-</string>
+                      <string>0.1x2.1 </string>
                      </property>
                     </widget>
                    </item>
@@ -7629,9 +7700,7 @@ Preset Positions</string>
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>
-2.1x.1 
-</string>
+                      <string>2.1x.1 </string>
                      </property>
                     </widget>
                    </item>
@@ -7644,7 +7713,7 @@ Preset Positions</string>
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>    0.05x0.03    </string>
+                      <string> 0.05x0.03    </string>
                      </property>
                     </widget>
                    </item>
@@ -7695,6 +7764,12 @@ Preset Positions</string>
               <layout class="QGridLayout" name="gridLayout_83">
                <item row="0" column="1">
                 <widget class="QPushButton" name="pb_zpbsy_in">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Beam Stop IN (Y+100)</string>
                  </property>
@@ -7702,6 +7777,12 @@ Preset Positions</string>
                </item>
                <item row="1" column="1">
                 <widget class="QPushButton" name="pb_zpbsy_out">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Beam Stop OUT (Y-100)</string>
                  </property>
@@ -7716,12 +7797,20 @@ Preset Positions</string>
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>OSA IN (Y+2700)</string>
+                  <string>
+OSA IN (Y+2700)
+</string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="2">
                 <widget class="QPushButton" name="pb_zp_nanobeam">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>ZP to Nanobeam</string>
                  </property>
@@ -7729,6 +7818,12 @@ Preset Positions</string>
                </item>
                <item row="0" column="2">
                 <widget class="QPushButton" name="pb_zp_cam11_view">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>ZP to CAM 11 View</string>
                  </property>
@@ -7737,13 +7832,15 @@ Preset Positions</string>
                <item row="1" column="0">
                 <widget class="QPushButton" name="pb_osa_out">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>OSA OUT (Y-2700)</string>
+                  <string>
+OSA OUT (Y-2700)
+</string>
                  </property>
                 </widget>
                </item>
@@ -7753,7 +7850,7 @@ Preset Positions</string>
             <item>
              <widget class="QGroupBox" name="groupBox_24">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -8221,7 +8318,7 @@ Move to New Focus
             <item>
              <widget class="QGroupBox" name="groupBox_34">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -9332,6 +9429,9 @@ Start Focus Series
                <string>MLL_Rot.Center Alignment</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_53">
+               <property name="verticalSpacing">
+                <number>0</number>
+               </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_80">
                  <property name="text">
@@ -9931,7 +10031,7 @@ Apply All Corrections
         <item row="0" column="0">
          <widget class="QPlainTextEdit" name="pte_log">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -9944,56 +10044,340 @@ Apply All Corrections
        <attribute name="title">
         <string>Energy Change</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_107">
-        <item row="1" column="0" colspan="2">
-         <widget class="QGroupBox" name="gb_calib_foil">
-          <property name="title">
-           <string>Calibration Foils</string>
+       <layout class="QGridLayout" name="gridLayout_52">
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_33">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
+          <property name="title">
+           <string>Feedbacks</string>
+          </property>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="geometry">
+            <rect>
+             <x>8</x>
+             <y>33</y>
+             <width>210</width>
+             <height>59</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>
+ Engage Mirror Feedbacks 
+</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_153">
+           <property name="geometry">
+            <rect>
+             <x>8</x>
+             <y>8</y>
+             <width>16</width>
+             <height>19</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_23">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="title">
+           <string>Upstream Cameras</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_71">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_133">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QDoubleSpinBox" name="db_fs">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::UpDownArrows</enum>
+               </property>
+               <property name="suffix">
+                <string> mm</string>
+               </property>
+               <property name="decimals">
+                <number>1</number>
+               </property>
+               <property name="minimum">
+                <double>-100.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="db_cam6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::UpDownArrows</enum>
+               </property>
+               <property name="suffix">
+                <string> mm</string>
+               </property>
+               <property name="decimals">
+                <number>1</number>
+               </property>
+               <property name="minimum">
+                <double>-100.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>100.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>1.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <layout class="QGridLayout" name="gridLayout_80">
+             <item row="1" column="0">
+              <layout class="QGridLayout" name="gridLayout_76">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_72">
+                 <property name="text">
+                  <string>     Front End Fluor. Screen     </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_75">
+                 <property name="text">
+                  <string>    CAM 06    </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" rowspan="2">
+                <layout class="QGridLayout" name="gridLayout_74">
+                 <item row="2" column="1">
+                  <widget class="QPushButton" name="pb_CAM6_OUT">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>    OUT   </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="pb_FS_OUT">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>    OUT   </string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="pb_FS_IN">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string> 
+    IN     
+</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QPushButton" name="pb_CAM6_IN">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>   
+  IN    
+</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="2" column="1">
+                <widget class="QPushButton" name="pb_CAM6_LASER">
+                 <property name="text">
+                  <string>Laser engage position</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="groupBox_32">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>Set Energy</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_99">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_46">
-             <property name="text">
-              <string/>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="sb_harmonic">
+             <property name="minimum">
+              <number>-1</number>
              </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="cb_change_energy_only">
+             <property name="toolTip">
+              <string>does not mover mirrors or pitch, ugap and bragg only</string>
+             </property>
+             <property name="text">
+              <string>Change energy only</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_148">
+             <property name="text">
+              <string>      Harmonic: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox">
+             <layout class="QGridLayout" name="gridLayout_96">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_70">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Move Energy with Sid = </string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QPushButton" name="pb_energy_change_w_sid">
+                <property name="text">
+                 <string>
+ Move 
+</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="sb_energy_sid">
+                <property name="minimum">
+                 <number>-9999999</number>
+                </property>
+                <property name="maximum">
+                 <number>9999999</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="value">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_81">
              <property name="text">
               <string>  Target Energy: </string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="dsb_target_e">
-             <property name="styleSheet">
-              <string notr="true">font: 14pt &quot;Cantarell&quot;;</string>
-             </property>
-             <property name="suffix">
-              <string> keV</string>
-             </property>
-             <property name="decimals">
-              <number>2</number>
-             </property>
-             <property name="minimum">
-              <double>5.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>25.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.500000000000000</double>
-             </property>
-             <property name="value">
-              <double>12.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -10201,101 +10585,6 @@ Apply All Corrections
              </layout>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_148">
-             <property name="text">
-              <string>      Harmonic: </string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="sb_harmonic">
-             <property name="minimum">
-              <number>-1</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>-1</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QCheckBox" name="cb_change_energy_only">
-             <property name="toolTip">
-              <string>does not mover mirrors or pitch, ugap and bragg only</string>
-             </property>
-             <property name="text">
-              <string>Change energy only</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0" colspan="2">
-            <widget class="QPushButton" name="pb_move_energy">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>
- Move   
-</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBox">
-             <layout class="QGridLayout" name="gridLayout_96">
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_70">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Move Energy with Sid = </string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QPushButton" name="pb_energy_change_w_sid">
-                <property name="text">
-                 <string>
- Move 
-</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="sb_energy_sid">
-                <property name="minimum">
-                 <number>-9999999</number>
-                </property>
-                <property name="maximum">
-                 <number>9999999</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="value">
-                 <number>0</number>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
            <item row="6" column="2">
             <layout class="QGridLayout" name="gridLayout_106">
              <item row="1" column="1">
@@ -10379,239 +10668,71 @@ Apply All Corrections
              </layout>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_86">
-          <item row="0" column="0">
-           <widget class="QGroupBox" name="groupBox_23">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="styleSheet">
-             <string notr="true"/>
-            </property>
-            <property name="title">
-             <string>Upstream Cameras</string>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-            <property name="checkable">
-             <bool>false</bool>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_71">
-             <item row="1" column="0" colspan="2">
-              <layout class="QGridLayout" name="gridLayout_80">
-               <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_76">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_72">
-                   <property name="text">
-                    <string>     Front End Fluor. Screen     </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_75">
-                   <property name="text">
-                    <string>    CAM 06    </string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1" rowspan="2">
-                  <layout class="QGridLayout" name="gridLayout_74">
-                   <item row="2" column="1">
-                    <widget class="QPushButton" name="pb_CAM6_OUT">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>    OUT   </string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QPushButton" name="pb_FS_OUT">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>    OUT   </string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QPushButton" name="pb_FS_IN">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string> 
-    IN     
-</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QPushButton" name="pb_CAM6_IN">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>   
-  IN    
-</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QPushButton" name="pb_CAM6_LASER">
-                   <property name="text">
-                    <string>Laser engage position</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_133">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <layout class="QVBoxLayout" name="verticalLayout_5">
-               <item>
-                <widget class="QDoubleSpinBox" name="db_fs">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>1</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-100.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="db_cam6">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>1</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-100.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>100.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_33">
-            <property name="title">
-             <string>Feedbacks</string>
-            </property>
-            <widget class="QPushButton" name="pushButton_2">
-             <property name="geometry">
-              <rect>
-               <x>8</x>
-               <y>33</y>
-               <width>210</width>
-               <height>59</height>
-              </rect>
+           <item row="4" column="0" colspan="2">
+            <widget class="QPushButton" name="pb_move_energy">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="text">
               <string>
- Engage Mirror Feedbacks 
+ Move   
 </string>
              </property>
             </widget>
-            <widget class="QLabel" name="label_153">
-             <property name="geometry">
-              <rect>
-               <x>8</x>
-               <y>8</y>
-               <width>16</width>
-               <height>19</height>
-              </rect>
-             </property>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
              <property name="text">
               <string/>
              </property>
             </widget>
-           </widget>
-          </item>
-         </layout>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="dsb_target_e">
+             <property name="styleSheet">
+              <string notr="true">font: 14pt &quot;Cantarell&quot;;</string>
+             </property>
+             <property name="suffix">
+              <string> keV</string>
+             </property>
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="minimum">
+              <double>5.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>25.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>12.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="gb_calib_foil">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>Calibration Foils</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -10626,7 +10747,7 @@ Apply All Corrections
            <bool>true</bool>
           </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -10895,8 +11016,8 @@ border-radius: 10px</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>2067</width>
-     <height>33</height>
+     <width>2056</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
