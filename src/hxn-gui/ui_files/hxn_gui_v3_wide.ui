@@ -4684,7 +4684,7 @@ Plot
             <item row="0" column="3" rowspan="5">
              <widget class="QGroupBox" name="gb_queue_server_plan">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">

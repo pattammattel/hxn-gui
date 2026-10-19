@@ -113,6 +113,15 @@ if OFFLINE_MODE:
     dets_fast_fs = [fs, xspress3]
 
 
+class ReorderableListWidget(QtWidgets.QListWidget):
+    """QListWidget that emits `reordered` after an internal drag-and-drop move."""
+    reordered = pyqtSignal()
+
+    def dropEvent(self, event):
+        super().dropEvent(event)
+        self.reordered.emit()
+
+
 # class Ui(QtWidgets.QMainWindow, Ui_window):  # Multiple inheritance with compiled UI (fallback)
 class Ui(QtWidgets.QMainWindow):
 
@@ -593,6 +602,7 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_export_xrf_elem_list.clicked.connect(
             lambda:self.export_xrf_elem_list(auto = False))
         self.sb_live_elem_num.valueChanged.connect(self.populate_elems_from_combobox)
+        self.sb_live_elem_num.valueChanged.connect(self._highlight_live_items)
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
         self.pb_get_proposal_info.clicked.connect(lambda:self.fill_user_info())
         self.pb_move_data_to_globus.clicked.connect(lambda:self.copy_data_to_globus(self.le_proposal_num.text().strip()))
@@ -609,6 +619,7 @@ class Ui(QtWidgets.QMainWindow):
         self._line_to_index = {str(t).split(":")[0]: i
                                for i, t in enumerate(all_elem_lines)}
         self.ptable_selected = {}  # element symbol -> line label, in click order
+        self.ptable_order = []     # line labels in plot order (box 1..N)
         self.ptable_buttons = {}
         self._ptable_max = len(self.xrf_combo_boxes)
 
@@ -697,6 +708,27 @@ class Ui(QtWidgets.QMainWindow):
             grid.addWidget(btn, r, c)
             self.ptable_buttons[sym] = btn
         outer.addLayout(grid)
+
+        order_row = QtWidgets.QHBoxLayout()
+        order_row.addWidget(QtWidgets.QLabel(
+            "Plot order (drag to reorder; green = live-plotted):"))
+        order_row.addStretch(1)
+        outer.addLayout(order_row)
+
+        self.ptable_order_list = ReorderableListWidget()
+        self.ptable_order_list.setFlow(QtWidgets.QListView.Flow.LeftToRight)
+        self.ptable_order_list.setWrapping(True)
+        self.ptable_order_list.setResizeMode(QtWidgets.QListView.ResizeMode.Adjust)
+        self.ptable_order_list.setDragDropMode(
+            QtWidgets.QAbstractItemView.DragDropMode.InternalMove)
+        self.ptable_order_list.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.ptable_order_list.setSelectionMode(
+            QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+        self.ptable_order_list.setSpacing(2)
+        self.ptable_order_list.setMaximumHeight(74)
+        self.ptable_order_list.reordered.connect(self._on_order_list_reordered)
+        outer.addWidget(self.ptable_order_list)
+
         self.update_ptable_for_energy()
         self.autofill_abundant_elements()
 
@@ -738,7 +770,7 @@ class Ui(QtWidgets.QMainWindow):
         if self.ptable_selected.get(sym) == label and label is not None:
             del self.ptable_selected[sym]
             self.update_ptable_for_energy()
-            self._update_combos_from_ptable()
+            self._apply_ptable_selection()
             return
 
         if label is None:
@@ -752,14 +784,18 @@ class Ui(QtWidgets.QMainWindow):
             return
         self.ptable_selected[sym] = label
         self.update_ptable_for_energy()
+        self._apply_ptable_selection()
+
+    def _apply_ptable_selection(self):
+        # Default order: K lines first, then L, then M (stable within each edge).
+        # The user can override this afterwards by dragging the plot-order list.
+        edge_rank = {"_L": 1, "_M": 2}
+        self.ptable_order = sorted(self.ptable_selected.values(),
+                                   key=lambda lbl: edge_rank.get(lbl[-2:], 0))
         self._update_combos_from_ptable()
 
     def _update_combos_from_ptable(self):
-        # K lines (bare symbols) fill the first boxes; L then M go to the end.
-        # sorted() is stable, so order within each edge (click/abundance) holds.
-        edge_rank = {"_L": 1, "_M": 2}
-        labels = sorted(self.ptable_selected.values(),
-                        key=lambda lbl: edge_rank.get(lbl[-2:], 0))
+        labels = list(self.ptable_order)
         default_index = self._line_to_index["Fe"]
         for i, cb in enumerate(self.xrf_combo_boxes):
             cb.blockSignals(True)
@@ -767,13 +803,55 @@ class Ui(QtWidgets.QMainWindow):
                                else default_index)
             cb.blockSignals(False)
         self.lbl_ptable_count.setText(f"{len(labels)} / {self._ptable_max}")
+        self._refresh_order_list()
+        self.populate_elems_from_combobox()
+
+    def _refresh_order_list(self):
+        if not hasattr(self, "ptable_order_list"):
+            return
+        self.ptable_order_list.clear()
+        for label in self.ptable_order:
+            self.ptable_order_list.addItem(QtWidgets.QListWidgetItem(label))
+        self._highlight_live_items()
+
+    def _highlight_live_items(self):
+        # Bold + green the first `sb_live_elem_num` entries (the live-plotted ones).
+        if not hasattr(self, "ptable_order_list"):
+            return
+        n_live = self.sb_live_elem_num.value()
+        live_bg = QtGui.QColor(0, 200, 0)
+        for i in range(self.ptable_order_list.count()):
+            item = self.ptable_order_list.item(i)
+            f = item.font()
+            f.setBold(i < n_live)
+            item.setFont(f)
+            item.setBackground(live_bg if i < n_live else QtGui.QBrush())
+            item.setToolTip("Live-plotted" if i < n_live else "")
+
+    def _on_order_list_reordered(self):
+        new_order = [self.ptable_order_list.item(i).text()
+                     for i in range(self.ptable_order_list.count())]
+        self.ptable_order = new_order
+        # Keep ptable_selected in the same order so it survives later refreshes.
+        label_to_sym = {lbl: sym for sym, lbl in self.ptable_selected.items()}
+        self.ptable_selected = {label_to_sym[lbl]: lbl
+                                for lbl in new_order if lbl in label_to_sym}
+        self._ptable_user_modified = True
+        default_index = self._line_to_index["Fe"]
+        for i, cb in enumerate(self.xrf_combo_boxes):
+            cb.blockSignals(True)
+            cb.setCurrentIndex(self._line_to_index[new_order[i]] if i < len(new_order)
+                               else default_index)
+            cb.blockSignals(False)
+        self.lbl_ptable_count.setText(f"{len(new_order)} / {self._ptable_max}")
+        self._highlight_live_items()
         self.populate_elems_from_combobox()
 
     def clear_ptable_selection(self):
         self._ptable_user_modified = True
         self.ptable_selected.clear()
         self.update_ptable_for_energy()
-        self._update_combos_from_ptable()
+        self._apply_ptable_selection()
 
     def autofill_abundant_elements(self):
         # Pick the most Earth-abundant elements excitable at the current beam
@@ -796,7 +874,7 @@ class Ui(QtWidgets.QMainWindow):
                 break
         self.ptable_selected = selected
         self.update_ptable_for_energy()
-        self._update_combos_from_ptable()
+        self._apply_ptable_selection()
 
 
     @show_error_message_box
@@ -937,12 +1015,15 @@ class Ui(QtWidgets.QMainWindow):
         # Reflect the imported list on the periodic table and keep it from being
         # overwritten by the energy-triggered auto-fill.
         self.ptable_selected = {}
+        self.ptable_order = []
         for elem in roi_elems:
             sym = str(elem).split("_")[0].capitalize()
             if sym in self.ptable_buttons and str(elem) in self._line_to_index:
                 self.ptable_selected[sym] = str(elem)
+                self.ptable_order.append(str(elem))
         self._ptable_user_modified = True
         self.update_ptable_for_energy()
+        self._refresh_order_list()
 
     @show_error_message_box
     def export_xrf_elem_list(self, auto = False):
@@ -2817,20 +2898,42 @@ class Ui(QtWidgets.QMainWindow):
 
     #exit gui
 
+    def _re_is_idle(self):
+        # RE is injected by the beamline profile; treat as idle when absent (offline).
+        re = globals().get("RE", None)
+        return re is None or getattr(re, "state", "idle") == "idle"
+
+    def _stop_thread(self, thread, wait_ms=3000):
+        # Ask the loop to exit, then wait; only force-terminate as a last resort.
+        if thread is None or not thread.isRunning():
+            return
+        thread.requestInterruption()
+        thread.quit()
+        if not thread.wait(wait_ms):
+            thread.terminate()
+            thread.wait()
+
+    def _stop_all_threads(self):
+        for name in ("scanStatus_thread", "liveWorker", "pump_update_worker",
+                     "update_thread", "live_plot_worker_thread",
+                     "points_update_thread", "pump_worker_thread", "vent_thread",
+                     "he_backfill_worker_thread", "thread"):
+            self._stop_thread(getattr(self, name, None))
+
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
-        if reply == QMessageBox.Yes and RE.state == "idle":
-
-            event.accept()
-            self.scanStatus_thread.terminate()
-            self.liveWorker.terminate()
-            plt.close('all')
-            #self.updateTimer.stop()
-            QApplication.closeAllWindows()
-
-        else:
+        if reply != QMessageBox.Yes:
+            event.ignore()
+            return
+        if not self._re_is_idle():
             event.ignore()
             QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
+            return
+
+        self._stop_all_threads()
+        plt.close('all')
+        event.accept()
+        QApplication.closeAllWindows()
 
     def close_application(self):
 
@@ -2838,17 +2941,17 @@ class Ui(QtWidgets.QMainWindow):
                                       "Are you sure to quit?", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
 
-        if choice == QMessageBox.Yes and RE.state == "idle":
-            plt.close('all')
-            self.scanStatus_thread.terminate()
-            self.liveWorker.terminate()
-            QApplication.closeAllWindows()
-
-            print('quit application')
-            sys.exit()
-        else:
+        if choice != QMessageBox.Yes:
+            return
+        if not self._re_is_idle():
             QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
-            pass
+            return
+
+        self._stop_all_threads()
+        plt.close('all')
+        QApplication.closeAllWindows()
+        print('quit application')
+        sys.exit()
 
     def connect_sample_exchange(self):
         #sample exchange
@@ -3088,6 +3191,21 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_peakBeamXY.clicked.connect(lambda:RE(peak_the_flux()))
         self.pb_recover_from_beamdump.clicked.connect(lambda:RE(recover_from_beamdump()))
 
+
+def _interruptible_wait(thread, total_ms, chunk_ms=200):
+    """Wait in small chunks so the thread exits promptly when interrupted."""
+    elapsed = 0
+    while elapsed < total_ms:
+        if thread.isInterruptionRequested():
+            return
+        step = min(chunk_ms, total_ms - elapsed)
+        if QtTest is not None:
+            QtTest.QTest.qWait(step)
+        else:
+            thread.msleep(step)
+        elapsed += step
+
+
 #from FXI--modified
 class liveStatus(QThread):
     current_sts = pyqtSignal(int)
@@ -3104,14 +3222,14 @@ class liveStatus(QThread):
             print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
             self.pv_obj = None
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 # Only read if connected
                 if self.pv_obj is not None and self.pv_obj.connected:
                     value = self.pv_obj.get(timeout=0.1)
                     if value is not None:
                         self.current_sts.emit(value)
-                QtTest.QTest.qWait(500)
+                _interruptible_wait(self, 500)
             except Exception as e:
                 # Silently continue if PV unavailable
                 pass
@@ -3156,11 +3274,11 @@ class liveUpdate(QThread):
                 self.pv_objects.append(None)
         print(f"  PV objects created, starting update loop...")
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 positions = self.return_values()
                 self.current_positions.emit(positions)
-                QtTest.QTest.qWait(self.update_interval_ms)
+                _interruptible_wait(self, self.update_interval_ms)
             except:
                 pass
 
@@ -3182,7 +3300,7 @@ class liveThresholdUpdate(QThread):
             print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
             self.pv_obj = None
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 # Only read if connected
                 if self.pv_obj is not None and self.pv_obj.connected:
@@ -3198,7 +3316,7 @@ class liveThresholdUpdate(QThread):
                 # PV unavailable, emit False
                 self.current_sts.emit(False)
 
-            QtTest.QTest.qWait(60000)
+            _interruptible_wait(self, 60000)
 
 class updateScanProgress(QThread):
 
@@ -3233,14 +3351,14 @@ class updateScanProgress(QThread):
         except:
             self.tot_scan_points.emit(0)
 
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 if self.update_pv_obj is not None and self.update_pv_obj.connected:
                     points = self.update_pv_obj.get(timeout=0.1)
                     self.completed_points.emit(points if points is not None else 0)
             except:
                 pass
-            QtTest.QTest.qWait(self.update_interval_ms)
+            _interruptible_wait(self, self.update_interval_ms)
             if caget(self.tot_pv) == caget(self.update_pv):
                 break
 
@@ -3362,7 +3480,7 @@ class LivePressureValueThread(QThread):
             self.pv_obj = None
         
         start_time = 0
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 if self.pv_obj is not None and self.pv_obj.connected:
                     pressure = self.pv_obj.get(timeout=0.1)
@@ -3374,7 +3492,7 @@ class LivePressureValueThread(QThread):
             except Exception as e:
                 self.current_time_pressure.emit((start_time, 0.0))
             
-            QtTest.QTest.qWait(int(self.wait_time))
+            _interruptible_wait(self, int(self.wait_time))
             start_time += self.wait_time
 
 
