@@ -1287,7 +1287,7 @@ class Ui(QtWidgets.QMainWindow):
                             scan_time_min = scan_time)))
 
     @show_error_message_box
-    def update_mosaic_estimate(self):
+    def update_mosaic_estimate(self, *args):
         # Mirror mosaic_overlap_scan's math so the user sees the optimized ranges
         # and estimated fly time before the plan is queued (no hardware needed).
         max_travel = 25
