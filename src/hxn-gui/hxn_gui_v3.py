@@ -746,7 +746,11 @@ class Ui(QtWidgets.QMainWindow):
         self._update_combos_from_ptable()
 
     def _update_combos_from_ptable(self):
-        labels = list(self.ptable_selected.values())
+        # K lines (bare symbols) fill the first boxes; L then M go to the end.
+        # sorted() is stable, so order within each edge (click/abundance) holds.
+        edge_rank = {"_L": 1, "_M": 2}
+        labels = sorted(self.ptable_selected.values(),
+                        key=lambda lbl: edge_rank.get(lbl[-2:], 0))
         default_index = self._line_to_index["Fe"]
         for i, cb in enumerate(self.xrf_combo_boxes):
             cb.blockSignals(True)
