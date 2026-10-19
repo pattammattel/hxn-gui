@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>2056</width>
-    <height>1169</height>
+    <width>1946</width>
+    <height>1164</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -2655,7 +2655,7 @@ Show Meta Data
         <item row="0" column="0" colspan="2">
          <widget class="QGroupBox" name="groupBox_3">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -3206,41 +3206,41 @@ RUN PLAN
            <item row="1" column="0" colspan="2">
             <layout class="QVBoxLayout" name="verticalLayout_34">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_27">
-               <item>
-                <widget class="QLabel" name="label_scan_info_calc">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Modern No. 20</family>
-                   <pointsize>15</pointsize>
-                   <italic>false</italic>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(73, 91, 255);
+              <widget class="QLabel" name="label_scan_info_calc">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Modern No. 20</family>
+                 <pointsize>15</pointsize>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(73, 91, 255);
 font: 15pt &quot;Modern No. 20&quot;;
 
 
 </string>
-                 </property>
-                 <property name="text">
-                  <string>Scan Info</string>
-                 </property>
-                 <property name="textFormat">
-                  <enum>Qt::MarkdownText</enum>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
+               </property>
+               <property name="text">
+                <string>Scan Info</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::MarkdownText</enum>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_27">
                <item>
                 <widget class="QLineEdit" name="text_scan_plan">
                  <property name="sizePolicy">
@@ -3314,7 +3314,7 @@ Copy Plan
         <item row="1" column="0" colspan="3">
          <widget class="QTabWidget" name="tabWidget_18">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -11036,7 +11036,7 @@ border-radius: 10px</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>2056</width>
+     <width>1946</width>
      <height>33</height>
     </rect>
    </property>
