@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1946</width>
+    <width>1940</width>
     <height>1164</height>
    </rect>
   </property>
@@ -5513,6 +5513,12 @@ Plot
            </item>
            <item row="2" column="0">
             <widget class="QTextEdit" name="te_mosaic_estimate">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -11087,7 +11093,7 @@ border-radius: 10px</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1946</width>
+     <width>1940</width>
      <height>33</height>
     </rect>
    </property>
