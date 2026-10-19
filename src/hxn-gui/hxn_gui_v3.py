@@ -1120,6 +1120,12 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_flyplan_to_qserver.clicked.connect(lambda:self.send_to_queue())
         self.pb_send_mosaic_to_queue.clicked.connect(lambda:self.send_mosaic_to_queue())
 
+        # Live estimate of optimized ranges and total time for the mosaic scan.
+        for _w in (self.sb_yrange_mosaic, self.sb_xrange_mosaic,
+                   self.dsb_overlap_mosaic, self.dsb_dwell, self.sb_stepsize_mosaic):
+            _w.valueChanged.connect(self.update_mosaic_estimate)
+        self.update_mosaic_estimate()
+
         self.cb_queue_use_curr_pos.stateChanged.connect(self.toggle_manual_roi_box)
 
         self.pb_get_current_position.clicked.connect(self.fill_current_pos)
@@ -1281,13 +1287,54 @@ class Ui(QtWidgets.QMainWindow):
                             scan_time_min = scan_time)))
 
     @show_error_message_box
+    def update_mosaic_estimate(self):
+        # Mirror mosaic_overlap_scan's math so the user sees the optimized ranges
+        # and estimated fly time before the plan is queued (no hardware needed).
+        max_travel = 25
+        overlap_per = self.dsb_overlap_mosaic.value()
+        xlen = self.sb_xrange_mosaic.value()
+        ylen = self.sb_yrange_mosaic.value()
+        dwell = self.dsb_dwell.value()
+        step_size = self.sb_stepsize_mosaic.value()
+
+        scan_dim = max_travel - round(max_travel * overlap_per * 0.01)
+        if scan_dim <= 0 or step_size <= 0:
+            self.te_mosaic_estimate.setPlainText(
+                "Invalid parameters (overlap too high or step size is 0).")
+            return
+
+        x_tile = round(abs(xlen) / scan_dim)
+        y_tile = round(abs(ylen) / scan_dim)
+        if x_tile < 1 or y_tile < 1:
+            self.te_mosaic_estimate.setPlainText(
+                f"Range too small for one {scan_dim} um grid; increase X/Y range.")
+            return
+
+        xlen_updated = scan_dim * x_tile
+        ylen_updated = scan_dim * y_tile
+        num_steps = round(max_travel * 1000 / step_size)
+        num_flys = x_tile * y_tile
+        total_time = (num_steps ** 2) * dwell * 2 * num_flys / 60.0
+
+        unit = "minutes"
+        if total_time > 60:
+            total_time /= 60.0
+            unit = "hours"
+
+        self.te_mosaic_estimate.setPlainText(
+            f"Optimized X range : {xlen_updated} um\n"
+            f"Optimized Y range : {ylen_updated} um\n"
+            f"Grids             : {x_tile} x {y_tile}  (each {scan_dim} x {scan_dim} um)\n"
+            f"Steps per grid    : {num_steps} x {num_steps}\n"
+            f"# of fly scans    : {num_flys}\n"
+            f"Est. scan time    : {total_time:.2f} {unit}")
+
     def send_mosaic_to_queue(self):
         """
         Queue a mosaic overlap scan for execution by QServer.
         Uses current GUI widget values.
         """
         self.getScanValues()
-
         # --- Collect detectors and scan metadata ---
         det_names = [d.name for d in eval(self.cb_det_list_mosaic.currentText())]
         scan_name = self.le_mosaic_plan_name.text()

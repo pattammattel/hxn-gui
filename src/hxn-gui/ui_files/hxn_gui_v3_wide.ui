@@ -5511,6 +5511,22 @@ Plot
              </property>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QTextEdit" name="te_mosaic_estimate">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>150</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Estimated optimized ranges and total scan time</string>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
