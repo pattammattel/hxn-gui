@@ -1080,7 +1080,7 @@ Create PDF and User Directory
         <item row="2" column="0" colspan="2">
          <widget class="QTabWidget" name="tabWidget">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1681,18 +1681,12 @@ Stop All Sample Motion
                  <item row="0" column="0">
                   <layout class="QGridLayout" name="gridLayout_128">
                    <item row="2" column="0">
-                    <widget class="QPushButton" name="pb_move_pos_mll">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true"/>
+                    <widget class="QPushButton" name="pb_copy_curr_pos_mll">
+                     <property name="toolTip">
+                      <string>motor values to clipboard</string>
                      </property>
                      <property name="text">
-                      <string>Move to Selected</string>
+                      <string>Copy Curr. Pos. to Clipboard</string>
                      </property>
                     </widget>
                    </item>
@@ -1701,7 +1695,7 @@ Stop All Sample Motion
                      <item>
                       <widget class="QPushButton" name="pb_save_pos_mll">
                        <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                          <horstretch>0</horstretch>
                          <verstretch>0</verstretch>
                         </sizepolicy>
@@ -1717,12 +1711,18 @@ Stop All Sample Motion
                     </layout>
                    </item>
                    <item row="1" column="0">
-                    <widget class="QPushButton" name="pb_copy_curr_pos_mll">
-                     <property name="toolTip">
-                      <string>motor values to clipboard</string>
+                    <widget class="QPushButton" name="pb_move_pos_mll">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
                      </property>
                      <property name="text">
-                      <string>Copy Curr. Pos. to Clipboard</string>
+                      <string>Move to Selected</string>
                      </property>
                     </widget>
                    </item>
@@ -1741,6 +1741,12 @@ Stop All Sample Motion
                     <layout class="QHBoxLayout" name="horizontalLayout_81">
                      <item>
                       <widget class="QPushButton" name="pb_roiList_export_mll">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
                        <property name="text">
                         <string>  Export List  </string>
                        </property>
@@ -1748,6 +1754,12 @@ Stop All Sample Motion
                      </item>
                      <item>
                       <widget class="QPushButton" name="pb_roiList_import_mll">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
                        <property name="text">
                         <string>   Import List   </string>
                        </property>
@@ -1898,7 +1910,7 @@ Show Scan Pos
                <string>Save Positions</string>
               </property>
               <layout class="QGridLayout" name="gridLayout">
-               <item row="0" column="0">
+               <item row="1" column="0">
                 <layout class="QGridLayout" name="gridLayout_122">
                  <item row="2" column="0">
                   <widget class="QPushButton" name="pb_copy_curr_pos_zp">
@@ -1948,7 +1960,7 @@ Show Scan Pos
                  </item>
                 </layout>
                </item>
-               <item row="1" column="0">
+               <item row="2" column="0">
                 <layout class="QGridLayout" name="gridLayout_123">
                  <item row="0" column="0">
                   <layout class="QHBoxLayout" name="horizontalLayout_80">
@@ -1996,7 +2008,7 @@ Show Scan Pos
                  </item>
                 </layout>
                </item>
-               <item row="0" column="1" rowspan="2">
+               <item row="1" column="1" rowspan="2">
                 <widget class="QListWidget" name="zp_sample_roi_list_widget">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
@@ -2006,7 +2018,7 @@ Show Scan Pos
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2" rowspan="2">
+               <item row="1" column="2" rowspan="2">
                 <layout class="QVBoxLayout" name="verticalLayout_8">
                  <item>
                   <widget class="QLabel" name="label_163">
@@ -2101,6 +2113,19 @@ Show Meta Data
                   </widget>
                  </item>
                 </layout>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_47">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -11201,7 +11226,6 @@ border-radius: 10px</string>
   <tabstop>cb_elem_15</tabstop>
   <tabstop>lcd_scanNumber</tabstop>
   <tabstop>le_sample_name</tabstop>
-  <tabstop>pb_move_pos_mll</tabstop>
   <tabstop>pb_save_pos_mll</tabstop>
   <tabstop>pb_copy_curr_pos_mll</tabstop>
   <tabstop>pb_roiList_clear_mll</tabstop>
