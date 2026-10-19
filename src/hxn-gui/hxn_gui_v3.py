@@ -485,6 +485,15 @@ class Ui(QtWidgets.QMainWindow):
                 if not self._ptable_user_modified:
                     self.autofill_abundant_elements()
 
+        # Seed the energy-change target with the live mono energy on first read.
+        if not getattr(self, "_target_e_initialized", False):
+            mono_e = self.lcd_monoE.value()
+            if mono_e > 0:
+                self._target_e_initialized = True
+                self.dsb_target_e.setValue(mono_e)
+                # Recalc gap/pitch/coating even if setValue rounds to the preset.
+                self.update_energy_calc(mono_e)
+
     def handle_bool_signals(self,pv_val_list):
 
         #self.pump_PVs.keys() = pv_val_list (works?)
@@ -1559,6 +1568,8 @@ class Ui(QtWidgets.QMainWindow):
     #energy change
     def connect_energy_change(self):
         #print("energy_change")
+        # Prefill dsb_target_e from the live mono energy once PVs connect.
+        self._target_e_initialized = False
         self.pb_move_energy.clicked.connect(lambda:self.change_energy(self.dsb_target_e.value()))
         self.pb_energy_change_w_sid.clicked.connect(lambda:self.move_energy_with_sid_gui(self.sb_energy_sid.value()))
         self.dsb_target_e.valueChanged.connect(lambda:self.update_energy_calc(self.dsb_target_e.value()))
