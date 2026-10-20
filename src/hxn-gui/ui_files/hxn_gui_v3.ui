@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1334</width>
-    <height>1741</height>
+    <height>1738</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,11 +41,11 @@
    <bool>true</bool>
   </property>
   <property name="tabShape">
-   <enum>QTabWidget::TabShape::Rounded</enum>
+   <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="focusPolicy">
-    <enum>Qt::FocusPolicy::TabFocus</enum>
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">
@@ -78,9 +78,6 @@ QGroupBox {
       <property name="text">
        <string>Idle</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignCenter</set>
-      </property>
      </widget>
     </item>
     <item row="0" column="0">
@@ -103,9 +100,6 @@ border-radius: 10px</string>
         <property name="text">
          <string>HXN 3-ID</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-        </property>
        </widget>
       </item>
       <item row="0" column="1">
@@ -121,7 +115,7 @@ border-radius: 10px</string>
              <bool>true</bool>
             </property>
             <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             <enum>QAbstractSpinBox::UpDownArrows</enum>
             </property>
             <property name="suffix">
              <string> Torr</string>
@@ -151,9 +145,6 @@ border-radius: 10px</string>
             <property name="text">
              <string>Flytube Pressure:</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
            </widget>
           </item>
          </layout>
@@ -167,9 +158,6 @@ border-radius: 10px</string>
             </property>
             <property name="text">
              <string>Scan ID:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -188,7 +176,7 @@ border-radius: 10px</string>
              <bool>true</bool>
             </property>
             <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             <enum>QAbstractSpinBox::UpDownArrows</enum>
             </property>
             <property name="decimals">
              <number>0</number>
@@ -222,9 +210,6 @@ border-radius: 10px</string>
             <property name="text">
              <string>IC3:</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
            </widget>
           </item>
           <item row="0" column="1">
@@ -242,7 +227,7 @@ border-radius: 10px</string>
              <bool>true</bool>
             </property>
             <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             <enum>QAbstractSpinBox::UpDownArrows</enum>
             </property>
             <property name="decimals">
              <number>0</number>
@@ -268,7 +253,7 @@ border-radius: 10px</string>
              <bool>true</bool>
             </property>
             <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+             <enum>QAbstractSpinBox::UpDownArrows</enum>
             </property>
             <property name="suffix">
              <string> keV</string>
@@ -297,9 +282,6 @@ border-radius: 10px</string>
             </property>
             <property name="text">
              <string>  Energy:  </string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -417,7 +399,7 @@ Close Fast Shutter (C)
          <bool>true</bool>
         </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -431,10 +413,10 @@ Close Fast Shutter (C)
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::StrongFocus</enum>
+         <enum>Qt::NoFocus</enum>
         </property>
         <property name="layoutDirection">
-         <enum>Qt::LayoutDirection::LeftToRight</enum>
+         <enum>Qt::LeftToRight</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">QPushButton {
@@ -507,7 +489,7 @@ QRadioButton::indicator:unchecked {
 	</string>
         </property>
         <property name="tabPosition">
-         <enum>QTabWidget::TabPosition::North</enum>
+         <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
          <number>1</number>
@@ -700,9 +682,6 @@ Export List
                     <property name="text">
                      <string>1</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -716,9 +695,6 @@ Export List
                    <widget class="QLabel" name="label_24">
                     <property name="text">
                      <string>2</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -734,9 +710,6 @@ Export List
                     <property name="text">
                      <string>3</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -750,9 +723,6 @@ Export List
                    <widget class="QLabel" name="label_33">
                     <property name="text">
                      <string>4</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -768,9 +738,6 @@ Export List
                     <property name="text">
                      <string>5</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -784,9 +751,6 @@ Export List
                    <widget class="QLabel" name="label_30">
                     <property name="text">
                      <string>6</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -802,9 +766,6 @@ Export List
                     <property name="text">
                      <string>7</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -818,9 +779,6 @@ Export List
                    <widget class="QLabel" name="label_31">
                     <property name="text">
                      <string>8</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -836,9 +794,6 @@ Export List
                     <property name="text">
                      <string>9</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -852,9 +807,6 @@ Export List
                    <widget class="QLabel" name="label_34">
                     <property name="text">
                      <string>10</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -870,9 +822,6 @@ Export List
                     <property name="text">
                      <string>11</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -886,9 +835,6 @@ Export List
                    <widget class="QLabel" name="label_28">
                     <property name="text">
                      <string>12</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -904,9 +850,6 @@ Export List
                     <property name="text">
                      <string>13</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -920,9 +863,6 @@ Export List
                    <widget class="QLabel" name="label_39">
                     <property name="text">
                      <string>14</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -938,9 +878,6 @@ Export List
                     <property name="text">
                      <string>15</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
-                    </property>
                    </widget>
                   </item>
                   <item>
@@ -954,9 +891,6 @@ Export List
                    <widget class="QLabel" name="label_41">
                     <property name="text">
                      <string>16</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -996,7 +930,7 @@ p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:12pt;&quot;&gt;Please note that this list is only for creating plots during data aquistion. Complete XRF spectrum is saved for all data collected. &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:12pt;&quot;&gt;If you make any changes to the list click &amp;quot;Apply Element Selection &amp;quot;. The program will restart to load those changes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1009,10 +943,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <item row="3" column="0">
            <spacer name="verticalSpacer">
             <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
+             <enum>Qt::Vertical</enum>
             </property>
             <property name="sizeType">
-             <enum>QSizePolicy::Policy::Minimum</enum>
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -1033,42 +967,39 @@ li.checked::marker { content: &quot;\2612&quot;; }
                <property name="text">
                 <string>Proposal Number </string>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-               </property>
               </widget>
              </item>
-             <item row="5" column="1">
-              <widget class="QPushButton" name="pb_create_user">
+             <item row="6" column="2">
+              <widget class="QPushButton" name="pb_create_new_pdf_log">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="text">
                 <string>
-Create PDF and User Directory
+Create PDF log
 </string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout">
-               <property name="rightMargin">
-                <number>15</number>
+             <item row="3" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="leftMargin">
+                <number>20</number>
                </property>
                <item>
-                <widget class="QLabel" name="label_13">
+                <widget class="QLabel" name="label_12">
                  <property name="text">
-                  <string>Sample Name    </string>
+                  <string>Experimenters     </string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="le_sample_name">
+                <widget class="QLineEdit" name="le_experimenters">
                  <property name="placeholderText">
-                  <string>Precious</string>
+                  <string>HX,NU,SER</string>
                  </property>
                 </widget>
                </item>
@@ -1092,45 +1023,25 @@ Create PDF and User Directory
                </item>
               </layout>
              </item>
-             <item row="4" column="2">
-              <layout class="QGridLayout" name="gridLayout_33">
-               <property name="leftMargin">
+             <item row="3" column="0" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <property name="rightMargin">
                 <number>15</number>
                </property>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="pb_insert_user_image">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> Insert An image   </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="le_image_path"/>
-               </item>
-              </layout>
-             </item>
-             <item row="3" column="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <property name="leftMargin">
-                <number>20</number>
-               </property>
                <item>
-                <widget class="QLabel" name="label_12">
+                <widget class="QLabel" name="label_11">
                  <property name="text">
-                  <string>Experimenters     </string>
+                  <string>PI Name             </string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="le_experimenters">
+                <widget class="QLineEdit" name="le_username">
+                 <property name="toolTip">
+                  <string/>
+                 </property>
                  <property name="placeholderText">
-                  <string>HX,NU,SER</string>
+                  <string>Professor</string>
                  </property>
                 </widget>
                </item>
@@ -1138,6 +1049,21 @@ Create PDF and User Directory
              </item>
              <item row="2" column="1">
               <widget class="QLineEdit" name="le_proposal_num"/>
+             </item>
+             <item row="6" column="0">
+              <widget class="QPushButton" name="pb_create_user">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+Create PDF and User Directory
+</string>
+               </property>
+              </widget>
              </item>
              <item row="0" column="1" colspan="2">
               <widget class="QGroupBox" name="groupBox_16">
@@ -1189,58 +1115,6 @@ Create PDF and User Directory
                </layout>
               </widget>
              </item>
-             <item row="6" column="1">
-              <spacer name="verticalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Orientation::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="3" column="0" colspan="2">
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
-               <property name="rightMargin">
-                <number>15</number>
-               </property>
-               <item>
-                <widget class="QLabel" name="label_11">
-                 <property name="text">
-                  <string>PI Name             </string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="le_username">
-                 <property name="toolTip">
-                  <string/>
-                 </property>
-                 <property name="placeholderText">
-                  <string>Professor</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="5" column="2">
-              <widget class="QPushButton" name="pb_create_new_pdf_log">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-Create PDF log
-</string>
-               </property>
-              </widget>
-             </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_15">
                <property name="text">
@@ -1248,14 +1122,60 @@ Create PDF log
                </property>
               </widget>
              </item>
+             <item row="4" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <property name="rightMargin">
+                <number>15</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_13">
+                 <property name="text">
+                  <string>Sample Name    </string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_sample_name">
+                 <property name="placeholderText">
+                  <string>Precious</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
              <item row="2" column="2">
               <widget class="QPushButton" name="pb_get_proposal_info">
                <property name="text">
-                <string>Get Proposal Info</string>
+                <string>
+Get Proposal Info
+</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="4" column="2">
+              <layout class="QGridLayout" name="gridLayout_33">
+               <property name="leftMargin">
+                <number>15</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pb_insert_user_image">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> Insert An image   </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="le_image_path"/>
+               </item>
+              </layout>
+             </item>
+             <item row="6" column="1">
               <widget class="QPushButton" name="pb_move_data_to_globus">
                <property name="text">
                 <string>
@@ -1277,22 +1197,19 @@ Move Data to Globus
           <item row="0" column="0" colspan="2">
            <widget class="QFrame" name="frame_2">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="frameShape">
-             <enum>QFrame::Shape::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Shadow::Raised</enum>
+             <enum>QFrame::NoFrame</enum>
             </property>
             <layout class="QGridLayout" name="gridLayout_92">
              <item row="0" column="1" rowspan="2">
               <widget class="QGroupBox" name="groupBox_3">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1323,15 +1240,12 @@ Move Data to Globus
                   <property name="text">
                    <string>Detectors</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                  </widget>
                 </item>
                 <item row="0" column="2">
                  <widget class="QComboBox" name="cb_dets">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1360,15 +1274,12 @@ Move Data to Globus
                   <property name="text">
                    <string>Motors</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                  </widget>
                 </item>
                 <item row="1" column="2">
                  <widget class="QComboBox" name="cb_motor1">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1396,15 +1307,12 @@ Move Data to Globus
                   <property name="text">
                    <string>Start</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                  </widget>
                 </item>
                 <item row="2" column="2">
                  <widget class="QDoubleSpinBox" name="x_start">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1477,15 +1385,12 @@ Move Data to Globus
                   <property name="text">
                    <string>End</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                  </widget>
                 </item>
                 <item row="3" column="2">
                  <widget class="QDoubleSpinBox" name="x_end">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1564,20 +1469,17 @@ Move Data to Globus
                    <string>Steps</string>
                   </property>
                   <property name="textFormat">
-                   <enum>Qt::TextFormat::AutoText</enum>
+                   <enum>Qt::PlainText</enum>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                 <item row="4" column="2">
                  <widget class="QSpinBox" name="x_step">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1644,20 +1546,17 @@ Move Data to Globus
                    <string>Dwell Time</string>
                   </property>
                   <property name="textFormat">
-                   <enum>Qt::TextFormat::AutoText</enum>
+                   <enum>Qt::PlainText</enum>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
                 <item row="5" column="2">
                  <widget class="QDoubleSpinBox" name="dwell">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1761,9 +1660,6 @@ Move Data to Globus
                   <property name="title">
                    <string> Quick Fill</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                   <layout class="QGridLayout" name="gridLayout_6">
                    <item row="2" column="0">
                     <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1844,15 +1740,21 @@ Move Data to Globus
                </layout>
               </widget>
              </item>
-             <item row="0" column="2" rowspan="2">
+             <item row="0" column="2">
               <widget class="QToolBox" name="toolBox_10">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <widget class="QWidget" name="toolBox_10Page1">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>561</width>
-                  <height>374</height>
+                  <width>576</width>
+                  <height>180</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1938,9 +1840,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <property name="text">
                     <string>Scan Info</string>
                    </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignCenter</set>
-                   </property>
                   </widget>
                  </item>
                  <item row="0" column="0">
@@ -2016,8 +1915,8 @@ QPushButton:pressed{
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>476</width>
-                  <height>234</height>
+                  <width>462</width>
+                  <height>281</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -2086,7 +1985,7 @@ QPushButton:pressed{
                     <bool>false</bool>
                    </property>
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
@@ -2282,9 +2181,6 @@ Get curr pos
                       <property name="text">
                        <string>zpssx</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="3" column="2">
@@ -2360,9 +2256,6 @@ Get curr pos
                       <property name="text">
                        <string>smarz</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="7" column="2">
@@ -2411,18 +2304,12 @@ Get curr pos
                       <property name="text">
                        <string>zpssy</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="3" column="3">
                      <widget class="QLabel" name="label_210">
                       <property name="text">
                        <string>zpsth</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -2431,9 +2318,6 @@ Get curr pos
                       <property name="text">
                        <string>smary</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="2" column="1">
@@ -2441,18 +2325,12 @@ Get curr pos
                       <property name="text">
                        <string>smarx</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="3" column="1">
                      <widget class="QLabel" name="label_211">
                       <property name="text">
                        <string>zpz1</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -2495,9 +2373,6 @@ Get curr pos
                       <property name="text">
                        <string>zpssz</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="7" column="4">
@@ -2538,7 +2413,7 @@ Get curr pos
                 </sizepolicy>
                </property>
                <property name="tabPosition">
-                <enum>QTabWidget::TabPosition::North</enum>
+                <enum>QTabWidget::North</enum>
                </property>
                <property name="currentIndex">
                 <number>0</number>
@@ -2570,9 +2445,6 @@ Get curr pos
                         <property name="text">
                          <string>Recover Pos. Using Scan ID</string>
                         </property>
-                        <property name="alignment">
-                         <set>Qt::AlignmentFlag::AlignCenter</set>
-                        </property>
                        </widget>
                       </item>
                       <item>
@@ -2587,9 +2459,6 @@ Get curr pos
                           </property>
                           <property name="text">
                            <string>Scan ID</string>
-                          </property>
-                          <property name="alignment">
-                           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                           </property>
                          </widget>
                         </item>
@@ -2799,7 +2668,7 @@ Show Meta Data
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -2871,7 +2740,7 @@ Show Meta Data
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -2901,9 +2770,6 @@ Show Meta Data
                       <property name="text">
                        <string>Zone Plate Z  </string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="4" column="4">
@@ -2918,7 +2784,7 @@ Show Meta Data
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -2962,7 +2828,7 @@ Show Meta Data
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> mm</string>
@@ -2998,9 +2864,6 @@ Show Meta Data
                       </property>
                       <property name="text">
                        <string>Sample Angle  </string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -3205,9 +3068,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>smarZ</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="1" column="2">
@@ -3224,9 +3084,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>Move by</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="2" column="0">
@@ -3239,9 +3096,6 @@ Stop All Sample Motion
                       </property>
                       <property name="text">
                        <string>smarX</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -3270,7 +3124,7 @@ Stop All Sample Motion
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> deg</string>
@@ -3302,9 +3156,6 @@ Stop All Sample Motion
                       </property>
                       <property name="text">
                        <string>Motor</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -3346,9 +3197,6 @@ Stop All Sample Motion
                       </property>
                       <property name="text">
                        <string>smarY</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -3430,9 +3278,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>DSZ</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="3" column="4">
@@ -3458,9 +3303,6 @@ Stop All Sample Motion
                       </property>
                       <property name="text">
                        <string>SBZ</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -3504,7 +3346,7 @@ Stop All Sample Motion
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -3537,9 +3379,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>Move by</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="2" column="4">
@@ -3567,7 +3406,7 @@ Stop All Sample Motion
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> deg</string>
@@ -3604,9 +3443,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>Sample Angle  </string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="2" column="5">
@@ -3621,7 +3457,7 @@ Stop All Sample Motion
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -3707,9 +3543,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>DSX</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="6" column="2">
@@ -3752,7 +3585,7 @@ Stop All Sample Motion
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -3808,7 +3641,7 @@ Stop All Sample Motion
                        <bool>true</bool>
                       </property>
                       <property name="buttonSymbols">
-                       <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                       <enum>QAbstractSpinBox::UpDownArrows</enum>
                       </property>
                       <property name="suffix">
                        <string> um</string>
@@ -3841,9 +3674,6 @@ Stop All Sample Motion
                       <property name="text">
                        <string>Motor</string>
                       </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignCenter</set>
-                      </property>
                      </widget>
                     </item>
                     <item row="3" column="0">
@@ -3856,9 +3686,6 @@ Stop All Sample Motion
                       </property>
                       <property name="text">
                        <string>DSY</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -4079,10 +3906,10 @@ Stop All Sample Motion
                     <item row="0" column="0">
                      <spacer name="verticalSpacer_30">
                       <property name="orientation">
-                       <enum>Qt::Orientation::Vertical</enum>
+                       <enum>Qt::Vertical</enum>
                       </property>
                       <property name="sizeType">
-                       <enum>QSizePolicy::Policy::Fixed</enum>
+                       <enum>QSizePolicy::Fixed</enum>
                       </property>
                       <property name="sizeHint" stdset="0">
                        <size>
@@ -4119,9 +3946,6 @@ Stop All Sample Motion
                         </property>
                         <property name="text">
                          <string>Scan ID</string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                         </property>
                        </widget>
                       </item>
@@ -4207,6 +4031,12 @@ Show Scan Pos
              </item>
              <item row="0" column="0">
               <widget class="QLabel" name="label_6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="text">
                 <string/>
                </property>
@@ -4218,13 +4048,13 @@ Show Scan Pos
           <item row="1" column="0" colspan="2">
            <widget class="QTabWidget" name="tabWidget_18">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="layoutDirection">
-             <enum>Qt::LayoutDirection::LeftToRight</enum>
+             <enum>Qt::LeftToRight</enum>
             </property>
             <property name="currentIndex">
              <number>0</number>
@@ -4285,9 +4115,6 @@ Show Scan Pos
                    </property>
                    <property name="text">
                     <string/>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignCenter</set>
                    </property>
                   </widget>
                  </item>
@@ -4524,7 +4351,7 @@ Show Scan Pos
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -4552,7 +4379,7 @@ Show Scan Pos
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -4587,7 +4414,7 @@ Show Scan Pos
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -4618,7 +4445,7 @@ Show Scan Pos
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -4667,9 +4494,6 @@ Show Scan Pos
                      </property>
                      <property name="text">
                       <string>XRF Det IN Pos. = </string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -4794,9 +4618,6 @@ Show Scan Pos
                        </property>
                        <property name="text">
                         <string>Enter Dexela XY Pixels</string>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
                        </property>
                       </widget>
                      </item>
@@ -4924,9 +4745,6 @@ Show Scan Pos
                      <property name="text">
                       <string>diff_z</string>
                      </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                     </property>
                     </widget>
                    </item>
                    <item>
@@ -5031,9 +4849,6 @@ Show Scan Pos
                   <widget class="QLabel" name="label_63">
                    <property name="text">
                     <string>Chosse Detector</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                    </property>
                   </widget>
                  </item>
@@ -5309,9 +5124,6 @@ Show Scan Pos
                    <property name="text">
                     <string>    Elem:</string>
                    </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                   </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
@@ -5338,9 +5150,6 @@ Show Scan Pos
                    </property>
                    <property name="text">
                     <string>Scan ID:</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                    </property>
                   </widget>
                  </item>
@@ -5411,7 +5220,7 @@ ERF Fit
                     </sizepolicy>
                    </property>
                    <property name="layoutDirection">
-                    <enum>Qt::LayoutDirection::LeftToRight</enum>
+                    <enum>Qt::LeftToRight</enum>
                    </property>
                    <property name="text">
                     <string>Linear Flag      </string>
@@ -5437,9 +5246,6 @@ ERF Fit
                      </property>
                      <property name="text">
                       <string>Threshold</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -5531,514 +5337,6 @@ Plot
           <string>Advanced Scans/Queue</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_145">
-          <item row="0" column="0">
-           <widget class="QGroupBox" name="groupBox_18">
-            <property name="title">
-             <string>Mosaic Scan</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_144">
-             <item row="0" column="0">
-              <widget class="QFrame" name="frame_19">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_119">
-                <item row="1" column="2">
-                 <widget class="QComboBox" name="cb_det_list_mosaic">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string comment="choose the detector system"/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QLabel" name="label_177">
-                  <property name="text">
-                   <string>Y Range</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QLabel" name="label_179">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI</family>
-                    <pointsize>12</pointsize>
-                    <italic>false</italic>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Det list</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="2">
-                 <widget class="QDoubleSpinBox" name="sb_yrange_mosaic">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>scan range entry</string>
-                  </property>
-                  <property name="suffix">
-                   <string notr="true"> um</string>
-                  </property>
-                  <property name="decimals">
-                   <number>2</number>
-                  </property>
-                  <property name="minimum">
-                   <double>0.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>5000.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>100.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>100.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QDoubleSpinBox" name="sb_xrange_mosaic">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>scan range entry</string>
-                  </property>
-                  <property name="prefix">
-                   <string notr="true"/>
-                  </property>
-                  <property name="suffix">
-                   <string> um</string>
-                  </property>
-                  <property name="decimals">
-                   <number>2</number>
-                  </property>
-                  <property name="minimum">
-                   <double>0.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>5000.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>100.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>100.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QLabel" name="label_189">
-                  <property name="text">
-                   <string>Overlap </string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="2">
-                 <widget class="QDoubleSpinBox" name="dsb_dwell">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>exposure time per point</string>
-                  </property>
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="suffix">
-                   <string notr="true"> sec</string>
-                  </property>
-                  <property name="decimals">
-                   <number>4</number>
-                  </property>
-                  <property name="minimum">
-                   <double>0.004000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>0.500000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.005000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.005000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="2">
-                 <widget class="QDoubleSpinBox" name="dsb_overlap_mosaic">
-                  <property name="suffix">
-                   <string> %</string>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>100.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="2">
-                 <widget class="QSpinBox" name="sb_stepsize_mosaic">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>first motor steps</string>
-                  </property>
-                  <property name="suffix">
-                   <string> nm</string>
-                  </property>
-                  <property name="prefix">
-                   <string/>
-                  </property>
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>10000</number>
-                  </property>
-                  <property name="singleStep">
-                   <number>10</number>
-                  </property>
-                  <property name="value">
-                   <number>500</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLabel" name="label_190">
-                  <property name="text">
-                   <string>X Range</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="1">
-                 <widget class="QLabel" name="label_188">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI</family>
-                    <pointsize>12</pointsize>
-                    <italic>false</italic>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Dwell Time</string>
-                  </property>
-                  <property name="textFormat">
-                   <enum>Qt::TextFormat::AutoText</enum>
-                  </property>
-                  <property name="scaledContents">
-                   <bool>false</bool>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QLabel" name="label_191">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>Segoe UI</family>
-                    <pointsize>12</pointsize>
-                    <italic>false</italic>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>Step size</string>
-                  </property>
-                  <property name="textFormat">
-                   <enum>Qt::TextFormat::AutoText</enum>
-                  </property>
-                  <property name="scaledContents">
-                   <bool>false</bool>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" rowspan="6">
-                 <widget class="QWidget" name="widget_5" native="true">
-                  <property name="styleSheet">
-                   <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_26">
-                   <item>
-                    <widget class="QRadioButton" name="rb_mosaic_mll">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="toolTip">
-                      <string>select for 2D scan</string>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true"/>
-                     </property>
-                     <property name="text">
-                      <string>MLL</string>
-                     </property>
-                     <property name="checked">
-                      <bool>false</bool>
-                     </property>
-                     <property name="autoExclusive">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QRadioButton" name="rb_mosaic_zp">
-                     <property name="text">
-                      <string>ZP</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QLineEdit" name="le_mosaic_plan_name">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Mosaic_scan#1</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="label_192">
-                  <property name="text">
-                   <string>Plan name</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pb_send_mosaic_to_queue">
-               <property name="text">
-                <string>
- Send to Queue 
-</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="2">
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="title">
-             <string>MLL</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_3">
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pb_open_mll_tomo_widget">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-MLL Tomo Widget
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QPushButton" name="pushButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string> 
-MLL-XANES Widget
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_15">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-MLL Diff Widget
-</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QGroupBox" name="groupBox">
-            <property name="title">
-             <string>ZP</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_4">
-             <item row="1" column="0">
-              <widget class="QPushButton" name="pushButton_5">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-ZP Tomo Widget
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_6">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-ZP-XANES Widget
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QPushButton" name="pushButton_14">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
-ZP Diff Widget
-</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QGroupBox" name="groupBox_17">
             <property name="enabled">
@@ -6121,9 +5419,6 @@ ZP Diff Widget
                   <property name="text">
                    <string>End</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
@@ -6144,9 +5439,6 @@ ZP Diff Widget
                   </property>
                   <property name="text">
                    <string>Detectors</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -6204,13 +5496,10 @@ ZP Diff Widget
                    <string>Dwell Time</string>
                   </property>
                   <property name="textFormat">
-                   <enum>Qt::TextFormat::AutoText</enum>
+                   <enum>Qt::PlainText</enum>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -6297,7 +5586,7 @@ ZP Diff Widget
                    <double>100.000000000000000</double>
                   </property>
                   <property name="stepType">
-                   <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+                   <enum>QAbstractSpinBox::DefaultStepType</enum>
                   </property>
                   <property name="value">
                    <double>100.000000000000000</double>
@@ -6322,9 +5611,6 @@ ZP Diff Widget
                   </property>
                   <property name="text">
                    <string>Motors</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -6421,9 +5707,6 @@ ZP Diff Widget
                   <property name="text">
                    <string>Start</string>
                   </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
-                  </property>
                  </widget>
                 </item>
                 <item row="4" column="1">
@@ -6446,13 +5729,10 @@ ZP Diff Widget
                    <string>Steps</string>
                   </property>
                   <property name="textFormat">
-                   <enum>Qt::TextFormat::AutoText</enum>
+                   <enum>Qt::PlainText</enum>
                   </property>
                   <property name="scaledContents">
                    <bool>false</bool>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -6518,21 +5798,476 @@ ZP Diff Widget
             </layout>
            </widget>
           </item>
-          <item row="2" column="0">
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
+          <item row="0" column="2">
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>ZP</string>
             </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Preferred</enum>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+ZP Tomo Widget
+</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+ZP-XANES Widget
+</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QPushButton" name="pushButton_14">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+ZP Diff Widget
+</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QGroupBox" name="groupBox_18">
+            <property name="title">
+             <string>Mosaic Scan</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>874</height>
-             </size>
+            <layout class="QGridLayout" name="gridLayout_144">
+             <item row="0" column="0">
+              <widget class="QFrame" name="frame_19">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_119">
+                <item row="1" column="2">
+                 <widget class="QComboBox" name="cb_det_list_mosaic">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string comment="choose the detector system"/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="label_177">
+                  <property name="text">
+                   <string>Y Range</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLabel" name="label_179">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI</family>
+                    <pointsize>12</pointsize>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Det list</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QDoubleSpinBox" name="sb_yrange_mosaic">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>scan range entry</string>
+                  </property>
+                  <property name="suffix">
+                   <string notr="true"> um</string>
+                  </property>
+                  <property name="decimals">
+                   <number>2</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>5000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>100.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>100.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QDoubleSpinBox" name="sb_xrange_mosaic">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>scan range entry</string>
+                  </property>
+                  <property name="prefix">
+                   <string notr="true"/>
+                  </property>
+                  <property name="suffix">
+                   <string> um</string>
+                  </property>
+                  <property name="decimals">
+                   <number>2</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>5000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>100.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>100.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLabel" name="label_189">
+                  <property name="text">
+                   <string>Overlap </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="2">
+                 <widget class="QDoubleSpinBox" name="dsb_dwell">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>exposure time per point</string>
+                  </property>
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                  <property name="suffix">
+                   <string notr="true"> sec</string>
+                  </property>
+                  <property name="decimals">
+                   <number>4</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.004000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>0.500000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.005000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.005000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="2">
+                 <widget class="QDoubleSpinBox" name="dsb_overlap_mosaic">
+                  <property name="suffix">
+                   <string> %</string>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>100.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="2">
+                 <widget class="QSpinBox" name="sb_stepsize_mosaic">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>first motor steps</string>
+                  </property>
+                  <property name="suffix">
+                   <string> nm</string>
+                  </property>
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>500</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_190">
+                  <property name="text">
+                   <string>X Range</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QLabel" name="label_188">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI</family>
+                    <pointsize>12</pointsize>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Dwell Time</string>
+                  </property>
+                  <property name="textFormat">
+                   <enum>Qt::PlainText</enum>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QLabel" name="label_191">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>Segoe UI</family>
+                    <pointsize>12</pointsize>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Step size</string>
+                  </property>
+                  <property name="textFormat">
+                   <enum>Qt::PlainText</enum>
+                  </property>
+                  <property name="scaledContents">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" rowspan="6">
+                 <widget class="QWidget" name="widget_5" native="true">
+                  <property name="styleSheet">
+                   <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_26">
+                   <item>
+                    <widget class="QRadioButton" name="rb_mosaic_mll">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="toolTip">
+                      <string>select for 2D scan</string>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>MLL</string>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                     <property name="autoExclusive">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QRadioButton" name="rb_mosaic_zp">
+                     <property name="text">
+                      <string>ZP</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLineEdit" name="le_mosaic_plan_name">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Mosaic_scan#1</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_192">
+                  <property name="text">
+                   <string>Plan name</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pb_send_mosaic_to_queue">
+               <property name="text">
+                <string>
+ Send to Queue 
+</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QGroupBox" name="groupBox_4">
+            <property name="title">
+             <string>MLL</string>
             </property>
-           </spacer>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="1" column="0">
+              <widget class="QPushButton" name="pb_open_mll_tomo_widget">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+MLL Tomo Widget
+</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QPushButton" name="pushButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string> 
+MLL-XANES Widget
+</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QPushButton" name="pushButton_15">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+MLL Diff Widget
+</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -6601,7 +6336,7 @@ p, li { white-space: pre-wrap; }
 hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:12pt;&quot;&gt;Read Me&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Segoe UI'; font-size:12pt;&quot;&gt;- Please don't close the window while pumping/venting/He-backfill. &lt;/span&gt;&lt;/p&gt;
@@ -6644,6 +6379,49 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <string>Auto</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_105">
+                  <item row="0" column="2" rowspan="2">
+                   <widget class="QGroupBox" name="groupBox_29">
+                    <property name="title">
+                     <string/>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_103">
+                     <item row="1" column="0">
+                      <widget class="QCheckBox" name="cb_sample_ex_det_out">
+                       <property name="text">
+                        <string>Move Dets Out</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QPushButton" name="pb_start_vent">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="toolTip">
+                        <string>Status of all the motors and valves will be checked</string>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true"/>
+                       </property>
+                       <property name="text">
+                        <string>       
+ VENT   
+                   (Sample OUT)                  </string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
                   <item row="0" column="0" rowspan="2" colspan="2">
                    <widget class="QGroupBox" name="groupBox_22">
                     <property name="title">
@@ -6662,9 +6440,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
                          </property>
                          <property name="text">
                           <string>Target P = </string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                          </property>
                         </widget>
                        </item>
@@ -6739,75 +6514,6 @@ EVAC
                     </layout>
                    </widget>
                   </item>
-                  <item row="0" column="2" rowspan="2">
-                   <widget class="QGroupBox" name="groupBox_29">
-                    <property name="title">
-                     <string/>
-                    </property>
-                    <layout class="QGridLayout" name="gridLayout_103">
-                     <item row="0" column="0">
-                      <widget class="QPushButton" name="pb_start_vent">
-                       <property name="enabled">
-                        <bool>true</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="toolTip">
-                        <string>Status of all the motors and valves will be checked</string>
-                       </property>
-                       <property name="styleSheet">
-                        <string notr="true"/>
-                       </property>
-                       <property name="text">
-                        <string>       
- VENT   
-                   (Sample OUT)                  </string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QCheckBox" name="cb_sample_ex_det_out">
-                       <property name="text">
-                        <string>Move Dets Out</string>
-                       </property>
-                       <property name="checked">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <spacer name="verticalSpacer_16">
-                       <property name="orientation">
-                        <enum>Qt::Orientation::Vertical</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>20</width>
-                         <height>40</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                  <item row="2" column="2">
-                   <spacer name="verticalSpacer_8">
-                    <property name="orientation">
-                     <enum>Qt::Orientation::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
                  </layout>
                 </widget>
                 <widget class="QWidget" name="tab_7">
@@ -6848,10 +6554,10 @@ Stop Venting
                   <item row="3" column="0">
                    <spacer name="verticalSpacer_10">
                     <property name="orientation">
-                     <enum>Qt::Orientation::Vertical</enum>
+                     <enum>Qt::Vertical</enum>
                     </property>
                     <property name="sizeType">
-                     <enum>QSizePolicy::Policy::MinimumExpanding</enum>
+                     <enum>QSizePolicy::Fixed</enum>
                     </property>
                     <property name="sizeHint" stdset="0">
                      <size>
@@ -6959,7 +6665,7 @@ Close He Valve
                        </sizepolicy>
                       </property>
                       <property name="layoutDirection">
-                       <enum>Qt::LayoutDirection::RightToLeft</enum>
+                       <enum>Qt::LeftToRight</enum>
                       </property>
                       <property name="styleSheet">
                        <string notr="true">color: rgb(245, 121, 0);
@@ -6992,7 +6698,7 @@ indicator {
                        </sizepolicy>
                       </property>
                       <property name="layoutDirection">
-                       <enum>Qt::LayoutDirection::RightToLeft</enum>
+                       <enum>Qt::LeftToRight</enum>
                       </property>
                       <property name="styleSheet">
                        <string notr="true">color: rgb(245, 121, 0);</string>
@@ -7055,7 +6761,7 @@ indicator {
                        </sizepolicy>
                       </property>
                       <property name="layoutDirection">
-                       <enum>Qt::LayoutDirection::RightToLeft</enum>
+                       <enum>Qt::LeftToRight</enum>
                       </property>
                       <property name="styleSheet">
                        <string notr="true">color: rgb(245, 121, 0);
@@ -7081,7 +6787,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                        </sizepolicy>
                       </property>
                       <property name="layoutDirection">
-                       <enum>Qt::LayoutDirection::RightToLeft</enum>
+                       <enum>Qt::LeftToRight</enum>
                       </property>
                       <property name="styleSheet">
                        <string notr="true">color: rgb(245, 121, 0);
@@ -7143,7 +6849,7 @@ font: 18pt &quot;Cantarell&quot;;</string>
                  </sizepolicy>
                 </property>
                 <property name="layoutDirection">
-                 <enum>Qt::LayoutDirection::RightToLeft</enum>
+                 <enum>Qt::LeftToRight</enum>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">font: 75 20pt &quot;C059&quot;;
@@ -7151,9 +6857,6 @@ color:rgb(51, 184, 141)</string>
                 </property>
                 <property name="text">
                  <string>Process Update</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
                 </property>
                </widget>
               </item>
@@ -7169,9 +6872,6 @@ color:rgb(51, 184, 141)</string>
                   </property>
                   <property name="text">
                    <string>Current Pressure = </string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -7190,7 +6890,7 @@ color:rgb(51, 184, 141)</string>
                    <bool>true</bool>
                   </property>
                   <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                   <enum>QAbstractSpinBox::UpDownArrows</enum>
                   </property>
                   <property name="suffix">
                    <string> mm Hg</string>
@@ -7366,9 +7066,6 @@ ZP to Nanobeam
                             <property name="text">
                              <string>Zone Plate Z</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -7380,9 +7077,6 @@ ZP to Nanobeam
                               </property>
                               <property name="text">
                                <string>ZPZ Start</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -7423,9 +7117,6 @@ ZP to Nanobeam
                               <property name="text">
                                <string>ZPZ End</string>
                               </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                              </property>
                              </widget>
                             </item>
                             <item>
@@ -7461,9 +7152,6 @@ ZP to Nanobeam
                              <widget class="QLabel" name="label_106">
                               <property name="text">
                                <string>No. of Steps</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -7503,9 +7191,6 @@ ZP to Nanobeam
                             <property name="text">
                              <string>FlyScan Param.</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -7533,9 +7218,6 @@ ZP to Nanobeam
                              <widget class="QLabel" name="label_99">
                               <property name="text">
                                <string>Start</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -7567,9 +7249,6 @@ ZP to Nanobeam
                               <property name="text">
                                <string>End</string>
                               </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                              </property>
                              </widget>
                             </item>
                             <item>
@@ -7599,9 +7278,6 @@ ZP to Nanobeam
                              <widget class="QLabel" name="label_105">
                               <property name="text">
                                <string>No. of Steps</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -7638,9 +7314,6 @@ ZP to Nanobeam
                              <widget class="QLabel" name="label_118">
                               <property name="text">
                                <string>Dwell Time</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -7679,9 +7352,6 @@ ZP to Nanobeam
                            <widget class="QLabel" name="label_56">
                             <property name="text">
                              <string>New Focus Position = </string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -7724,9 +7394,6 @@ ZP to Nanobeam
                             </property>
                             <property name="text">
                              <string>     Elem:  </string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -7819,9 +7486,6 @@ Start Focus Series
                             <property name="text">
                              <string>Start</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -7857,9 +7521,6 @@ Start Focus Series
                            <widget class="QLabel" name="label_109">
                             <property name="text">
                              <string>End</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -7897,9 +7558,6 @@ Start Focus Series
                             <property name="text">
                              <string>No. of Steps</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -7932,9 +7590,6 @@ Start Focus Series
                            <widget class="QLabel" name="label_157">
                             <property name="text">
                              <string>Dwell Time</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -7993,9 +7648,6 @@ Start
                               <property name="text">
                                <string>Theta Start</string>
                               </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                              </property>
                              </widget>
                             </item>
                             <item>
@@ -8035,9 +7687,6 @@ Start
                               <property name="text">
                                <string>Theta End</string>
                               </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                              </property>
                              </widget>
                             </item>
                             <item>
@@ -8073,9 +7722,6 @@ Start
                              <widget class="QLabel" name="label_107">
                               <property name="text">
                                <string>No. of Steps</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -8473,9 +8119,6 @@ MLLs to Downstream
                             <property name="text">
                              <string>to</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -8509,9 +8152,6 @@ MLLs to Downstream
                             <property name="text">
                              <string>FlyScan Param.</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -8542,9 +8182,6 @@ MLLs to Downstream
                              <widget class="QLabel" name="label_111">
                               <property name="text">
                                <string>Start</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -8579,9 +8216,6 @@ MLLs to Downstream
                               <property name="text">
                                <string>End</string>
                               </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                              </property>
                              </widget>
                             </item>
                             <item>
@@ -8614,9 +8248,6 @@ MLLs to Downstream
                              <widget class="QLabel" name="label_114">
                               <property name="text">
                                <string>No. of Steps</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -8653,9 +8284,6 @@ MLLs to Downstream
                              <widget class="QLabel" name="label_120">
                               <property name="text">
                                <string>Dwell Time</string>
-                              </property>
-                              <property name="alignment">
-                               <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                               </property>
                              </widget>
                             </item>
@@ -8694,9 +8322,6 @@ MLLs to Downstream
                            <widget class="QLabel" name="label_84">
                             <property name="text">
                              <string>Focus Series with:</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -8746,9 +8371,6 @@ Start Focus Series
                             <property name="text">
                              <string>Z End</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -8788,9 +8410,6 @@ Start Focus Series
                             <property name="text">
                              <string>Z Start</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -8826,9 +8445,6 @@ Start Focus Series
                            <widget class="QLabel" name="label_117">
                             <property name="text">
                              <string>No. of Steps</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -8985,9 +8601,6 @@ Stop All MLL Motion
                           <property name="text">
                            <string>Angle Range</string>
                           </property>
-                          <property name="alignment">
-                           <set>Qt::AlignmentFlag::AlignCenter</set>
-                          </property>
                          </widget>
                         </item>
                         <item row="5" column="0">
@@ -9010,9 +8623,6 @@ Stop All MLL Motion
                            <widget class="QLabel" name="label_124">
                             <property name="text">
                              <string>Theta Start</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -9053,9 +8663,6 @@ Stop All MLL Motion
                             <property name="text">
                              <string>Theta End</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -9091,9 +8698,6 @@ Stop All MLL Motion
                            <widget class="QLabel" name="label_174">
                             <property name="text">
                              <string>No. of Steps</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -9132,9 +8736,6 @@ Stop All MLL Motion
                           <property name="text">
                            <string>FlyScan Param.</string>
                           </property>
-                          <property name="alignment">
-                           <set>Qt::AlignmentFlag::AlignCenter</set>
-                          </property>
                          </widget>
                         </item>
                         <item row="1" column="0">
@@ -9143,9 +8744,6 @@ Stop All MLL Motion
                            <widget class="QLabel" name="label_112">
                             <property name="text">
                              <string>Start</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -9180,9 +8778,6 @@ Stop All MLL Motion
                             <property name="text">
                              <string>End</string>
                             </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                            </property>
                            </widget>
                           </item>
                           <item>
@@ -9215,9 +8810,6 @@ Stop All MLL Motion
                            <widget class="QLabel" name="label_140">
                             <property name="text">
                              <string>No. of Steps</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -9254,9 +8846,6 @@ Stop All MLL Motion
                            <widget class="QLabel" name="label_142">
                             <property name="text">
                              <string>Dwell Time</string>
-                            </property>
-                            <property name="alignment">
-                             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                             </property>
                            </widget>
                           </item>
@@ -9417,9 +9006,6 @@ Move
                          <widget class="QLabel" name="label_86">
                           <property name="text">
                            <string>Correction</string>
-                          </property>
-                          <property name="alignment">
-                           <set>Qt::AlignmentFlag::AlignCenter</set>
                           </property>
                          </widget>
                         </item>
@@ -9664,9 +9250,6 @@ Move
                        <property name="text">
                         <string>HGap</string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0">
@@ -9694,7 +9277,7 @@ Move
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -9728,9 +9311,6 @@ Move
                        <property name="text">
                         <string>VGap</string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0">
@@ -9758,7 +9338,7 @@ Move
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -9919,9 +9499,6 @@ Move
                        <property name="text">
                         <string>Hcen</string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item>
@@ -9936,7 +9513,7 @@ Move
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -9970,9 +9547,6 @@ Move
                        <property name="text">
                         <string>Vcen </string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item>
@@ -9987,7 +9561,7 @@ Move
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -10091,9 +9665,6 @@ Move
                     <string>
 Preset Positions</string>
                    </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
-                   </property>
                   </widget>
                  </item>
                  <item row="1" column="0" rowspan="2" colspan="2">
@@ -10177,9 +9748,6 @@ Preset Positions</string>
                        <property name="text">
                         <string>HGap</string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0">
@@ -10207,7 +9775,7 @@ Preset Positions</string>
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -10284,9 +9852,6 @@ Preset Positions</string>
                        <property name="text">
                         <string>VGap</string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item row="1" column="0">
@@ -10314,7 +9879,7 @@ Preset Positions</string>
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -10374,9 +9939,6 @@ Move
                        <property name="text">
                         <string>Hcen</string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item>
@@ -10391,7 +9953,7 @@ Move
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -10425,9 +9987,6 @@ Move
                        <property name="text">
                         <string>Vcen </string>
                        </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
                       </widget>
                      </item>
                      <item>
@@ -10442,7 +10001,7 @@ Move
                         <bool>true</bool>
                        </property>
                        <property name="buttonSymbols">
-                        <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                        <enum>QAbstractSpinBox::UpDownArrows</enum>
                        </property>
                        <property name="suffix">
                         <string> mm</string>
@@ -10625,6 +10184,443 @@ Move
           <string>Energy Change</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_107">
+          <item row="1" column="0" colspan="2">
+           <widget class="QGroupBox" name="gb_calib_foil">
+            <property name="title">
+             <string>Calibration Foils</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QGroupBox" name="groupBox_32">
+            <property name="title">
+             <string>Set Energy</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_99">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_46">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_81">
+               <property name="text">
+                <string>  Target Energy: </string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="dsb_target_e">
+               <property name="styleSheet">
+                <string notr="true">font: 14pt &quot;Cantarell&quot;;</string>
+               </property>
+               <property name="suffix">
+                <string> keV</string>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="minimum">
+                <double>5.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>25.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.500000000000000</double>
+               </property>
+               <property name="value">
+                <double>12.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2" rowspan="5">
+              <widget class="QGroupBox" name="groupBox_31">
+               <property name="title">
+                <string>Estimated Positions</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_114">
+                <item row="0" column="0">
+                 <spacer name="verticalSpacer_19">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="0">
+                 <layout class="QGridLayout" name="gridLayout_113">
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_150">
+                    <property name="text">
+                     <string>Harmonic</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="cb_target_coating">
+                    <item>
+                     <property name="text">
+                      <string>Cr</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Pt</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Si</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Rh</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_target_roll">
+                    <property name="suffix">
+                     <string> mrad</string>
+                    </property>
+                    <property name="decimals">
+                     <number>4</number>
+                    </property>
+                    <property name="minimum">
+                     <double>-9.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>9.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.100000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.200000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QSpinBox" name="sb_calc_harmonic">
+                    <property name="minimum">
+                     <number>-1</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>2</number>
+                    </property>
+                    <property name="value">
+                     <number>-1</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_146">
+                    <property name="text">
+                     <string>Mirror Coating</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_154">
+                    <property name="text">
+                     <string>DCM Roll</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_155">
+                    <property name="text">
+                     <string>HFM Pitch</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_hfm_target_pitch">
+                    <property name="suffix">
+                     <string> mrad</string>
+                    </property>
+                    <property name="decimals">
+                     <number>4</number>
+                    </property>
+                    <property name="minimum">
+                     <double>-9.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>9.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.100000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>1.200000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QGridLayout" name="gridLayout_112">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_149">
+                    <property name="text">
+                     <string>Gap</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_target_ugap">
+                    <property name="suffix">
+                     <string> um</string>
+                    </property>
+                    <property name="decimals">
+                     <number>1</number>
+                    </property>
+                    <property name="minimum">
+                     <double>4000.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>25000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>5.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>5920.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="2" column="0">
+                 <layout class="QGridLayout" name="gridLayout_109">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_132">
+                    <property name="text">
+                     <string>DCM  Pitch  </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_target_pitch">
+                    <property name="suffix">
+                     <string>  mrad</string>
+                    </property>
+                    <property name="decimals">
+                     <number>4</number>
+                    </property>
+                    <property name="minimum">
+                     <double>-5.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>5.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.005000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.960500000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_148">
+               <property name="text">
+                <string>      Harmonic: </string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="sb_harmonic">
+               <property name="minimum">
+                <number>-1</number>
+               </property>
+               <property name="singleStep">
+                <number>2</number>
+               </property>
+               <property name="value">
+                <number>-1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="cb_change_energy_only">
+               <property name="toolTip">
+                <string>does not mover mirrors or pitch, ugap and bragg only</string>
+               </property>
+               <property name="text">
+                <string>Change energy only</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" colspan="2">
+              <widget class="QPushButton" name="pb_move_energy">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>
+ Move   
+</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" colspan="2">
+              <widget class="QGroupBox" name="groupBox">
+               <layout class="QGridLayout" name="gridLayout_96">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_70">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Move Energy with Sid = </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="pb_energy_change_w_sid">
+                  <property name="text">
+                   <string>
+ Move 
+</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="sb_energy_sid">
+                  <property name="minimum">
+                   <number>-9999999</number>
+                  </property>
+                  <property name="maximum">
+                   <number>9999999</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <layout class="QGridLayout" name="gridLayout_106">
+               <item row="1" column="1">
+                <widget class="QLabel" name="label_178">
+                 <property name="text">
+                  <string>Zone Plate Focus </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QDoubleSpinBox" name="dsb_ZPZ1TargetPos_energy">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-100.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>20.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-15.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QPushButton" name="pb_movezpz1_energy">
+                 <property name="text">
+                  <string>Move ZPZ1</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="0" colspan="2">
+              <widget class="QGroupBox" name="groupBox_9">
+               <property name="title">
+                <string>Optmize</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_116">
+                <item row="2" column="1">
+                 <widget class="QSpinBox" name="sb_max_iter">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_151">
+                  <property name="text">
+                   <string>Max. Iter.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QCheckBox" name="cb_beam_at_ssa2">
+                  <property name="text">
+                   <string>Find beam at SSA2</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_152">
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item row="0" column="0">
            <layout class="QGridLayout" name="gridLayout_86">
             <item row="0" column="0">
@@ -10657,18 +10653,12 @@ Move
                      <property name="text">
                       <string>     Front End Fluor. Screen     </string>
                      </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                     </property>
                     </widget>
                    </item>
                    <item row="1" column="0">
                     <widget class="QLabel" name="label_75">
                      <property name="text">
                       <string>    CAM 06    </string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -10770,7 +10760,7 @@ Move
                     <bool>true</bool>
                    </property>
                    <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                    <enum>QAbstractSpinBox::UpDownArrows</enum>
                    </property>
                    <property name="suffix">
                     <string> mm</string>
@@ -10801,7 +10791,7 @@ Move
                     <bool>true</bool>
                    </property>
                    <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+                    <enum>QAbstractSpinBox::UpDownArrows</enum>
                    </property>
                    <property name="suffix">
                     <string> mm</string>
@@ -10862,486 +10852,6 @@ Move
             </item>
            </layout>
           </item>
-          <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_32">
-            <property name="title">
-             <string>Set Energy</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_99">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_46">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_81">
-               <property name="text">
-                <string>  Target Energy: </string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="dsb_target_e">
-               <property name="styleSheet">
-                <string notr="true">font: 14pt &quot;Cantarell&quot;;</string>
-               </property>
-               <property name="suffix">
-                <string> keV</string>
-               </property>
-               <property name="decimals">
-                <number>2</number>
-               </property>
-               <property name="minimum">
-                <double>5.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>25.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.500000000000000</double>
-               </property>
-               <property name="value">
-                <double>12.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2" rowspan="5">
-              <widget class="QGroupBox" name="groupBox_31">
-               <property name="title">
-                <string>Estimated Positions</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_114">
-                <item row="0" column="0">
-                 <spacer name="verticalSpacer_19">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
-                  </property>
-                  <property name="sizeType">
-                   <enum>QSizePolicy::Policy::Fixed</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="3" column="0">
-                 <layout class="QGridLayout" name="gridLayout_113">
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="label_150">
-                    <property name="text">
-                     <string>Harmonic</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QComboBox" name="cb_target_coating">
-                    <item>
-                     <property name="text">
-                      <string>Cr</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Pt</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Si</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Rh</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="dsb_target_roll">
-                    <property name="suffix">
-                     <string> mrad</string>
-                    </property>
-                    <property name="decimals">
-                     <number>4</number>
-                    </property>
-                    <property name="minimum">
-                     <double>-9.000000000000000</double>
-                    </property>
-                    <property name="maximum">
-                     <double>9.000000000000000</double>
-                    </property>
-                    <property name="singleStep">
-                     <double>0.100000000000000</double>
-                    </property>
-                    <property name="value">
-                     <double>0.200000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="1">
-                   <widget class="QSpinBox" name="sb_calc_harmonic">
-                    <property name="minimum">
-                     <number>-1</number>
-                    </property>
-                    <property name="singleStep">
-                     <number>2</number>
-                    </property>
-                    <property name="value">
-                     <number>-1</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QLabel" name="label_146">
-                    <property name="text">
-                     <string>Mirror Coating</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_154">
-                    <property name="text">
-                     <string>DCM Roll</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_155">
-                    <property name="text">
-                     <string>HFM Pitch</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QDoubleSpinBox" name="dsb_hfm_target_pitch">
-                    <property name="suffix">
-                     <string> mrad</string>
-                    </property>
-                    <property name="decimals">
-                     <number>4</number>
-                    </property>
-                    <property name="minimum">
-                     <double>-9.000000000000000</double>
-                    </property>
-                    <property name="maximum">
-                     <double>9.000000000000000</double>
-                    </property>
-                    <property name="singleStep">
-                     <double>0.100000000000000</double>
-                    </property>
-                    <property name="value">
-                     <double>1.200000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="1" column="0">
-                 <layout class="QGridLayout" name="gridLayout_112">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_149">
-                    <property name="text">
-                     <string>Gap</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="dsb_target_ugap">
-                    <property name="suffix">
-                     <string> um</string>
-                    </property>
-                    <property name="decimals">
-                     <number>1</number>
-                    </property>
-                    <property name="minimum">
-                     <double>4000.000000000000000</double>
-                    </property>
-                    <property name="maximum">
-                     <double>25000.000000000000000</double>
-                    </property>
-                    <property name="singleStep">
-                     <double>5.000000000000000</double>
-                    </property>
-                    <property name="value">
-                     <double>5920.000000000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="2" column="0">
-                 <layout class="QGridLayout" name="gridLayout_109">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_132">
-                    <property name="text">
-                     <string>DCM  Pitch  </string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QDoubleSpinBox" name="dsb_target_pitch">
-                    <property name="suffix">
-                     <string>  mrad</string>
-                    </property>
-                    <property name="decimals">
-                     <number>4</number>
-                    </property>
-                    <property name="minimum">
-                     <double>-5.000000000000000</double>
-                    </property>
-                    <property name="maximum">
-                     <double>5.000000000000000</double>
-                    </property>
-                    <property name="singleStep">
-                     <double>0.005000000000000</double>
-                    </property>
-                    <property name="value">
-                     <double>0.960500000000000</double>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_148">
-               <property name="text">
-                <string>      Harmonic: </string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QSpinBox" name="sb_harmonic">
-               <property name="minimum">
-                <number>-1</number>
-               </property>
-               <property name="singleStep">
-                <number>2</number>
-               </property>
-               <property name="value">
-                <number>-1</number>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QCheckBox" name="cb_change_energy_only">
-               <property name="toolTip">
-                <string>does not mover mirrors or pitch, ugap and bragg only</string>
-               </property>
-               <property name="text">
-                <string>Change energy only</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0" colspan="2">
-              <widget class="QPushButton" name="pb_move_energy">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>
- Move   
-</string>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="0" colspan="2">
-              <widget class="QGroupBox" name="groupBox">
-               <layout class="QGridLayout" name="gridLayout_96">
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_70">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Move Energy with Sid = </string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QPushButton" name="pb_energy_change_w_sid">
-                  <property name="text">
-                   <string>
- Move 
-</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QSpinBox" name="sb_energy_sid">
-                  <property name="minimum">
-                   <number>-9999999</number>
-                  </property>
-                  <property name="maximum">
-                   <number>9999999</number>
-                  </property>
-                  <property name="singleStep">
-                   <number>10</number>
-                  </property>
-                  <property name="value">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="6" column="2">
-              <layout class="QGridLayout" name="gridLayout_106">
-               <item row="1" column="1">
-                <widget class="QLabel" name="label_178">
-                 <property name="text">
-                  <string>Zone Plate Focus </string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_ZPZ1TargetPos_energy">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-100.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>20.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-15.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QPushButton" name="pb_movezpz1_energy">
-                 <property name="text">
-                  <string>Move ZPZ1</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item row="5" column="0" colspan="2">
-              <widget class="QGroupBox" name="groupBox_9">
-               <property name="title">
-                <string>Optmize</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_116">
-                <item row="2" column="1">
-                 <widget class="QSpinBox" name="sb_max_iter">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_151">
-                  <property name="text">
-                   <string>Max. Iter.</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0" colspan="2">
-                 <widget class="QCheckBox" name="cb_beam_at_ssa2">
-                  <property name="text">
-                   <string>Find beam at SSA2</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_152">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QGroupBox" name="gb_calib_foil">
-            <property name="title">
-             <string>Calibration Foils</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>795</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="beamline_contacts_tab">
@@ -11370,13 +10880,13 @@ Move
              <bool>false</bool>
             </property>
             <property name="layoutDirection">
-             <enum>Qt::LayoutDirection::LeftToRight</enum>
+             <enum>Qt::LeftToRight</enum>
             </property>
             <property name="verticalScrollBarPolicy">
-             <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+             <enum>Qt::ScrollBarAsNeeded</enum>
             </property>
             <property name="sizeAdjustPolicy">
-             <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+             <enum>QAbstractScrollArea::AdjustIgnored</enum>
             </property>
             <attribute name="horizontalHeaderDefaultSectionSize">
              <number>200</number>
@@ -11493,35 +11003,6 @@ Move
             </item>
            </widget>
           </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>571</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="0">
-           <spacer name="verticalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Policy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>853</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
          </layout>
         </widget>
        </widget>
@@ -11536,7 +11017,7 @@ Move
      <x>0</x>
      <y>0</y>
      <width>1334</width>
-     <height>26</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">

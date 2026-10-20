@@ -1,13 +1,14 @@
 """
  __Author__: Ajith Pattammattel
  Original Date:06-23-2020
- Last Major Update: 03-07-2024
+ Last Major Update: 10-01-2026
  """
 
 import os
 import sys
 import webbrowser
 import pyqtgraph as pg
+import xraydb
 import json
 import re
 import sys
@@ -40,10 +41,85 @@ from element_lines import *
 from mll_tomo_gui import *
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
-ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3.ui')
+ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
+
+# Elements ordered by approximate Earth's-crust abundance (Na onward), used to
+# auto-populate the XRF list with the most likely elements for a given energy.
+ABUNDANCE_ORDER = [
+    # Na, Mg, Al dropped (detector sensitivity too low); Ar kept as it is
+    # always visible from air.
+    "Si", "Fe", "Ca", "K", "Ti", "P", "Mn",
+    "Ba", "Sr", "S", "Zr", "Cl", "Ar", "V", "Cr", "Rb", "Ni", "Zn",
+    "Ce", "Cu", "Y", "La", "Nd", "Co", "Sc", "Nb", "Ga", "Pb",
+    "Th", "Pr", "Sm", "Gd", "Dy", "Cs", "Hf", "As", "U", "Sn",
+    "W", "Mo", "Br", "Yb", "Er", "Ho", "Eu", "Tb", "Tm", "Lu",
+    "I", "Tl", "Cd", "Sb", "Bi", "In", "Hg", "Ag", "Se", "Ge",
+    "Te", "Pd", "Pt", "Ru", "Rh", "Au", "Re", "Ir", "Os", "Ta",
+]
+
+# Offline mode: provide dummy motors/detectors so the GUI can launch without
+# the beamline collection profile that normally injects these as globals.
+OFFLINE_MODE = "--offline" in sys.argv
+
+
+class DummyMotor:
+    """Stand-in for an ophyd motor with just the attributes the GUI reads."""
+
+    def __init__(self, name):
+        self.name = name
+        self.prefix = f"SIM:{name}"
+        self._position = 0.0
+
+    @property
+    def position(self):
+        return self._position
+
+    def move(self, value, *args, **kwargs):
+        self._position = float(value)
+
+    def set(self, value, *args, **kwargs):
+        self._position = float(value)
+
+    def __repr__(self):
+        return f"DummyMotor({self.name!r})"
+
+
+class DummyDetector:
+    """Stand-in for an ophyd detector; only its name is read by the GUI."""
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"DummyDetector({self.name!r})"
+
+
+if OFFLINE_MODE:
+    print("Running in OFFLINE mode: using dummy motors/detectors (no hardware).")
+    zpssx = DummyMotor("zpssx")
+    zpssy = DummyMotor("zpssy")
+    zpssz = DummyMotor("zpssz")
+    dssx = DummyMotor("dssx")
+    dssy = DummyMotor("dssy")
+    dssz = DummyMotor("dssz")
+    fs = DummyDetector("fs")
+    xspress3 = DummyDetector("xspress3")
+    merlin1 = DummyDetector("merlin1")
+    dets_fast = [xspress3]
+    dets_fast_merlin = [xspress3, merlin1]
+    dets_fast_fs = [fs, xspress3]
+
+
+class ReorderableListWidget(QtWidgets.QListWidget):
+    """QListWidget that emits `reordered` after an internal drag-and-drop move."""
+    reordered = pyqtSignal()
+
+    def dropEvent(self, event):
+        super().dropEvent(event)
+        self.reordered.emit()
 
 
 # class Ui(QtWidgets.QMainWindow, Ui_window):  # Multiple inheritance with compiled UI (fallback)
@@ -56,6 +132,9 @@ class Ui(QtWidgets.QMainWindow):
         # Load .ui file directly (recommended for rapid iteration)
         uic.loadUi(ui_file_path, self)
         print("UI File loaded")
+
+        # Make the window adapt to the current display size
+        #self._make_window_responsive()
         
         # Fallback: Use compiled UI with multiple inheritance
         # from ui_files.hxn_gui_v3_ui import Ui_window
@@ -70,6 +149,9 @@ class Ui(QtWidgets.QMainWindow):
             'pump_update': True,
             'flytube_pressure': True
         }
+        # Background threads poll EPICS PVs; skip them entirely with no hardware.
+        if OFFLINE_MODE:
+            self.thread_settings = {key: False for key in self.thread_settings}
         print(f"Thread settings: {self.thread_settings}")
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
@@ -184,9 +266,38 @@ class Ui(QtWidgets.QMainWindow):
         print("Showing window...")
         self.show()
         QApplication.processEvents()
+        #self._fit_window_to_screen()
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
     
+    def _make_window_responsive(self):
+        # The .ui is designed at a fixed size; wrap the central widget in a
+        # scroll area so oversized content stays reachable on smaller displays.
+        central = self.takeCentralWidget()
+        if central is not None:
+            scroll = QtWidgets.QScrollArea(self)
+            scroll.setWidgetResizable(True)
+            scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+            scroll.setWidget(central)
+            self.setCentralWidget(scroll)
+
+        # Let the window shrink below the design size once wrapped.
+        self.setMinimumSize(0, 0)
+
+    def _fit_window_to_screen(self):
+        # Run after show() so screen and frame geometry are reliable, then
+        # clamp the window to the available area and centre it.
+        screen = self.screen() or QApplication.primaryScreen()
+        available = screen.availableGeometry()
+        frame_extra_w = self.frameGeometry().width() - self.width()
+        frame_extra_h = self.frameGeometry().height() - self.height()
+        width = min(self.width(), available.width() - frame_extra_w)
+        height = min(self.height(), available.height() - frame_extra_h)
+        self.resize(width, height)
+        x = available.x() + (available.width() - self.frameGeometry().width()) // 2
+        y = available.y() + (available.height() - self.frameGeometry().height()) // 2
+        self.move(max(available.x(), x), max(available.y(), y))
+
     def _start_background_threads(self):
         """Start background threads after GUI is fully loaded"""
         print("Starting background threads (based on user settings)...")
@@ -374,6 +485,24 @@ class Ui(QtWidgets.QMainWindow):
                     # Catch both type errors and invalid value errors
                     pass
 
+        # Refresh periodic-table availability when the beam energy changes.
+        if hasattr(self, "ptable_buttons"):
+            beam_ev = self._beam_energy_ev()
+            if beam_ev != self._ptable_last_energy:
+                self._ptable_last_energy = beam_ev
+                self.update_ptable_for_energy()
+                if not self._ptable_user_modified:
+                    self.autofill_abundant_elements()
+
+        # Seed the energy-change target with the live mono energy on first read.
+        if not getattr(self, "_target_e_initialized", False):
+            mono_e = self.lcd_monoE.value()
+            if mono_e > 0:
+                self._target_e_initialized = True
+                self.dsb_target_e.setValue(mono_e)
+                # Recalc gap/pitch/coating even if setValue rounds to the preset.
+                self.update_energy_calc(mono_e)
+
     def handle_bool_signals(self,pv_val_list):
 
         #self.pump_PVs.keys() = pv_val_list (works?)
@@ -453,13 +582,17 @@ class Ui(QtWidgets.QMainWindow):
     def connect_user_setup_signals(self):
 
         #user setup
-        self.xrf_combo_boxes = self.xrf_elem_cb_widget.findChildren(QtWidgets.QComboBox)
+        # Fixed order 1..16 so the periodic table can map selections to boxes.
+        self.xrf_combo_boxes = [self.findChild(QtWidgets.QComboBox, f"cb_elem_{i}")
+                                for i in range(1, 17)]
 
         for cb in self.xrf_combo_boxes:
-            cb.addItems(all_elem_lines)
+            cb.addItems(list(all_elem_lines))
             cb.currentIndexChanged.connect(self.populate_elems_from_combobox)
 
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
+
+        self.build_periodic_table()
 
         self.pb_create_user.clicked.connect(lambda:self.new_user_setup())
         self.pb_update_xrf_elems.clicked.connect(self.apply_xrf_elems)
@@ -469,9 +602,279 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_export_xrf_elem_list.clicked.connect(
             lambda:self.export_xrf_elem_list(auto = False))
         self.sb_live_elem_num.valueChanged.connect(self.populate_elems_from_combobox)
+        self.sb_live_elem_num.valueChanged.connect(self._highlight_live_items)
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
         self.pb_get_proposal_info.clicked.connect(lambda:self.fill_user_info())
         self.pb_move_data_to_globus.clicked.connect(lambda:self.copy_data_to_globus(self.le_proposal_num.text().strip()))
+
+    def build_periodic_table(self):
+        # Line labels available per absorption edge, keyed by element symbol.
+        # K labels are bare symbols ("Fe"); L/M labels carry a suffix ("Zn_L").
+        self._edge_label_maps = {
+            "K": {str(s): str(s) for s in elem_K_list},
+            "L": {str(l).split("_")[0].capitalize(): str(l) for l in elem_L_list},
+            "M": {str(m).split("_")[0].capitalize(): str(m) for m in elem_M_list},
+        }
+        # Map a line label (e.g. "Fe", "Zn_L") to its combo-box item index.
+        self._line_to_index = {str(t).split(":")[0]: i
+                               for i, t in enumerate(all_elem_lines)}
+        self.ptable_selected = {}  # element symbol -> line label, in click order
+        self.ptable_order = []     # line labels in plot order (box 1..N)
+        self.ptable_buttons = {}
+        self._ptable_max = len(self.xrf_combo_boxes)
+
+        # Absorption-edge threshold energy (eV) to excite each edge's lines;
+        # an edge is usable only when the beam energy exceeds this. L lines
+        # need the L3 edge, M lines need the M5 edge (the lowest sub-edges).
+        self._ptable_edge_names = {"K": "K", "L": "L3", "M": "M5"}
+        self._edge_energies = {"K": {}, "L": {}, "M": {}}
+        self._ptable_last_energy = None
+        self._ptable_user_modified = False
+
+        # Standard periodic-table (row, col); elements before Na are omitted
+        # since the beamline cannot measure them.
+        positions = {
+            "Na": (0, 0), "Mg": (0, 1), "Al": (0, 12), "Si": (0, 13), "P": (0, 14),
+            "S": (0, 15), "Cl": (0, 16), "Ar": (0, 17),
+            "K": (1, 0), "Ca": (1, 1), "Sc": (1, 2), "Ti": (1, 3), "V": (1, 4),
+            "Cr": (1, 5), "Mn": (1, 6), "Fe": (1, 7), "Co": (1, 8), "Ni": (1, 9),
+            "Cu": (1, 10), "Zn": (1, 11), "Ga": (1, 12), "Ge": (1, 13), "As": (1, 14),
+            "Se": (1, 15), "Br": (1, 16), "Kr": (1, 17),
+            "Rb": (2, 0), "Sr": (2, 1), "Y": (2, 2), "Zr": (2, 3), "Nb": (2, 4),
+            "Mo": (2, 5), "Tc": (2, 6), "Ru": (2, 7), "Rh": (2, 8), "Pd": (2, 9),
+            "Ag": (2, 10), "Cd": (2, 11), "In": (2, 12), "Sn": (2, 13), "Sb": (2, 14),
+            "Te": (2, 15), "I": (2, 16), "Xe": (2, 17),
+            "Cs": (3, 0), "Ba": (3, 1), "La": (3, 2), "Hf": (3, 3), "Ta": (3, 4),
+            "W": (3, 5), "Re": (3, 6), "Os": (3, 7), "Ir": (3, 8), "Pt": (3, 9),
+            "Au": (3, 10), "Hg": (3, 11), "Tl": (3, 12), "Pb": (3, 13), "Bi": (3, 14),
+            "Po": (3, 15), "At": (3, 16), "Rn": (3, 17),
+            "Fr": (4, 0), "Ra": (4, 1), "Ac": (4, 2),
+            "Ce": (6, 3), "Pr": (6, 4), "Nd": (6, 5), "Pm": (6, 6), "Sm": (6, 7),
+            "Eu": (6, 8), "Gd": (6, 9), "Tb": (6, 10), "Dy": (6, 11), "Ho": (6, 12),
+            "Er": (6, 13), "Tm": (6, 14), "Yb": (6, 15), "Lu": (6, 16),
+            "Th": (7, 3), "Pa": (7, 4), "U": (7, 5), "Np": (7, 6), "Pu": (7, 7),
+            "Am": (7, 8), "Cm": (7, 9), "Bk": (7, 10), "Cf": (7, 11),
+        }
+
+        self._ptable_default_style = (
+            "QPushButton {border: 1px solid #888; border-radius: 3px; "
+            "background-color: rgb(235, 235, 235);}")
+        self._ptable_selected_style = (
+            "QPushButton {border: 1px solid #2a2; border-radius: 3px; "
+            "background-color: rgb(0, 200, 0); font-weight: bold;}")
+        self._ptable_unavailable_style = (
+            "QPushButton {border: 1px solid #c00; border-radius: 3px; "
+            "background-color: rgb(225, 120, 120); color: rgb(90, 0, 0);}")
+
+        for sym in positions:
+            edges = xraydb.xray_edges(sym)
+            for edge, ename in self._ptable_edge_names.items():
+                e = edges.get(ename)
+                if e is not None:
+                    self._edge_energies[edge][sym] = e.energy
+
+        outer = QtWidgets.QVBoxLayout(self.widget_periodictable)
+        outer.setContentsMargins(2, 2, 2, 2)
+        outer.setSpacing(4)
+
+        top = QtWidgets.QHBoxLayout()
+        top.addWidget(QtWidgets.QLabel("Edge:"))
+        self.ptable_edge_group = QtWidgets.QButtonGroup(self)
+        for edge in ("K", "L", "M"):
+            rb = QtWidgets.QRadioButton(edge)
+            rb.setChecked(edge == "K")
+            self.ptable_edge_group.addButton(rb)
+            top.addWidget(rb)
+        self.ptable_edge_group.buttonClicked.connect(
+            lambda _b: self.update_ptable_for_energy())
+        top.addSpacing(20)
+        self.lbl_ptable_count = QtWidgets.QLabel(f"0 / {self._ptable_max}")
+        top.addWidget(self.lbl_ptable_count)
+        self.pb_ptable_clear = QtWidgets.QPushButton("Clear")
+        self.pb_ptable_clear.clicked.connect(self.clear_ptable_selection)
+        top.addWidget(self.pb_ptable_clear)
+        top.addStretch(1)
+        outer.addLayout(top)
+
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(2)
+        for sym, (r, c) in positions.items():
+            btn = QtWidgets.QPushButton(sym)
+            btn.setStyleSheet(self._ptable_default_style)
+            btn.setMinimumSize(34, 26)
+            btn.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                              QtWidgets.QSizePolicy.Policy.Fixed)
+            btn.clicked.connect(lambda _=False, s=sym: self._ptable_element_clicked(s))
+            grid.addWidget(btn, r, c)
+            self.ptable_buttons[sym] = btn
+        outer.addLayout(grid)
+
+        order_row = QtWidgets.QHBoxLayout()
+        order_row.addWidget(QtWidgets.QLabel(
+            "Plot order (drag to reorder; green = live-plotted):"))
+        order_row.addStretch(1)
+        outer.addLayout(order_row)
+
+        self.ptable_order_list = ReorderableListWidget()
+        self.ptable_order_list.setFlow(QtWidgets.QListView.Flow.LeftToRight)
+        self.ptable_order_list.setWrapping(True)
+        self.ptable_order_list.setResizeMode(QtWidgets.QListView.ResizeMode.Adjust)
+        self.ptable_order_list.setDragDropMode(
+            QtWidgets.QAbstractItemView.DragDropMode.InternalMove)
+        self.ptable_order_list.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.ptable_order_list.setSelectionMode(
+            QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+        self.ptable_order_list.setSpacing(2)
+        self.ptable_order_list.setMaximumHeight(74)
+        self.ptable_order_list.reordered.connect(self._on_order_list_reordered)
+        outer.addWidget(self.ptable_order_list)
+
+        self.update_ptable_for_energy()
+        self.autofill_abundant_elements()
+
+    def _current_ptable_edge(self):
+        btn = self.ptable_edge_group.checkedButton()
+        return btn.text() if btn else "K"
+
+    def _beam_energy_ev(self):
+        # lcd_monoE reads the mono energy in keV; xraydb edges are in eV.
+        return self.lcd_monoE.value() * 1000.0
+
+    def update_ptable_for_energy(self):
+        # Grey/clickable when the current edge is excitable at the beam energy,
+        # red/disabled otherwise. Selected elements stay green and clickable so
+        # they can be toggled off. A non-positive beam energy disables filtering.
+        beam_ev = self._beam_energy_ev()
+        edge = self._current_ptable_edge()
+        emap = self._edge_label_maps[edge]
+        energies = self._edge_energies[edge]
+        for sym, btn in self.ptable_buttons.items():
+            # Only green when the element is selected on the edge currently shown.
+            if self.ptable_selected.get(sym) == emap.get(sym) and sym in self.ptable_selected:
+                btn.setEnabled(True)
+                btn.setStyleSheet(self._ptable_selected_style)
+                continue
+            edge_e = energies.get(sym)
+            excitable = (sym in emap and edge_e is not None
+                         and (beam_ev <= 0 or edge_e <= beam_ev))
+            btn.setEnabled(excitable)
+            btn.setStyleSheet(self._ptable_default_style if excitable
+                              else self._ptable_unavailable_style)
+
+    def _ptable_element_clicked(self, sym):
+        self._ptable_user_modified = True
+        edge = self._current_ptable_edge()
+        label = self._edge_label_maps[edge].get(sym)
+        # Clicking the element while it is already selected on this edge
+        # (shown green) toggles it off.
+        if self.ptable_selected.get(sym) == label and label is not None:
+            del self.ptable_selected[sym]
+            self.update_ptable_for_energy()
+            self._apply_ptable_selection()
+            return
+
+        if label is None:
+            self.statusbar.showMessage(f"No {edge} line available for {sym}", 4000)
+            return
+        # Selecting on a new edge while not yet selected counts toward the limit;
+        # switching an already-selected element's edge does not.
+        if sym not in self.ptable_selected and len(self.ptable_selected) >= self._ptable_max:
+            self.statusbar.showMessage(
+                f"Cannot select more than {self._ptable_max} elements", 4000)
+            return
+        self.ptable_selected[sym] = label
+        self.update_ptable_for_energy()
+        self._apply_ptable_selection()
+
+    def _apply_ptable_selection(self):
+        # Default order: K lines first, then L, then M (stable within each edge).
+        # The user can override this afterwards by dragging the plot-order list.
+        edge_rank = {"_L": 1, "_M": 2}
+        self.ptable_order = sorted(self.ptable_selected.values(),
+                                   key=lambda lbl: edge_rank.get(lbl[-2:], 0))
+        self._update_combos_from_ptable()
+
+    def _update_combos_from_ptable(self):
+        labels = list(self.ptable_order)
+        default_index = self._line_to_index["Fe"]
+        for i, cb in enumerate(self.xrf_combo_boxes):
+            cb.blockSignals(True)
+            cb.setCurrentIndex(self._line_to_index[labels[i]] if i < len(labels)
+                               else default_index)
+            cb.blockSignals(False)
+        self.lbl_ptable_count.setText(f"{len(labels)} / {self._ptable_max}")
+        self._refresh_order_list()
+        self.populate_elems_from_combobox()
+
+    def _refresh_order_list(self):
+        if not hasattr(self, "ptable_order_list"):
+            return
+        self.ptable_order_list.clear()
+        for label in self.ptable_order:
+            self.ptable_order_list.addItem(QtWidgets.QListWidgetItem(label))
+        self._highlight_live_items()
+
+    def _highlight_live_items(self):
+        # Bold + green the first `sb_live_elem_num` entries (the live-plotted ones).
+        if not hasattr(self, "ptable_order_list"):
+            return
+        n_live = self.sb_live_elem_num.value()
+        live_bg = QtGui.QColor(0, 200, 0)
+        for i in range(self.ptable_order_list.count()):
+            item = self.ptable_order_list.item(i)
+            f = item.font()
+            f.setBold(i < n_live)
+            item.setFont(f)
+            item.setBackground(live_bg if i < n_live else QtGui.QBrush())
+            item.setToolTip("Live-plotted" if i < n_live else "")
+
+    def _on_order_list_reordered(self):
+        new_order = [self.ptable_order_list.item(i).text()
+                     for i in range(self.ptable_order_list.count())]
+        self.ptable_order = new_order
+        # Keep ptable_selected in the same order so it survives later refreshes.
+        label_to_sym = {lbl: sym for sym, lbl in self.ptable_selected.items()}
+        self.ptable_selected = {label_to_sym[lbl]: lbl
+                                for lbl in new_order if lbl in label_to_sym}
+        self._ptable_user_modified = True
+        default_index = self._line_to_index["Fe"]
+        for i, cb in enumerate(self.xrf_combo_boxes):
+            cb.blockSignals(True)
+            cb.setCurrentIndex(self._line_to_index[new_order[i]] if i < len(new_order)
+                               else default_index)
+            cb.blockSignals(False)
+        self.lbl_ptable_count.setText(f"{len(new_order)} / {self._ptable_max}")
+        self._highlight_live_items()
+        self.populate_elems_from_combobox()
+
+    def clear_ptable_selection(self):
+        self._ptable_user_modified = True
+        self.ptable_selected.clear()
+        self.update_ptable_for_energy()
+        self._apply_ptable_selection()
+
+    def autofill_abundant_elements(self):
+        # Pick the most Earth-abundant elements excitable at the current beam
+        # energy, filling K edges first, then L, then M, up to the 16 boxes.
+        beam_ev = self._beam_energy_ev()
+        selected = {}
+        for edge in ("K", "L", "M"):
+            emap = self._edge_label_maps[edge]
+            energies = self._edge_energies[edge]
+            for sym in ABUNDANCE_ORDER:
+                if len(selected) >= self._ptable_max:
+                    break
+                if sym in selected or sym not in emap:
+                    continue
+                e = energies.get(sym)
+                if e is None or (beam_ev > 0 and e > beam_ev):
+                    continue
+                selected[sym] = emap[sym]
+            if len(selected) >= self._ptable_max:
+                break
+        self.ptable_selected = selected
+        self.update_ptable_for_energy()
+        self._apply_ptable_selection()
 
 
     @show_error_message_box
@@ -576,6 +979,9 @@ class Ui(QtWidgets.QMainWindow):
 
         if auto:
              json_param_file = "/nsls2/data/hxn/shared/config/bluesky/profile_collection/startup/plot_elems.json"
+             if not os.path.isfile(json_param_file):
+                 print(f"XRF element list not found at {json_param_file}; skipping auto-import.")
+                 return
 
         else:
             # Open a file dialog to select a JSON file
@@ -605,6 +1011,19 @@ class Ui(QtWidgets.QMainWindow):
                     box.setCurrentIndex(i)
             box.setCurrentText(elem)
             #except:box.setCurrentText("Si")
+
+        # Reflect the imported list on the periodic table and keep it from being
+        # overwritten by the energy-triggered auto-fill.
+        self.ptable_selected = {}
+        self.ptable_order = []
+        for elem in roi_elems:
+            sym = str(elem).split("_")[0].capitalize()
+            if sym in self.ptable_buttons and str(elem) in self._line_to_index:
+                self.ptable_selected[sym] = str(elem)
+                self.ptable_order.append(str(elem))
+        self._ptable_user_modified = True
+        self.update_ptable_for_energy()
+        self._refresh_order_list()
 
     @show_error_message_box
     def export_xrf_elem_list(self, auto = False):
@@ -700,6 +1119,12 @@ class Ui(QtWidgets.QMainWindow):
         #q server
         self.pb_flyplan_to_qserver.clicked.connect(lambda:self.send_to_queue())
         self.pb_send_mosaic_to_queue.clicked.connect(lambda:self.send_mosaic_to_queue())
+
+        # Live estimate of optimized ranges and total time for the mosaic scan.
+        for _w in (self.sb_yrange_mosaic, self.sb_xrange_mosaic,
+                   self.dsb_overlap_mosaic, self.dsb_dwell, self.sb_stepsize_mosaic):
+            _w.valueChanged.connect(self.update_mosaic_estimate)
+        self.update_mosaic_estimate()
 
         self.cb_queue_use_curr_pos.stateChanged.connect(self.toggle_manual_roi_box)
 
@@ -862,13 +1287,54 @@ class Ui(QtWidgets.QMainWindow):
                             scan_time_min = scan_time)))
 
     @show_error_message_box
+    def update_mosaic_estimate(self, *args):
+        # Mirror mosaic_overlap_scan's math so the user sees the optimized ranges
+        # and estimated fly time before the plan is queued (no hardware needed).
+        max_travel = 25
+        overlap_per = self.dsb_overlap_mosaic.value()
+        xlen = self.sb_xrange_mosaic.value()
+        ylen = self.sb_yrange_mosaic.value()
+        dwell = self.dsb_dwell.value()
+        step_size = self.sb_stepsize_mosaic.value()
+
+        scan_dim = max_travel - round(max_travel * overlap_per * 0.01)
+        if scan_dim <= 0 or step_size <= 0:
+            self.te_mosaic_estimate.setPlainText(
+                "Invalid parameters (overlap too high or step size is 0).")
+            return
+
+        x_tile = round(abs(xlen) / scan_dim)
+        y_tile = round(abs(ylen) / scan_dim)
+        if x_tile < 1 or y_tile < 1:
+            self.te_mosaic_estimate.setPlainText(
+                f"Range too small for one {scan_dim} um grid; increase X/Y range.")
+            return
+
+        xlen_updated = scan_dim * x_tile
+        ylen_updated = scan_dim * y_tile
+        num_steps = round(max_travel * 1000 / step_size)
+        num_flys = x_tile * y_tile
+        total_time = (num_steps ** 2) * dwell * 2 * num_flys / 60.0
+
+        unit = "minutes"
+        if total_time > 60:
+            total_time /= 60.0
+            unit = "hours"
+
+        self.te_mosaic_estimate.setPlainText(
+            f"Optimized X range : {xlen_updated} um\n"
+            f"Optimized Y range : {ylen_updated} um\n"
+            f"Grids             : {x_tile} x {y_tile}  (each {scan_dim} x {scan_dim} um)\n"
+            f"Steps per grid    : {num_steps} x {num_steps}\n"
+            f"# of fly scans    : {num_flys}\n"
+            f"Est. scan time    : {total_time:.2f} {unit}")
+
     def send_mosaic_to_queue(self):
         """
         Queue a mosaic overlap scan for execution by QServer.
         Uses current GUI widget values.
         """
         self.getScanValues()
-
         # --- Collect detectors and scan metadata ---
         det_names = [d.name for d in eval(self.cb_det_list_mosaic.currentText())]
         scan_name = self.le_mosaic_plan_name.text()
@@ -1230,6 +1696,8 @@ class Ui(QtWidgets.QMainWindow):
     #energy change
     def connect_energy_change(self):
         #print("energy_change")
+        # Prefill dsb_target_e from the live mono energy once PVs connect.
+        self._target_e_initialized = False
         self.pb_move_energy.clicked.connect(lambda:self.change_energy(self.dsb_target_e.value()))
         self.pb_energy_change_w_sid.clicked.connect(lambda:self.move_energy_with_sid_gui(self.sb_energy_sid.value()))
         self.dsb_target_e.valueChanged.connect(lambda:self.update_energy_calc(self.dsb_target_e.value()))
@@ -2477,20 +2945,42 @@ class Ui(QtWidgets.QMainWindow):
 
     #exit gui
 
+    def _re_is_idle(self):
+        # RE is injected by the beamline profile; treat as idle when absent (offline).
+        re = globals().get("RE", None)
+        return re is None or getattr(re, "state", "idle") == "idle"
+
+    def _stop_thread(self, thread, wait_ms=3000):
+        # Ask the loop to exit, then wait; only force-terminate as a last resort.
+        if thread is None or not thread.isRunning():
+            return
+        thread.requestInterruption()
+        thread.quit()
+        if not thread.wait(wait_ms):
+            thread.terminate()
+            thread.wait()
+
+    def _stop_all_threads(self):
+        for name in ("scanStatus_thread", "liveWorker", "pump_update_worker",
+                     "update_thread", "live_plot_worker_thread",
+                     "points_update_thread", "pump_worker_thread", "vent_thread",
+                     "he_backfill_worker_thread", "thread"):
+            self._stop_thread(getattr(self, name, None))
+
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
-        if reply == QMessageBox.Yes and RE.state == "idle":
-
-            event.accept()
-            self.scanStatus_thread.terminate()
-            self.liveWorker.terminate()
-            plt.close('all')
-            #self.updateTimer.stop()
-            QApplication.closeAllWindows()
-
-        else:
+        if reply != QMessageBox.Yes:
+            event.ignore()
+            return
+        if not self._re_is_idle():
             event.ignore()
             QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
+            return
+
+        self._stop_all_threads()
+        plt.close('all')
+        event.accept()
+        QApplication.closeAllWindows()
 
     def close_application(self):
 
@@ -2498,17 +2988,17 @@ class Ui(QtWidgets.QMainWindow):
                                       "Are you sure to quit?", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
 
-        if choice == QMessageBox.Yes and RE.state == "idle":
-            plt.close('all')
-            self.scanStatus_thread.terminate()
-            self.liveWorker.terminate()
-            QApplication.closeAllWindows()
-
-            print('quit application')
-            sys.exit()
-        else:
+        if choice != QMessageBox.Yes:
+            return
+        if not self._re_is_idle():
             QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
-            pass
+            return
+
+        self._stop_all_threads()
+        plt.close('all')
+        QApplication.closeAllWindows()
+        print('quit application')
+        sys.exit()
 
     def connect_sample_exchange(self):
         #sample exchange
@@ -2748,6 +3238,21 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_peakBeamXY.clicked.connect(lambda:RE(peak_the_flux()))
         self.pb_recover_from_beamdump.clicked.connect(lambda:RE(recover_from_beamdump()))
 
+
+def _interruptible_wait(thread, total_ms, chunk_ms=200):
+    """Wait in small chunks so the thread exits promptly when interrupted."""
+    elapsed = 0
+    while elapsed < total_ms:
+        if thread.isInterruptionRequested():
+            return
+        step = min(chunk_ms, total_ms - elapsed)
+        if QtTest is not None:
+            QtTest.QTest.qWait(step)
+        else:
+            thread.msleep(step)
+        elapsed += step
+
+
 #from FXI--modified
 class liveStatus(QThread):
     current_sts = pyqtSignal(int)
@@ -2764,14 +3269,14 @@ class liveStatus(QThread):
             print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
             self.pv_obj = None
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 # Only read if connected
                 if self.pv_obj is not None and self.pv_obj.connected:
                     value = self.pv_obj.get(timeout=0.1)
                     if value is not None:
                         self.current_sts.emit(value)
-                QtTest.QTest.qWait(500)
+                _interruptible_wait(self, 500)
             except Exception as e:
                 # Silently continue if PV unavailable
                 pass
@@ -2816,11 +3321,11 @@ class liveUpdate(QThread):
                 self.pv_objects.append(None)
         print(f"  PV objects created, starting update loop...")
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 positions = self.return_values()
                 self.current_positions.emit(positions)
-                QtTest.QTest.qWait(self.update_interval_ms)
+                _interruptible_wait(self, self.update_interval_ms)
             except:
                 pass
 
@@ -2842,7 +3347,7 @@ class liveThresholdUpdate(QThread):
             print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
             self.pv_obj = None
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 # Only read if connected
                 if self.pv_obj is not None and self.pv_obj.connected:
@@ -2858,7 +3363,7 @@ class liveThresholdUpdate(QThread):
                 # PV unavailable, emit False
                 self.current_sts.emit(False)
 
-            QtTest.QTest.qWait(60000)
+            _interruptible_wait(self, 60000)
 
 class updateScanProgress(QThread):
 
@@ -2893,14 +3398,14 @@ class updateScanProgress(QThread):
         except:
             self.tot_scan_points.emit(0)
 
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 if self.update_pv_obj is not None and self.update_pv_obj.connected:
                     points = self.update_pv_obj.get(timeout=0.1)
                     self.completed_points.emit(points if points is not None else 0)
             except:
                 pass
-            QtTest.QTest.qWait(self.update_interval_ms)
+            _interruptible_wait(self, self.update_interval_ms)
             if caget(self.tot_pv) == caget(self.update_pv):
                 break
 
@@ -3022,7 +3527,7 @@ class LivePressureValueThread(QThread):
             self.pv_obj = None
         
         start_time = 0
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 if self.pv_obj is not None and self.pv_obj.connected:
                     pressure = self.pv_obj.get(timeout=0.1)
@@ -3034,7 +3539,7 @@ class LivePressureValueThread(QThread):
             except Exception as e:
                 self.current_time_pressure.emit((start_time, 0.0))
             
-            QtTest.QTest.qWait(int(self.wait_time))
+            _interruptible_wait(self, int(self.wait_time))
             start_time += self.wait_time
 
 
