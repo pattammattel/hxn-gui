@@ -12,6 +12,8 @@ import xraydb
 import json
 import re
 import sys
+import glob
+import datetime
 import traceback
 import logging
 
@@ -2743,7 +2745,15 @@ class Ui(QtWidgets.QMainWindow):
             self.sample_pos_roi_dict[item_text] = item_data
 
         if auto:
-            save_file_path = os.path.join(ui_path,"temp/gui_roi_positions.json")
+            # Timestamped filename so each auto save keeps a distinct state.
+            save_dir = "/data/users/current_user/temp"
+            os.makedirs(save_dir, exist_ok=True)
+            stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            save_file_path = os.path.join(save_dir, f"gui_roi_positions_{stamp}.json")
+            n = 1
+            while os.path.exists(save_file_path):
+                save_file_path = os.path.join(save_dir, f"gui_roi_positions_{stamp}_{n}.json")
+                n += 1
             # write the data to the temp location as JSON
 
         else:
@@ -2768,7 +2778,16 @@ class Ui(QtWidgets.QMainWindow):
         list_widget.clear()
 
         if auto:
-            file_path = os.path.join(ui_path,"temp/gui_roi_positions.json")
+            # Load the most recent timestamped save (fall back to legacy name).
+            save_dir = "/data/users/current_user/temp"
+            candidates = sorted(glob.glob(os.path.join(save_dir, "gui_roi_positions_*.json")))
+            legacy = os.path.join(save_dir, "gui_roi_positions.json")
+            if candidates:
+                file_path = candidates[-1]
+            elif os.path.isfile(legacy):
+                file_path = legacy
+            else:
+                file_path = ""
         else:
             file_path = QFileDialog().getOpenFileName(self,"Open JSON file", self.active_folder, "JSON Files (*.json)")[0]
             self.active_folder = file_path
