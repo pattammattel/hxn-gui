@@ -2517,6 +2517,7 @@ class Ui(QtWidgets.QMainWindow):
                                 acq_time, 
                                 elem=elem, 
                                 move_flag=0, 
+                                neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), 
                                 threshold =threshold))
         
         dx,dz = get_zp_rot_alignment_result(int(-1*a_num), elem=elem, threshold=threshold,
