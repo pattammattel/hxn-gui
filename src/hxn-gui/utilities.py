@@ -1,4 +1,5 @@
 import numpy as np
+import traceback
 from contextlib import contextmanager
 from functools import wraps
 from qtpy.QtWidgets import QProgressDialog, QMessageBox, QApplication
@@ -48,8 +49,13 @@ def show_error_message_box(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            error_message = f"An error occurred: {str(e)}"
-            QMessageBox.critical(None, "Error", error_message)
+            box = QMessageBox(None)
+            box.setIcon(QMessageBox.Critical)
+            box.setWindowTitle("Error")
+            box.setText(f"An error occurred: {str(e)}")
+            # Full traceback tucked behind "Show Details..." for debugging.
+            box.setDetailedText(traceback.format_exc())
+            box.exec_()
             return None
     return wrapper
 
