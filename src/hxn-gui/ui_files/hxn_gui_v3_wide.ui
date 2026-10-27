@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1209</height>
+    <height>1164</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -3364,7 +3364,7 @@ font: 15pt &quot;Modern No. 20&quot;;
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <property name="elideMode">
            <enum>Qt::ElideRight</enum>
@@ -11231,7 +11231,7 @@ border-radius: 10px</string>
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>30</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
