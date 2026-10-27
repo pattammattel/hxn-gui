@@ -1374,7 +1374,7 @@ class Ui(QtWidgets.QMainWindow):
 
 
 
-    #@show_error_message_box
+    @show_error_message_box
     def run_fly_scan(self):
         #if self.initParams() is None:
             #return  # Stop scan due to earlier error
@@ -3019,13 +3019,20 @@ class Ui(QtWidgets.QMainWindow):
 
         choice = QMessageBox.question(self, 'Start Pumping',
                                       f"HXN pumping will be excecuted with target value of {user_target_pressure}"
-                                      f"Turbo starts at ~ {fast_pump_start:.1f}"
+                                      f"Fast pumps starts at ~ {fast_pump_start:.1f}"
                                       f" Please confirm.", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
 
         if choice == QMessageBox.Yes:
-            #zps.zero.put(1)
-            #smll.zero.put(1)
+            
+            try:
+                RE(zps_zero_piezos())
+                RE(smll_zero_piezos())
+                RE(zps_sync_piezos())
+                RE(smll_sync_piezos())
+            except Exception as e:
+                print(f"Error while syncing piezos: {e}")
+                pass
             #panda_zero_all_encoders(si)
             # reset the progress bar
             self.prb_sample_exchange.reset()
@@ -3070,8 +3077,13 @@ class Ui(QtWidgets.QMainWindow):
                                       QMessageBox.No, QMessageBox.No)
 
         if choice == QMessageBox.Yes:
-            #zps.kill.put(1)
-            #smll.kill.put(1)
+            try:
+                RE(zps_kill_piezos())
+                RE(smll_kill_piezos())
+            except Exception as e:
+                print(f"Error while killing piezos: {e}")
+                pass
+            
             # reset the progress bar
             self.prb_sample_exchange.reset()
 
