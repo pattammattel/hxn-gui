@@ -8936,6 +8936,16 @@ Start
                         <item>
                          <widget class="QComboBox" name="cb_zp_rot_elem"/>
                         </item>
+                        <item>
+                         <widget class="QCheckBox" name="cb_zp_rot_neg_flag">
+                          <property name="toolTip">
+                           <string>Use the negative edge for the rotation-alignment fit (neg_flag=1)</string>
+                          </property>
+                          <property name="text">
+                           <string>Neg</string>
+                          </property>
+                         </widget>
+                        </item>
                        </layout>
                       </item>
                      </layout>

@@ -2520,7 +2520,7 @@ class Ui(QtWidgets.QMainWindow):
                                 threshold =threshold))
         
         dx,dz = get_zp_rot_alignment_result(int(-1*a_num), elem=elem, threshold=threshold,
-                            neg_flag=0, edge_flag=0, skip_scans=None, plot_flag=False)
+                            neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), edge_flag=0, skip_scans=None, plot_flag=False)
                             
         self.dsb_rot_align_smarx.setValue(float(dx))
         self.dsb_rot_align_smarz.setValue(float(dz))
