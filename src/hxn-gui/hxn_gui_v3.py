@@ -2417,7 +2417,41 @@ class Ui(QtWidgets.QMainWindow):
 
         RE(zp_z_alignment(zpStart,zpEnd,zpSteps,scanMotor,scanStart,scanEnd,scanSteps,scanDwell,
                           elem= fitElem, linFlag = linFlag))
-        
+
+        # Find the focus (lowest fitted FWHM) across the zpSteps+1 line-scans.
+        best_z, best_fwhm = self._best_zp_focus_position(zpSteps + 1, fitElem, linFlag)
+        if best_z is None:
+            self.statusbar.showMessage("Could not determine best ZPZ1 focus from the fits")
+            return
+
+        choice = QMessageBox.question(self, "ZP Focus",
+                                      f"Lowest FWHM = {best_fwhm:.3f} at zpz1 = {best_z:.3f}."
+                                      "\n Move ZPZ1 to this focus position?",
+                                      QMessageBox.Yes |
+                                      QMessageBox.No, QMessageBox.No)
+        QtTest.QTest.qWait(500)
+        if choice == QMessageBox.Yes:
+            RE(mov_zpz1(best_z))
+        else:
+            pass
+
+    def _best_zp_focus_position(self, n_scans, elem, lin_flag, z_mtr='zpz1', mon='sclr1_ch4'):
+        # Pull the fitted FWHM and z position for each of the last n_scans focus
+        # line-scans and return the (z, fwhm) with the smallest FWHM; None if no
+        # usable fit was found.
+        last_sid = int(db[-1].start['scan_id'])
+        best_z = None
+        best_fwhm = None
+        for sid in range(last_sid - n_scans + 1, last_sid + 1):
+            _, fwhm, _, _, _, z_pos = get_knife_edge_data(int(sid), elem, z_mtr,
+                                                          mon=mon, linear_flag=lin_flag)
+            if not np.isfinite(fwhm):
+                continue
+            if best_fwhm is None or fwhm < best_fwhm:
+                best_fwhm = fwhm
+                best_z = z_pos
+        return best_z, best_fwhm
+
 
     @show_error_message_box
     def mll_focus_scan(self):
