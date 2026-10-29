@@ -8946,6 +8946,35 @@ Start
                           </property>
                          </widget>
                         </item>
+                        <item>
+                         <widget class="QLabel" name="label_zp_rot_threshold">
+                          <property name="text">
+                           <string>Thr:</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QDoubleSpinBox" name="dsb_zp_rot_threshold">
+                          <property name="toolTip">
+                           <string>Line-center fit threshold passed to the rotation-alignment plan</string>
+                          </property>
+                          <property name="decimals">
+                           <number>2</number>
+                          </property>
+                          <property name="minimum">
+                           <double>0.000000000000000</double>
+                          </property>
+                          <property name="maximum">
+                           <double>1.000000000000000</double>
+                          </property>
+                          <property name="singleStep">
+                           <double>0.050000000000000</double>
+                          </property>
+                          <property name="value">
+                           <double>0.600000000000000</double>
+                          </property>
+                         </widget>
+                        </item>
                        </layout>
                       </item>
                      </layout>

@@ -2504,8 +2504,7 @@ class Ui(QtWidgets.QMainWindow):
         acq_time = self.sb_zp_rot_scan_exp_time.value()
         elem = self.cb_zp_rot_elem.currentText().split(':')[0]
         move_flag=0, 
-        #threshold = self.sb_zp_rot_scan_elem_threshold.value()
-        threshold = 0.6
+        threshold = self.dsb_zp_rot_threshold.value()
 
 
         RE(zp_rot_alignment(a_start, 
