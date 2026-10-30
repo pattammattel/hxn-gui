@@ -1743,6 +1743,15 @@ class Ui(QtWidgets.QMainWindow):
         self.dsb_target_e.valueChanged.connect(lambda:self.update_energy_calc(self.dsb_target_e.value()))
         self.sb_harmonic.valueChanged.connect(lambda:self.update_energy_calc(self.dsb_target_e.value()))
 
+        # Seed the target energy with the current mono energy at startup instead
+        # of waiting for the first live-update tick (thread may be disabled).
+        if not OFFLINE_MODE:
+            current_e = caget("XF:03ID{}Energy-I")
+            if current_e and current_e > 0:
+                self._target_e_initialized = True
+                self.dsb_target_e.setValue(current_e)
+                self.update_energy_calc(current_e)
+
 
     def update_energy_calc(self, target_energy):
 
