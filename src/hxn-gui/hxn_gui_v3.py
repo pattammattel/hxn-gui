@@ -2921,6 +2921,7 @@ class Ui(QtWidgets.QMainWindow):
             pass
 
 
+    @with_motion_feedback(title="Sample Stage Move", success_msg="Sample moved to selected position.")
     def move_stage_to_roi(self,list_widget):
         roi_num = list_widget.currentRow()
         roi_positions = list_widget.item(roi_num).data(QtCore.Qt.UserRole)
@@ -2940,6 +2941,7 @@ class Ui(QtWidgets.QMainWindow):
         self.export_listitems_to_json(list_widget)
 
     #@show_error_message_box
+    @with_motion_feedback(title="Recover ZP Scan Position", success_msg="Moved to scan position.")
     def recover_pos_from_sid_zp(self):
         current_sid = self.lcd_scanNumber.value()
         zp_flag = self.cb_sid_moveZPZ.isChecked()
@@ -2987,6 +2989,7 @@ class Ui(QtWidgets.QMainWindow):
 
         '''
 
+    @with_motion_feedback(title="Recover MLL Scan Position", success_msg="Moved to scan position.")
     def recover_pos_from_sid_mll(self):
         current_sid = self.lcd_scanNumber.value()
         sd = db[int(self.le_sid_position_mll.text())].start["scan_id"]
