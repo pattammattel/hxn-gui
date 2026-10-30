@@ -709,7 +709,11 @@ class Ui(QtWidgets.QMainWindow):
             btn.setMinimumSize(34, 26)
             btn.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
                               QtWidgets.QSizePolicy.Policy.Fixed)
+            btn.setToolTip(f"{sym}  (right-click for X-ray properties)")
             btn.clicked.connect(lambda _=False, s=sym: self._ptable_element_clicked(s))
+            btn.setContextMenuPolicy(Qt.CustomContextMenu)
+            btn.customContextMenuRequested.connect(
+                lambda _pos, s=sym: self._show_element_info(s))
             grid.addWidget(btn, r, c)
             self.ptable_buttons[sym] = btn
         outer.addLayout(grid)
@@ -880,6 +884,37 @@ class Ui(QtWidgets.QMainWindow):
         self.ptable_selected = selected
         self.update_ptable_for_energy()
         self._apply_ptable_selection()
+
+    def _show_element_info(self, elem):
+        # Right-click handler: dump xraydb atomic + X-ray edge/line data.
+        lines = [
+            f"Atomic Symbol: {elem}",
+            f"Atomic Number: {xraydb.atomic_number(elem)}",
+            f"Atomic Mass:   {xraydb.atomic_mass(elem):.4f}",
+            "",
+            "X-ray Edges:",
+            f"{'Edge':>5}  {'Energy':>9}  {'Width':>7}  {'FluorYield':>10}  {'EdgeJump':>8}",
+        ]
+        widths = dict(xraydb.core_width(elem))
+        for key, val in xraydb.xray_edges(elem).items():
+            wid = widths.get(key, 0) or 0
+            lines.append(f"{key:>5}  {val.energy:9.1f}  {wid:7.4f}  "
+                         f"{val.fyield:10.5f}  {val.jump_ratio:8.5f}")
+
+        lines += ["", "X-ray Lines:",
+                  f"{'Line':>7}  {'Energy':>9}  {'Intensity':>10}  {'Levels':>11}"]
+        for key, val in xraydb.xray_lines(elem).items():
+            levels = f"{val.initial_level}-{val.final_level}"
+            lines.append(f"{key:>7}  {val.energy:9.1f}  "
+                         f"{val.intensity:10.5f}  {levels:>11}")
+
+        box = QMessageBox(self)
+        box.setWindowTitle(f"{elem} - X-ray properties")
+        box.setIcon(QMessageBox.Information)
+        box.setTextFormat(Qt.RichText)
+        # <pre> keeps the columns aligned with a monospace font.
+        box.setText("<pre>" + "\n".join(lines) + "</pre>")
+        box.exec_()
 
 
     @show_error_message_box
