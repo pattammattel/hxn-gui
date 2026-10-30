@@ -238,6 +238,9 @@ class Ui(QtWidgets.QMainWindow):
         print("Initializing GUI parameters...")
         self.active_folder = "/data/users/current_user"
         self.client = webbrowser.get('firefox')
+        # Per-url time until which the "open camera?" prompt is suppressed
+        # (set when the user ticks "don't ask again"); see _open_cam_page.
+        self._cam_page_suppressed_until = {}
         self.live_plot_worker_thread = QThread()
         
         print("Running initParams()...")
@@ -1985,6 +1988,31 @@ class Ui(QtWidgets.QMainWindow):
         self.statusbar.showMessage('BS Y moved in')
             
 
+    def _open_cam_page(self, url, suppress_interval_s=900):
+        # Ask before opening a webcam tab; a checkbox lets the user suppress the
+        # prompt for suppress_interval_s seconds so repeated clicks aren't annoying.
+        until = self._cam_page_suppressed_until.get(url)
+        if until is not None and datetime.datetime.now() < until:
+            return
+
+        msg_box = QMessageBox(self)
+        msg_box.setIcon(QMessageBox.Question)
+        msg_box.setWindowTitle("Camera Check")
+        msg_box.setText("Open the camera webpage to verify this motion is safe?")
+        yes_button = msg_box.addButton(QMessageBox.Yes)
+        msg_box.addButton(QMessageBox.No)
+        msg_box.setDefaultButton(yes_button)
+        dont_ask = QCheckBox("Don't ask again for 15 minutes")
+        msg_box.setCheckBox(dont_ask)
+        msg_box.exec_()
+
+        if dont_ask.isChecked():
+            self._cam_page_suppressed_until[url] = (
+                datetime.datetime.now() + datetime.timedelta(seconds=suppress_interval_s))
+
+        if msg_box.clickedButton() == yes_button:
+            self.client.open(url)
+
     def connect_detectors_and_cameras(self):
 
         # Detector/Camera Motions
@@ -2045,7 +2073,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="Merlin Stage Move", success_msg="Merlin Motion completed.")
     def merlinIN(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
@@ -2058,7 +2086,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="Merlin Stage Move", success_msg="Merlin Motion completed.")
     def merlinOUT(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
@@ -2072,7 +2100,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="Eiger Stage Move", success_msg="Eiger Motion completed.")
     def eigerIN(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
@@ -2088,8 +2116,8 @@ class Ui(QtWidgets.QMainWindow):
     @with_motion_feedback(title="Dexela Stage Move", success_msg="Dexela  Motion completed.")
     def dexela_motion(self, move_to = 0):
 
-        self.client.open('http://10.66.17.48')
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.48')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
 
         choice = QMessageBox.question(self, 'Dexela Motion Warning',
@@ -2139,7 +2167,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="CAM11 Stage Move", success_msg="CAM11  Motion completed.")
     def cam11IN(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
@@ -2246,7 +2274,7 @@ class Ui(QtWidgets.QMainWindow):
                                       QMessageBox.No, QMessageBox.No)
         QtTest.QTest.qWait(500)
         if choice == QMessageBox.Yes:
-            self.client.open('http://10.66.17.43')
+            self._open_cam_page('http://10.66.17.43')
             QtTest.QTest.qWait(5000)
             RE(mov_diff(delta, gamma, dist))
 
@@ -2258,7 +2286,7 @@ class Ui(QtWidgets.QMainWindow):
     def move_diff_z(self):
         dist = self.dsb_move_diff_z_rel_value.value()
 
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(4000)
 
         choice = QMessageBox.question(self, "diff z stage motion",
@@ -2483,47 +2511,47 @@ class Ui(QtWidgets.QMainWindow):
     
     @show_error_message_box
     def mll_rot_alignment_(self):
-        
-        # a_start = self.sb_mll_rot_angle_start.value()
-        # a_end = self.sb_mll_rot_angle_end.value()
-        # a_num = self.sb_mll_rot_angle_num.value()
-        # start = self.sb_mll_rot_scan_start.value()
-        # end = self.sb_mll_rot_scan_end.value()
-        # num = self.sb_mll_rot_scan_num.value()
-        # acq_time = self.sb_mll_rot_scan_exp_time.value()
-        # elem = self.cb_mll_rot_elem.currentText().split(':')[0]
-        # move_flag=0, 
-        # threshold = 
+        print("mll rot_alignment started")
+        a_start = self.sb_mll_rot_angle_start.value()
+        a_end = self.sb_mll_rot_angle_end.value()
+        a_num = self.sb_mll_rot_angle_num.value()
+        start = self.sb_mll_rot_scan_start_2.value()
+        end = self.sb_mll_rot_scan_end_2.value()
+        num = self.sb_mll_rot_scan_num.value()
+        acq_time = self.sb_mll_rot_scan_exp_time.value()
+        elem = self.cb_mll_rot_elem.currentText().split(':')[0]
+        # sb_mll_rot_scan_exp_time_2 is the "Threshold:" field in the .ui
+        threshold = self.sb_mll_rot_scan_exp_time_2.value()
 
+        RE(mll_rot_alignment(a_start,
+                             a_end,
+                             a_num,
+                             start,
+                             end,
+                             num,
+                             acq_time,
+                             elem=elem,
+                             move_flag=0,
+                             threshold=threshold))
 
-        # dx, dz = RE(mll_rot_alignment(   a_start, 
-        #                         a_end, 
-        #                         a_num, 
-        #                         start, 
-        #                         end, 
-        #                         num, 
-        #                         acq_time, 
-        #                         elem=elem, 
-        #                         move_flag=0, 
-        #                         threshold = 0.5))
+        dx, dz = get_mll_rot_alignment_result(int(-1*a_num), elem=elem,
+                             threshold=threshold, plot_flag=False)
 
-        # self.dsb_rot_align_dsx.setValue(dx)
-        # self.dsb_rot_align_dsz.setValue(dz)
-        # self.dsb_rot_align_sbx.setValue(-1*dx)
+        self.dsb_rot_align_dsx.setValue(float(dx))
+        self.dsb_rot_align_dsz.setValue(float(dz))
+        self.dsb_rot_align_sbx.setValue(float(-1*dx))
 
-        # choice = QMessageBox.question(self, "MLL Rot Align",
-        #                               f"The recommended correction is {dx = :.2f}, {dz = :.2f} and sbx = {-1*dx :.2f}"
-        #                               "\n Proceed?",
-        #                               QMessageBox.Yes |
-        #                               QMessageBox.No, QMessageBox.No)
-        # QtTest.QTest.qWait(500)
-        # if choice == QMessageBox.Yes:
-        #     RE(self.apply_mll_rot_algn_corr())
+        choice = QMessageBox.question(self, "MLL Rot Align",
+                                      f"The recommended correction is {dx = :.2f}, {dz = :.2f} and sbx = {-1*dx :.2f}"
+                                      "\n Proceed?",
+                                      QMessageBox.Yes |
+                                      QMessageBox.No, QMessageBox.No)
+        QtTest.QTest.qWait(500)
+        if choice == QMessageBox.Yes:
+            self.apply_mll_rot_algn_corr()
 
-        # else:
-        #     pass
-
-        pass
+        else:
+            pass
 
 
     @show_error_message_box
@@ -2576,8 +2604,8 @@ class Ui(QtWidgets.QMainWindow):
 
     def apply_mll_rot_algn_corr(self):
 
-        dx = self.dsb_rot_align_dsx.value(dx)
-        dz = self.dsb_rot_align_dsz.value(dz)
+        dx = self.dsb_rot_align_dsx.value()
+        dz = self.dsb_rot_align_dsz.value()
 
         RE(bps.movr(dsx, dx, dsz, dz, sbx, -1*dx))
 
