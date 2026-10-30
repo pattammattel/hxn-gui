@@ -1257,7 +1257,16 @@ class Ui(QtWidgets.QMainWindow):
     
     def toggle_manual_roi_box(self, state):
 
-        self.gb_queue_server_plan.setEnabled(not(bool(state)))
+        # Lock the manual motor-position entries while "use current position" is on;
+        # disabling the whole group box would also disable the checkbox itself.
+        use_current = bool(state)
+        manual_roi_widgets = [
+            self.dsb_zpssx_manual_roi, self.dsb_zpssy_manual_roi, self.dsb_zpssz_manual_roi,
+            self.dsb_smarx_manual_roi, self.dsb_smary_manual_roi, self.dsb_smarz_manual_roi,
+            self.dsb_zpz1_manual_roi, self.dsb_zpsth_manual_roi,
+        ]
+        for widget in manual_roi_widgets:
+            widget.setEnabled(not use_current)
         self.fill_current_pos()
 
 

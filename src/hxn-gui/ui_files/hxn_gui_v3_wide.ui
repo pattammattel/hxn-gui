@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1164</height>
+    <height>1179</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -3830,38 +3830,65 @@ font: 15pt &quot;Modern No. 20&quot;;
                <string>Diff Stage Motion</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_42">
-               <item row="3" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_23">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_45">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_9">
                  <item>
-                  <widget class="QLabel" name="label_73">
-                   <property name="text">
-                    <string>diff_z</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="dsb_move_diff_z_rel_value">
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="minimum">
-                    <double>-50.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>50.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_move_diff_z">
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_x">
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
                    </property>
-                   <property name="text">
-                    <string>Move diff_z</string>
+                   <property name="prefix">
+                    <string>gamma = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> deg</string>
+                   </property>
+                   <property name="decimals">
+                    <number>2</number>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_y">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>delta = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> deg</string>
+                   </property>
+                   <property name="minimum">
+                    <double>-5.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>25.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -3915,127 +3942,30 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </item>
                 </layout>
                </item>
-               <item row="1" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item row="3" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_23">
                  <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_x">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>gamma = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> deg</string>
-                   </property>
-                   <property name="decimals">
-                    <number>2</number>
-                   </property>
-                   <property name="value">
-                    <double>0.000000000000000</double>
+                  <widget class="QLabel" name="label_73">
+                   <property name="text">
+                    <string>diff_z</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_y">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>delta = </string>
-                   </property>
+                  <widget class="QDoubleSpinBox" name="dsb_move_diff_z_rel_value">
                    <property name="suffix">
-                    <string> deg</string>
+                    <string> mm</string>
                    </property>
                    <property name="minimum">
-                    <double>-5.000000000000000</double>
+                    <double>-50.000000000000000</double>
                    </property>
                    <property name="maximum">
-                    <double>25.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="4" column="0">
-                <widget class="QPushButton" name="pb_pos_to_angle">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string> Calculate Diff.Pos.</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_13">
-                 <item>
-                  <widget class="QPushButton" name="pb_move_diff">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Move Diff. Stage</string>
+                    <double>50.000000000000000</double>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pb_abort_diff">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Abort Diff. Motion</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_copy_pos2angle">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Copy Results</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="cb_mll_theta_for_diff">
-                   <property name="text">
-                    <string>MLL User</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0" rowspan="3">
-                <layout class="QGridLayout" name="gridLayout_137">
-                 <item row="1" column="0">
-                  <widget class="QPushButton" name="pb_reset_dexela_ROI1">
+                  <widget class="QPushButton" name="pb_move_diff_z">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -4043,11 +3973,55 @@ font: 15pt &quot;Modern No. 20&quot;;
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Reset ROI1</string>
+                    <string>Move diff_z</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
+                </layout>
+               </item>
+               <item row="1" column="0" rowspan="3">
+                <layout class="QGridLayout" name="gridLayout_137">
+                 <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_21">
+                   <item>
+                    <widget class="QLabel" name="label_65">
+                     <property name="lineWidth">
+                      <number>0</number>
+                     </property>
+                     <property name="text">
+                      <string>Enter Dexela XY Pixels</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pb_read_dexela_ROI1">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Read Dexela ROI1 (top-right corner)</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="pb_pos_to_angle">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string> Calculate Diff.Pos.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
                   <layout class="QHBoxLayout" name="horizontalLayout_15">
                    <item>
                     <widget class="QSpinBox" name="sp_dexela_xpixel">
@@ -4093,22 +4067,8 @@ font: 15pt &quot;Modern No. 20&quot;;
                      </property>
                     </widget>
                    </item>
-                  </layout>
-                 </item>
-                 <item row="0" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
                    <item>
-                    <widget class="QLabel" name="label_65">
-                     <property name="lineWidth">
-                      <number>0</number>
-                     </property>
-                     <property name="text">
-                      <string>Enter Dexela XY Pixels</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="pb_read_dexela_ROI1">
+                    <widget class="QPushButton" name="pb_reset_dexela_ROI1">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -4116,7 +4076,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>Read Dexela ROI1 (top-right corner)</string>
+                      <string>Reset ROI1</string>
                      </property>
                     </widget>
                    </item>
@@ -4124,16 +4084,56 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </item>
                 </layout>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_45">
+               <item row="4" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <item>
+                  <widget class="QPushButton" name="pb_abort_diff">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Abort Diff. Motion</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_copy_pos2angle">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Copy Results</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_mll_theta_for_diff">
+                   <property name="text">
+                    <string>MLL User</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="4" column="1">
+                <widget class="QPushButton" name="pb_move_diff">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>Move Diff. Stage</string>
                  </property>
                 </widget>
                </item>
@@ -7944,7 +7944,7 @@ Preset Positions</string>
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="documentMode">
            <bool>true</bool>
@@ -11349,7 +11349,6 @@ border-radius: 10px</string>
   <tabstop>sp_diff_det_calc_y</tabstop>
   <tabstop>sp_diff_det_calc_2theta</tabstop>
   <tabstop>sp_diff_det_r</tabstop>
-  <tabstop>pb_move_diff</tabstop>
   <tabstop>pb_abort_diff</tabstop>
   <tabstop>pb_copy_pos2angle</tabstop>
   <tabstop>pb_move_dsx_neg</tabstop>
