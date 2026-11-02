@@ -388,6 +388,66 @@ class Ui(QtWidgets.QMainWindow):
         #advanced scans
         self.pb_open_mll_tomo_widget.clicked.connect(lambda:self.open_mll_tomo_gui())
 
+        #qserver connection controls
+        self.pb_start_qserver.clicked.connect(lambda:self.start_qserver())
+        self.pb_open_bsui_env.clicked.connect(lambda:self.open_bsui_env())
+        self.pb_close_bsui_env.clicked.connect(lambda:self.close_bsui_env())
+        self.pb_destroy_bsui_env.clicked.connect(lambda:self.destroy_bsui_env())
+        self.pb_update_bsui_env.clicked.connect(lambda:self.update_bsui_env())
+        self.pb_show_qserver_status.clicked.connect(lambda:self.show_qserver_status())
+
+    @show_error_message_box
+    def start_qserver(self):
+        # QServer (RE Manager) runs as a separate process started by the
+        # run-queue-server shell script; launch it in its own terminal tab.
+        os.system('gnome-terminal -t "QServer" --tab -e run-queue-server --active')
+
+    @show_error_message_box
+    def open_bsui_env(self):
+        self._qserver_request(RM.environment_open, "Open BSUI Env")
+
+    @show_error_message_box
+    def close_bsui_env(self):
+        self._qserver_request(RM.environment_close, "Close BSUI Env")
+
+    @show_error_message_box
+    def destroy_bsui_env(self):
+        self._qserver_request(RM.environment_destroy, "Destroy BSUI Env")
+
+    @show_error_message_box
+    def update_bsui_env(self):
+        self._qserver_request(RM.environment_update, "Update BSUI Env")
+
+    def _qserver_request(self, api_call, title):
+        # Run a QServer API call and report the returned dict in a message box.
+        # When no RE Manager is running the ZMQ layer raises RequestTimeoutError,
+        # which show_error_message_box surfaces with the full traceback.
+        response = api_call()
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle(title)
+        box.setText(f"{title} request sent.")
+        box.setDetailedText(json.dumps(response, indent=2, default=str))
+        box.exec_()
+
+    @show_error_message_box
+    def show_qserver_status(self):
+        # RM.status() raises a ZMQ RequestTimeoutError when QServer is not
+        # running; the decorator shows that full error for the user.
+        status = RM.status()
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle("QServer Status")
+        manager_state = status.get("manager_state", "unknown")
+        env_exists = status.get("worker_environment_exists", False)
+        items_in_queue = status.get("items_in_queue", "unknown")
+        box.setText(
+            f"Manager state: {manager_state}\n"
+            f"Worker environment exists: {env_exists}\n"
+            f"Items in queue: {items_in_queue}")
+        box.setDetailedText(json.dumps(status, indent=2, default=str))
+        box.exec_()
+
     def runTask(self, task, *args, **kwargs):
         self.pop_up = QMessageBox(self)
         self.pop_up.setWindowTitle("Please Wait")
