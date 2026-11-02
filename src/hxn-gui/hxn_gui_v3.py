@@ -391,11 +391,16 @@ class Ui(QtWidgets.QMainWindow):
 
         #qserver connection controls
         self.pb_start_qserver.clicked.connect(lambda:self.start_qserver())
+        self.pb_start_qmonitor.clicked.connect(lambda:self.start_qmonitor())
         self.pb_open_bsui_env.clicked.connect(lambda:self.open_bsui_env())
         self.pb_close_bsui_env.clicked.connect(lambda:self.close_bsui_env())
         self.pb_destroy_bsui_env.clicked.connect(lambda:self.destroy_bsui_env())
         self.pb_update_bsui_env.clicked.connect(lambda:self.update_bsui_env())
         self.pb_show_qserver_status.clicked.connect(lambda:self.show_qserver_status())
+
+        # Threaded heartbeat: a toggle that polls QServer and drives a status light.
+        self.qserver_heartbeat_thread = None
+        self.pb_qserver_heartbeat.toggled.connect(self.toggle_qserver_heartbeat)
 
     @show_error_message_box
     def start_qserver(self):
@@ -404,6 +409,20 @@ class Ui(QtWidgets.QMainWindow):
         subprocess.Popen(
             ["gnome-terminal", "-t", "QServer", "--tab", "-e",
              "run-queue-server", "--active"])
+
+    @show_error_message_box
+    def start_qmonitor(self):
+        # run-queue-monitor opens its own Qt GUI; keep it in its own terminal
+        # tab so its console output stays visible.
+        subprocess.Popen(
+            ["gnome-terminal", "-t", "QMonitor", "--tab", "-e",
+             "run-queue-monitor", "--active"])
+        QMessageBox.information(
+            self, "QMonitor Started",
+            "The QMonitor GUI is opening.\n\n"
+            "1. Click \"Connect\" in the QMonitor window first.\n"
+            "2. Then open the environment (Environment \u2192 Open) to "
+            "activate it.")
 
     @show_error_message_box
     def open_bsui_env(self):
@@ -460,6 +479,36 @@ class Ui(QtWidgets.QMainWindow):
             f"Items in queue: {items_in_queue}")
         box.setDetailedText(json.dumps(status, indent=2, default=str))
         box.exec_()
+
+    def toggle_qserver_heartbeat(self, enabled):
+        # Start/stop a background poll of QServer so the light stays live without
+        # freezing the GUI.
+        if enabled:
+            self.qserver_heartbeat_thread = QServerHeartbeat(poll_interval_ms=3000)
+            self.qserver_heartbeat_thread.status_update.connect(
+                self._on_qserver_heartbeat)
+            self.qserver_heartbeat_thread.start()
+            self.pb_qserver_heartbeat.setText("Stop Live Status")
+        else:
+            if self.qserver_heartbeat_thread is not None:
+                self.qserver_heartbeat_thread.requestInterruption()
+                self.qserver_heartbeat_thread.quit()
+                self.qserver_heartbeat_thread.wait(2000)
+                self.qserver_heartbeat_thread = None
+            self.pb_qserver_heartbeat.setText("Start Live Status")
+            self._set_qserver_light("gray", "Live status off", "Live status off")
+
+    def _on_qserver_heartbeat(self, reachable, state):
+        if reachable:
+            self._set_qserver_light("#00a91c", f"QServer: {state}", state)
+        else:
+            self._set_qserver_light(
+                "#d83933", f"QServer unreachable ({state})", "unreachable")
+
+    def _set_qserver_light(self, color, tooltip, state_text):
+        self.label_qserver_light.setStyleSheet(f"color: {color}; font-size: 18px;")
+        self.label_qserver_light.setToolTip(tooltip)
+        self.label_qserver_state.setText(state_text)
 
     def runTask(self, task, *args, **kwargs):
         self.pop_up = QMessageBox(self)
@@ -3475,6 +3524,29 @@ def _interruptible_wait(thread, total_ms, chunk_ms=200):
         else:
             thread.msleep(step)
         elapsed += step
+
+
+class QServerHeartbeat(QThread):
+    # Polls RM.status() on a background thread so the GUI can show a live
+    # QServer connection light without freezing. RM raises RequestTimeoutError
+    # when the RE Manager is unreachable.
+    status_update = pyqtSignal(bool, str)
+
+    def __init__(self, poll_interval_ms=3000):
+        super().__init__()
+        self.poll_interval_ms = poll_interval_ms
+
+    def run(self):
+        while not self.isInterruptionRequested():
+            try:
+                status = RM.status()
+                self.status_update.emit(
+                    True, str(status.get("manager_state", "unknown")))
+            except RM.RequestTimeoutError:
+                self.status_update.emit(False, "unreachable")
+            except Exception as exc:
+                self.status_update.emit(False, str(exc))
+            _interruptible_wait(self, self.poll_interval_ms)
 
 
 #from FXI--modified

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1161</height>
+    <height>1164</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -540,7 +540,7 @@ QRadioButton::indicator:unchecked {
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -6408,8 +6408,8 @@ ZP Tomo Widget
              </property>
             </widget>
            </item>
-           <item row="1" column="6">
-            <widget class="QPushButton" name="pb_open_bsui_env">
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pb_start_qserver">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -6417,20 +6417,7 @@ ZP Tomo Widget
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Open BSUI Env</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="4">
-            <widget class="QPushButton" name="pb_destroy_bsui_env">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Destroy BSUI Env</string>
+              <string>Start QServer</string>
              </property>
             </widget>
            </item>
@@ -6447,8 +6434,35 @@ ZP Tomo Widget
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="pb_start_qserver">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pb_qserver_heartbeat">
+             <property name="text">
+              <string>Start Live Status</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_qserver_light">
+             <property name="text">
+              <string>●</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: gray; font-size: 18px;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_qserver_state">
+             <property name="text">
+              <string>Live status off</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QPushButton" name="pb_destroy_bsui_env">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -6456,14 +6470,27 @@ ZP Tomo Widget
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Start QServer</string>
+              <string>Destroy BSUI Env</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_51">
+           <item row="1" column="6">
+            <widget class="QPushButton" name="pb_open_bsui_env">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="text">
-              <string/>
+              <string>Open BSUI Env</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pb_start_qmonitor">
+             <property name="text">
+              <string>Start QMonitor </string>
              </property>
             </widget>
            </item>
@@ -11360,7 +11387,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>30</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
