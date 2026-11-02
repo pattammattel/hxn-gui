@@ -435,9 +435,19 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def show_qserver_status(self):
-        # RM.status() raises a ZMQ RequestTimeoutError when QServer is not
-        # running; the decorator shows that full error for the user.
-        status = RM.status()
+        # RM.status() raises RequestTimeoutError when QServer (RE Manager) is
+        # unreachable; offer to start it rather than only showing the error.
+        try:
+            status = RM.status()
+        except RM.RequestTimeoutError:
+            choice = QMessageBox.question(
+                self, "QServer Not Reachable",
+                "Could not communicate with QServer (RE Manager); it may not "
+                "be running.\n\nWould you like to start it now?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if choice == QMessageBox.Yes:
+                self.start_qserver()
+            return
         box = QMessageBox(self)
         box.setIcon(QMessageBox.Information)
         box.setWindowTitle("QServer Status")
