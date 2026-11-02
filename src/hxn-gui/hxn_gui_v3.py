@@ -499,11 +499,27 @@ class Ui(QtWidgets.QMainWindow):
             self._set_qserver_light("gray", "Live status off", "Live status off")
 
     def _on_qserver_heartbeat(self, reachable, state):
-        if reachable:
-            self._set_qserver_light("#00a91c", f"QServer: {state}", state)
-        else:
+        if not reachable:
             self._set_qserver_light(
                 "#d83933", f"QServer unreachable ({state})", "unreachable")
+            return
+        # Colour reflects the documented RE Manager manager_state values.
+        busy_states = {"starting_queue", "executing_queue", "executing_task"}
+        caution_states = {"initializing", "creating_environment",
+                          "closing_environment"}
+        if state == "idle":
+            color = "#00a91c"
+        elif state == "paused":
+            color = "#ffbe2e"
+        elif state in busy_states:
+            color = "#005ea2"
+        elif state == "destroying_environment":
+            color = "#d83933"
+        elif state in caution_states:
+            color = "#ffbe2e"
+        else:
+            color = "#71767a"
+        self._set_qserver_light(color, f"QServer: {state}", state)
 
     def _set_qserver_light(self, color, tooltip, state_text):
         self.label_qserver_light.setStyleSheet(f"color: {color}; font-size: 18px;")
