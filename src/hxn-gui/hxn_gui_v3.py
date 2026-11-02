@@ -6,6 +6,7 @@
 
 import os
 import sys
+import subprocess
 import webbrowser
 import pyqtgraph as pg
 import xraydb
@@ -400,7 +401,9 @@ class Ui(QtWidgets.QMainWindow):
     def start_qserver(self):
         # QServer (RE Manager) runs as a separate process started by the
         # run-queue-server shell script; launch it in its own terminal tab.
-        os.system('gnome-terminal -t "QServer" --tab -e run-queue-server --active')
+        subprocess.Popen(
+            ["gnome-terminal", "-t", "QServer", "--tab", "-e",
+             "run-queue-server", "--active"])
 
     @show_error_message_box
     def open_bsui_env(self):
@@ -469,7 +472,9 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def open_mll_tomo_gui(self):
-        os.system(f'gnome-terminal -t "MLL TOMO" --tab -e run-mll-tomo --active')
+        subprocess.Popen(
+            ["gnome-terminal", "-t", "MLL TOMO", "--tab", "-e",
+             "run-mll-tomo", "--active"])
 
         #self.mll_tomo_window = MLLTomoGUI()
         #self.mll_tomo_window.show()
