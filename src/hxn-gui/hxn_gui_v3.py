@@ -1,16 +1,20 @@
 """
  __Author__: Ajith Pattammattel
  Original Date:06-23-2020
- Last Major Update: 03-07-2024
+ Last Major Update: 10-01-2026
  """
 
 import os
 import sys
+import subprocess
 import webbrowser
 import pyqtgraph as pg
+import xraydb
 import json
 import re
 import sys
+import glob
+import datetime
 import traceback
 import logging
 
@@ -40,10 +44,85 @@ from element_lines import *
 from mll_tomo_gui import *
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
-ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3.ui')
+ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
+
+# Elements ordered by approximate Earth's-crust abundance (Na onward), used to
+# auto-populate the XRF list with the most likely elements for a given energy.
+ABUNDANCE_ORDER = [
+    # Na, Mg, Al dropped (detector sensitivity too low); Ar kept as it is
+    # always visible from air.
+    "Si", "Fe", "Ca", "K", "Ti", "P", "Mn",
+    "Ba", "Sr", "S", "Zr", "Cl", "Ar", "V", "Cr", "Rb", "Ni", "Zn",
+    "Ce", "Cu", "Y", "La", "Nd", "Co", "Sc", "Nb", "Ga", "Pb",
+    "Th", "Pr", "Sm", "Gd", "Dy", "Cs", "Hf", "As", "U", "Sn",
+    "W", "Mo", "Br", "Yb", "Er", "Ho", "Eu", "Tb", "Tm", "Lu",
+    "I", "Tl", "Cd", "Sb", "Bi", "In", "Hg", "Ag", "Se", "Ge",
+    "Te", "Pd", "Pt", "Ru", "Rh", "Au", "Re", "Ir", "Os", "Ta",
+]
+
+# Offline mode: provide dummy motors/detectors so the GUI can launch without
+# the beamline collection profile that normally injects these as globals.
+OFFLINE_MODE = "--offline" in sys.argv
+
+
+class DummyMotor:
+    """Stand-in for an ophyd motor with just the attributes the GUI reads."""
+
+    def __init__(self, name):
+        self.name = name
+        self.prefix = f"SIM:{name}"
+        self._position = 0.0
+
+    @property
+    def position(self):
+        return self._position
+
+    def move(self, value, *args, **kwargs):
+        self._position = float(value)
+
+    def set(self, value, *args, **kwargs):
+        self._position = float(value)
+
+    def __repr__(self):
+        return f"DummyMotor({self.name!r})"
+
+
+class DummyDetector:
+    """Stand-in for an ophyd detector; only its name is read by the GUI."""
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"DummyDetector({self.name!r})"
+
+
+if OFFLINE_MODE:
+    print("Running in OFFLINE mode: using dummy motors/detectors (no hardware).")
+    zpssx = DummyMotor("zpssx")
+    zpssy = DummyMotor("zpssy")
+    zpssz = DummyMotor("zpssz")
+    dssx = DummyMotor("dssx")
+    dssy = DummyMotor("dssy")
+    dssz = DummyMotor("dssz")
+    fs = DummyDetector("fs")
+    xspress3 = DummyDetector("xspress3")
+    merlin1 = DummyDetector("merlin1")
+    dets_fast = [xspress3]
+    dets_fast_merlin = [xspress3, merlin1]
+    dets_fast_fs = [fs, xspress3]
+
+
+class ReorderableListWidget(QtWidgets.QListWidget):
+    """QListWidget that emits `reordered` after an internal drag-and-drop move."""
+    reordered = pyqtSignal()
+
+    def dropEvent(self, event):
+        super().dropEvent(event)
+        self.reordered.emit()
 
 
 # class Ui(QtWidgets.QMainWindow, Ui_window):  # Multiple inheritance with compiled UI (fallback)
@@ -56,6 +135,9 @@ class Ui(QtWidgets.QMainWindow):
         # Load .ui file directly (recommended for rapid iteration)
         uic.loadUi(ui_file_path, self)
         print("UI File loaded")
+
+        # Make the window adapt to the current display size
+        #self._make_window_responsive()
         
         # Fallback: Use compiled UI with multiple inheritance
         # from ui_files.hxn_gui_v3_ui import Ui_window
@@ -70,23 +152,27 @@ class Ui(QtWidgets.QMainWindow):
             'pump_update': True,
             'flytube_pressure': True
         }
+        # Background threads poll EPICS PVs; skip them entirely with no hardware.
+        if OFFLINE_MODE:
+            self.thread_settings = {key: False for key in self.thread_settings}
         print(f"Thread settings: {self.thread_settings}")
+        # Global stylesheet (incl. QGroupBox title spacing); uncomment to enable.
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
 
-        self.fly_motor_dict = {'zpssx': zpssx,
-                               'zpssy': zpssy,
-                               'zpssz': zpssz,
-                               'dssx': dssx,
-                               'dssy': dssy,
-                               'dssz': dssz}
-
-        # self.fly_motor_dict = {'dssx': dssx,
-        #                        'dssy': dssy,
-        #                        'dssz': dssz,
-        #                        'zpssx': zpssx,
+        # self.fly_motor_dict = {'zpssx': zpssx,
         #                        'zpssy': zpssy,
-        #                        'zpssz': zpssz,}
+        #                        'zpssz': zpssz,
+        #                        'dssx': dssx,
+        #                        'dssy': dssy,
+        #                        'dssz': dssz}
+
+        self.fly_motor_dict = {'dssx': dssx,
+                               'dssy': dssy,
+                               'dssz': dssz,
+                               'zpssx': zpssx,
+                               'zpssy': zpssy,
+                               'zpssz': zpssz,}
 
         # self.fly_det_dict = {'dets1': dets1,
         #                      'dets2': dets2,
@@ -154,6 +240,9 @@ class Ui(QtWidgets.QMainWindow):
         print("Initializing GUI parameters...")
         self.active_folder = "/data/users/current_user"
         self.client = webbrowser.get('firefox')
+        # Per-url time until which the "open camera?" prompt is suppressed
+        # (set when the user ticks "don't ask again"); see _open_cam_page.
+        self._cam_page_suppressed_until = {}
         self.live_plot_worker_thread = QThread()
         
         print("Running initParams()...")
@@ -184,9 +273,38 @@ class Ui(QtWidgets.QMainWindow):
         print("Showing window...")
         self.show()
         QApplication.processEvents()
+        #self._fit_window_to_screen()
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
     
+    def _make_window_responsive(self):
+        # The .ui is designed at a fixed size; wrap the central widget in a
+        # scroll area so oversized content stays reachable on smaller displays.
+        central = self.takeCentralWidget()
+        if central is not None:
+            scroll = QtWidgets.QScrollArea(self)
+            scroll.setWidgetResizable(True)
+            scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+            scroll.setWidget(central)
+            self.setCentralWidget(scroll)
+
+        # Let the window shrink below the design size once wrapped.
+        self.setMinimumSize(0, 0)
+
+    def _fit_window_to_screen(self):
+        # Run after show() so screen and frame geometry are reliable, then
+        # clamp the window to the available area and centre it.
+        screen = self.screen() or QApplication.primaryScreen()
+        available = screen.availableGeometry()
+        frame_extra_w = self.frameGeometry().width() - self.width()
+        frame_extra_h = self.frameGeometry().height() - self.height()
+        width = min(self.width(), available.width() - frame_extra_w)
+        height = min(self.height(), available.height() - frame_extra_h)
+        self.resize(width, height)
+        x = available.x() + (available.width() - self.frameGeometry().width()) // 2
+        y = available.y() + (available.height() - self.frameGeometry().height()) // 2
+        self.move(max(available.x(), x), max(available.y(), y))
+
     def _start_background_threads(self):
         """Start background threads after GUI is fully loaded"""
         print("Starting background threads (based on user settings)...")
@@ -272,6 +390,211 @@ class Ui(QtWidgets.QMainWindow):
         #advanced scans
         self.pb_open_mll_tomo_widget.clicked.connect(lambda:self.open_mll_tomo_gui())
 
+        #qserver connection controls
+        self.pb_start_qserver.clicked.connect(lambda:self.start_qserver())
+        self.pb_start_qmonitor.clicked.connect(lambda:self.start_qmonitor())
+        self.pb_open_bsui_env.clicked.connect(lambda:self.open_bsui_env())
+        self.pb_close_bsui_env.clicked.connect(lambda:self.close_bsui_env())
+        self.pb_destroy_bsui_env.clicked.connect(lambda:self.destroy_bsui_env())
+        self.pb_update_bsui_env.clicked.connect(lambda:self.update_bsui_env())
+        self.pb_show_qserver_status.clicked.connect(lambda:self.show_qserver_status())
+
+        # Threaded heartbeat: a toggle that polls QServer and drives a status light.
+        self.qserver_heartbeat_thread = None
+        self.pb_qserver_heartbeat.toggled.connect(self.toggle_qserver_heartbeat)
+
+    @show_error_message_box
+    def start_qserver(self):
+        # A reachable RM.status() means the RE Manager is already running;
+        # launching a second instance fails, so confirm before proceeding.
+        try:
+            RM.status()
+            already_running = True
+        except RM.RequestTimeoutError:
+            already_running = False
+
+        if already_running:
+            choice = QMessageBox.question(
+                self, "QServer Already Running",
+                "QServer (RE Manager) appears to be already running. Starting "
+                "another instance will fail.\n\nDo you really want to start it "
+                "anyway?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if choice != QMessageBox.Yes:
+                return
+
+        # QServer (RE Manager) runs as a separate process started by the
+        # run-queue-server shell script; launch it in its own terminal tab.
+        subprocess.Popen(
+            ["gnome-terminal", "-t", "QServer", "--tab", "-e",
+             "run-queue-server", "--active"])
+
+    @show_error_message_box
+    def start_qmonitor(self):
+        # run-queue-monitor opens its own Qt GUI; launch it in a new terminal
+        # window (--tab can silently fail when no gnome-terminal window exists).
+        subprocess.Popen(
+            ["gnome-terminal", "-t", "QMonitor", "--window", "-e",
+             "run-queue-monitor", "--active"])
+        QMessageBox.information(
+            self, "QMonitor Started",
+            "The QMonitor GUI is opening.\n\n"
+            "1. Click \"Connect\" in the QMonitor window first.\n"
+            "2. Then open the environment (Environment \u2192 Open) to "
+            "activate it.")
+
+    @show_error_message_box
+    def open_bsui_env(self):
+        self._qserver_request(RM.environment_open, "Open BSUI Env")
+
+    @show_error_message_box
+    def close_bsui_env(self):
+        self._qserver_request(RM.environment_close, "Close BSUI Env")
+
+    @show_error_message_box
+    def destroy_bsui_env(self):
+        self._qserver_request(RM.environment_destroy, "Destroy BSUI Env")
+
+    @show_error_message_box
+    def update_bsui_env(self):
+        # environment_update only re-syncs the RE reference and plan/device
+        # lists from the current namespace; it does NOT re-run the startup
+        # files. Closing then reopening re-executes the startup scripts so
+        # edits to the startup .py files are picked up.
+        choice = QMessageBox.question(
+            self, "Reload Environment",
+            "Updating re-runs the QServer startup files by closing and then "
+            "reopening the worker environment. Any running plan must finish "
+            "first.\n\nProceed?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice != QMessageBox.Yes:
+            return
+
+        progress = QProgressDialog(
+            "Reloading QServer environment (close then open)...",
+            None, 0, 0, self)
+        progress.setWindowTitle("Please Wait")
+        progress.setWindowModality(Qt.ApplicationModal)
+        progress.setCancelButton(None)
+        progress.show()
+        QApplication.processEvents()
+
+        if RM.status().get("worker_environment_exists", False):
+            RM.environment_close()
+            RM.wait_for_idle()
+        RM.environment_open()
+        RM.wait_for_idle()
+
+        progress.close()
+        status = RM.status()
+        QMessageBox.information(
+            self, "Reload Environment",
+            f"Environment reloaded.\n"
+            f"Manager state: {status.get('manager_state', 'unknown')}\n"
+            f"Worker environment exists: "
+            f"{status.get('worker_environment_exists', False)}")
+
+    def _qserver_request(self, api_call, title):
+        # Run a QServer API call and report the returned dict in a message box.
+        # When no RE Manager is running the ZMQ layer raises RequestTimeoutError,
+        # which show_error_message_box surfaces with the full traceback.
+        response = api_call()
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle(title)
+        box.setText(f"{title} request sent.")
+        box.setDetailedText(json.dumps(response, indent=2, default=str))
+        box.exec_()
+
+    @show_error_message_box
+    def show_qserver_status(self):
+        # RM.status() raises RequestTimeoutError when QServer (RE Manager) is
+        # unreachable; offer to start it rather than only showing the error.
+        try:
+            status = RM.status()
+        except RM.RequestTimeoutError:
+            choice = QMessageBox.question(
+                self, "QServer Not Reachable",
+                "Could not communicate with QServer (RE Manager); it may not "
+                "be running.\n\nWould you like to start it now?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if choice == QMessageBox.Yes:
+                self.start_qserver()
+            return
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle("QServer Status")
+        manager_state = status.get("manager_state", "unknown")
+        env_exists = status.get("worker_environment_exists", False)
+        items_in_queue = status.get("items_in_queue", "unknown")
+        box.setText(
+            f"Manager state: {manager_state}\n"
+            f"Worker environment exists: {env_exists}\n"
+            f"Items in queue: {items_in_queue}")
+        box.setDetailedText(json.dumps(status, indent=2, default=str))
+        box.exec_()
+
+    def toggle_qserver_heartbeat(self, enabled):
+        # Start/stop a background poll of QServer so the light stays live without
+        # freezing the GUI.
+        if enabled:
+            self.qserver_heartbeat_thread = QServerHeartbeat(poll_interval_ms=3000)
+            self.qserver_heartbeat_thread.status_update.connect(
+                self._on_qserver_heartbeat)
+            self.qserver_heartbeat_thread.start()
+            self.pb_qserver_heartbeat.setText("Stop Live Status")
+        else:
+            if self.qserver_heartbeat_thread is not None:
+                self.qserver_heartbeat_thread.requestInterruption()
+                self.qserver_heartbeat_thread.quit()
+                self.qserver_heartbeat_thread.wait(2000)
+                self.qserver_heartbeat_thread = None
+            self.pb_qserver_heartbeat.setText("Start Live Status")
+            self._set_qserver_light("gray", "Live status off", "Live status off")
+            self._set_qserver_env(None)
+
+    def _on_qserver_heartbeat(self, reachable, state, env_exists):
+        if not reachable:
+            self._set_qserver_light(
+                "#d83933", f"QServer unreachable ({state})", "unreachable")
+            self._set_qserver_env(None)
+            return
+        # Colour reflects the documented RE Manager manager_state values.
+        busy_states = {"starting_queue", "executing_queue", "executing_task"}
+        caution_states = {"initializing", "creating_environment",
+                          "closing_environment"}
+        if state == "idle":
+            color = "#00a91c"
+        elif state == "paused":
+            color = "#ffbe2e"
+        elif state in busy_states:
+            color = "#005ea2"
+        elif state == "destroying_environment":
+            color = "#d83933"
+        elif state in caution_states:
+            color = "#ffbe2e"
+        else:
+            color = "#71767a"
+        self._set_qserver_light(color, f"QServer: {state}", state)
+        self._set_qserver_env(env_exists)
+
+    def _set_qserver_light(self, color, tooltip, state_text):
+        self.label_qserver_light.setStyleSheet(f"color: {color}; font-size: 18px;")
+        self.label_qserver_light.setToolTip(tooltip)
+        self.label_qserver_state.setText(state_text)
+
+    def _set_qserver_env(self, env_exists):
+        # env_exists is None when the heartbeat is off or QServer is unreachable.
+        if env_exists is None:
+            self.label_qserver_env.setText("env: —")
+            self.label_qserver_env.setStyleSheet("color: #71767a;")
+        elif env_exists:
+            self.label_qserver_env.setText("env: open")
+            self.label_qserver_env.setStyleSheet("color: #00a91c; font-weight: bold;")
+        else:
+            self.label_qserver_env.setText("env: closed")
+            self.label_qserver_env.setStyleSheet("color: #d83933; font-weight: bold;")
+
     def runTask(self, task, *args, **kwargs):
         self.pop_up = QMessageBox(self)
         self.pop_up.setWindowTitle("Please Wait")
@@ -293,7 +616,9 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def open_mll_tomo_gui(self):
-        os.system(f'gnome-terminal -t "MLL TOMO" --tab -e run-mll-tomo --active')
+        subprocess.Popen(
+            ["gnome-terminal", "-t", "MLL TOMO", "--tab", "-e",
+             "run-mll-tomo", "--active"])
 
         #self.mll_tomo_window = MLLTomoGUI()
         #self.mll_tomo_window.show()
@@ -374,6 +699,24 @@ class Ui(QtWidgets.QMainWindow):
                     # Catch both type errors and invalid value errors
                     pass
 
+        # Refresh periodic-table availability when the beam energy changes.
+        if hasattr(self, "ptable_buttons"):
+            beam_ev = self._beam_energy_ev()
+            if beam_ev != self._ptable_last_energy:
+                self._ptable_last_energy = beam_ev
+                self.update_ptable_for_energy()
+                if not self._ptable_user_modified:
+                    self.autofill_abundant_elements()
+
+        # Seed the energy-change target with the live mono energy on first read.
+        if not getattr(self, "_target_e_initialized", False):
+            mono_e = self.lcd_monoE.value()
+            if mono_e > 0:
+                self._target_e_initialized = True
+                self.dsb_target_e.setValue(mono_e)
+                # Recalc gap/pitch/coating even if setValue rounds to the preset.
+                self.update_energy_calc(mono_e)
+
     def handle_bool_signals(self,pv_val_list):
 
         #self.pump_PVs.keys() = pv_val_list (works?)
@@ -453,13 +796,17 @@ class Ui(QtWidgets.QMainWindow):
     def connect_user_setup_signals(self):
 
         #user setup
-        self.xrf_combo_boxes = self.xrf_elem_cb_widget.findChildren(QtWidgets.QComboBox)
+        # Fixed order 1..16 so the periodic table can map selections to boxes.
+        self.xrf_combo_boxes = [self.findChild(QtWidgets.QComboBox, f"cb_elem_{i}")
+                                for i in range(1, 17)]
 
         for cb in self.xrf_combo_boxes:
-            cb.addItems(all_elem_lines)
+            cb.addItems(list(all_elem_lines))
             cb.currentIndexChanged.connect(self.populate_elems_from_combobox)
 
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
+
+        self.build_periodic_table()
 
         self.pb_create_user.clicked.connect(lambda:self.new_user_setup())
         self.pb_update_xrf_elems.clicked.connect(self.apply_xrf_elems)
@@ -469,9 +816,314 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_export_xrf_elem_list.clicked.connect(
             lambda:self.export_xrf_elem_list(auto = False))
         self.sb_live_elem_num.valueChanged.connect(self.populate_elems_from_combobox)
+        self.sb_live_elem_num.valueChanged.connect(self._highlight_live_items)
         self.roi_elements = [cb.currentText() for cb in self.xrf_combo_boxes]
         self.pb_get_proposal_info.clicked.connect(lambda:self.fill_user_info())
         self.pb_move_data_to_globus.clicked.connect(lambda:self.copy_data_to_globus(self.le_proposal_num.text().strip()))
+
+    def build_periodic_table(self):
+        # Line labels available per absorption edge, keyed by element symbol.
+        # K labels are bare symbols ("Fe"); L/M labels carry a suffix ("Zn_L").
+        self._edge_label_maps = {
+            "K": {str(s): str(s) for s in elem_K_list},
+            "L": {str(l).split("_")[0].capitalize(): str(l) for l in elem_L_list},
+            "M": {str(m).split("_")[0].capitalize(): str(m) for m in elem_M_list},
+        }
+        # Map a line label (e.g. "Fe", "Zn_L") to its combo-box item index.
+        self._line_to_index = {str(t).split(":")[0]: i
+                               for i, t in enumerate(all_elem_lines)}
+        self.ptable_selected = {}  # element symbol -> line label, in click order
+        self.ptable_order = []     # line labels in plot order (box 1..N)
+        self.ptable_buttons = {}
+        self._ptable_max = len(self.xrf_combo_boxes)
+
+        # Absorption-edge threshold energy (eV) to excite each edge's lines;
+        # an edge is usable only when the beam energy exceeds this. L lines
+        # need the L3 edge, M lines need the M5 edge (the lowest sub-edges).
+        self._ptable_edge_names = {"K": "K", "L": "L3", "M": "M5"}
+        self._edge_energies = {"K": {}, "L": {}, "M": {}}
+        self._ptable_last_energy = None
+        self._ptable_user_modified = False
+
+        # Standard periodic-table (row, col); elements before Na are omitted
+        # since the beamline cannot measure them.
+        positions = {
+            "Na": (0, 0), "Mg": (0, 1), "Al": (0, 12), "Si": (0, 13), "P": (0, 14),
+            "S": (0, 15), "Cl": (0, 16), "Ar": (0, 17),
+            "K": (1, 0), "Ca": (1, 1), "Sc": (1, 2), "Ti": (1, 3), "V": (1, 4),
+            "Cr": (1, 5), "Mn": (1, 6), "Fe": (1, 7), "Co": (1, 8), "Ni": (1, 9),
+            "Cu": (1, 10), "Zn": (1, 11), "Ga": (1, 12), "Ge": (1, 13), "As": (1, 14),
+            "Se": (1, 15), "Br": (1, 16), "Kr": (1, 17),
+            "Rb": (2, 0), "Sr": (2, 1), "Y": (2, 2), "Zr": (2, 3), "Nb": (2, 4),
+            "Mo": (2, 5), "Tc": (2, 6), "Ru": (2, 7), "Rh": (2, 8), "Pd": (2, 9),
+            "Ag": (2, 10), "Cd": (2, 11), "In": (2, 12), "Sn": (2, 13), "Sb": (2, 14),
+            "Te": (2, 15), "I": (2, 16), "Xe": (2, 17),
+            "Cs": (3, 0), "Ba": (3, 1), "La": (3, 2), "Hf": (3, 3), "Ta": (3, 4),
+            "W": (3, 5), "Re": (3, 6), "Os": (3, 7), "Ir": (3, 8), "Pt": (3, 9),
+            "Au": (3, 10), "Hg": (3, 11), "Tl": (3, 12), "Pb": (3, 13), "Bi": (3, 14),
+            "Po": (3, 15), "At": (3, 16), "Rn": (3, 17),
+            "Fr": (4, 0), "Ra": (4, 1), "Ac": (4, 2),
+            "Ce": (6, 3), "Pr": (6, 4), "Nd": (6, 5), "Pm": (6, 6), "Sm": (6, 7),
+            "Eu": (6, 8), "Gd": (6, 9), "Tb": (6, 10), "Dy": (6, 11), "Ho": (6, 12),
+            "Er": (6, 13), "Tm": (6, 14), "Yb": (6, 15), "Lu": (6, 16),
+            "Th": (7, 3), "Pa": (7, 4), "U": (7, 5), "Np": (7, 6), "Pu": (7, 7),
+            "Am": (7, 8), "Cm": (7, 9), "Bk": (7, 10), "Cf": (7, 11),
+        }
+
+        self._ptable_default_style = (
+            "QPushButton {border: 1px solid #888; border-radius: 3px; "
+            "background-color: rgb(235, 235, 235);}")
+        self._ptable_selected_style = (
+            "QPushButton {border: 1px solid #2a2; border-radius: 3px; "
+            "background-color: rgb(0, 200, 0); font-weight: bold;}")
+        self._ptable_unavailable_style = (
+            "QPushButton {border: 1px solid #c00; border-radius: 3px; "
+            "background-color: rgb(225, 120, 120); color: rgb(90, 0, 0);}")
+
+        for sym in positions:
+            edges = xraydb.xray_edges(sym)
+            for edge, ename in self._ptable_edge_names.items():
+                e = edges.get(ename)
+                if e is not None:
+                    self._edge_energies[edge][sym] = e.energy
+
+        outer = QtWidgets.QVBoxLayout(self.widget_periodictable)
+        outer.setContentsMargins(2, 2, 2, 2)
+        outer.setSpacing(4)
+
+        top = QtWidgets.QHBoxLayout()
+        top.addWidget(QtWidgets.QLabel("Edge:"))
+        self.ptable_edge_group = QtWidgets.QButtonGroup(self)
+        for edge in ("K", "L", "M"):
+            rb = QtWidgets.QRadioButton(edge)
+            rb.setChecked(edge == "K")
+            self.ptable_edge_group.addButton(rb)
+            top.addWidget(rb)
+        self.ptable_edge_group.buttonClicked.connect(
+            lambda _b: self.update_ptable_for_energy())
+        top.addSpacing(20)
+        self.lbl_ptable_count = QtWidgets.QLabel(f"0 / {self._ptable_max}")
+        top.addWidget(self.lbl_ptable_count)
+        self.pb_ptable_clear = QtWidgets.QPushButton("Clear")
+        self.pb_ptable_clear.clicked.connect(self.clear_ptable_selection)
+        top.addWidget(self.pb_ptable_clear)
+        top.addStretch(1)
+        outer.addLayout(top)
+
+        grid = QtWidgets.QGridLayout()
+        grid.setSpacing(2)
+        for sym, (r, c) in positions.items():
+            btn = QtWidgets.QPushButton(sym)
+            btn.setStyleSheet(self._ptable_default_style)
+            btn.setMinimumSize(34, 26)
+            btn.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding,
+                              QtWidgets.QSizePolicy.Policy.Fixed)
+            btn.setToolTip(f"{sym}  (right-click for X-ray properties)")
+            btn.clicked.connect(lambda _=False, s=sym: self._ptable_element_clicked(s))
+            btn.setContextMenuPolicy(Qt.CustomContextMenu)
+            btn.customContextMenuRequested.connect(
+                lambda _pos, s=sym: self._show_element_info(s))
+            grid.addWidget(btn, r, c)
+            self.ptable_buttons[sym] = btn
+        outer.addLayout(grid)
+
+        order_row = QtWidgets.QHBoxLayout()
+        order_row.addWidget(QtWidgets.QLabel(
+            "Plot order (drag to reorder; green = live-plotted):"))
+        order_row.addStretch(1)
+        outer.addLayout(order_row)
+
+        self.ptable_order_list = ReorderableListWidget()
+        self.ptable_order_list.setFlow(QtWidgets.QListView.Flow.LeftToRight)
+        self.ptable_order_list.setWrapping(True)
+        self.ptable_order_list.setResizeMode(QtWidgets.QListView.ResizeMode.Adjust)
+        self.ptable_order_list.setDragDropMode(
+            QtWidgets.QAbstractItemView.DragDropMode.InternalMove)
+        self.ptable_order_list.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.ptable_order_list.setSelectionMode(
+            QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
+        self.ptable_order_list.setSpacing(2)
+        self.ptable_order_list.setMaximumHeight(74)
+        self.ptable_order_list.reordered.connect(self._on_order_list_reordered)
+        outer.addWidget(self.ptable_order_list)
+
+        self.update_ptable_for_energy()
+        self.autofill_abundant_elements()
+
+    def _current_ptable_edge(self):
+        btn = self.ptable_edge_group.checkedButton()
+        return btn.text() if btn else "K"
+
+    def _beam_energy_ev(self):
+        # lcd_monoE reads the mono energy in keV; xraydb edges are in eV.
+        return self.lcd_monoE.value() * 1000.0
+
+    def update_ptable_for_energy(self):
+        # Grey/clickable when the current edge is excitable at the beam energy,
+        # red/disabled otherwise. Selected elements stay green and clickable so
+        # they can be toggled off. A non-positive beam energy disables filtering.
+        beam_ev = self._beam_energy_ev()
+        edge = self._current_ptable_edge()
+        emap = self._edge_label_maps[edge]
+        energies = self._edge_energies[edge]
+        for sym, btn in self.ptable_buttons.items():
+            # Only green when the element is selected on the edge currently shown.
+            if self.ptable_selected.get(sym) == emap.get(sym) and sym in self.ptable_selected:
+                btn.setEnabled(True)
+                btn.setStyleSheet(self._ptable_selected_style)
+                continue
+            edge_e = energies.get(sym)
+            excitable = (sym in emap and edge_e is not None
+                         and (beam_ev <= 0 or edge_e <= beam_ev))
+            btn.setEnabled(excitable)
+            btn.setStyleSheet(self._ptable_default_style if excitable
+                              else self._ptable_unavailable_style)
+
+    def _ptable_element_clicked(self, sym):
+        self._ptable_user_modified = True
+        edge = self._current_ptable_edge()
+        label = self._edge_label_maps[edge].get(sym)
+        # Clicking the element while it is already selected on this edge
+        # (shown green) toggles it off.
+        if self.ptable_selected.get(sym) == label and label is not None:
+            del self.ptable_selected[sym]
+            self.update_ptable_for_energy()
+            self._apply_ptable_selection()
+            return
+
+        if label is None:
+            self.statusbar.showMessage(f"No {edge} line available for {sym}", 4000)
+            return
+        # Selecting on a new edge while not yet selected counts toward the limit;
+        # switching an already-selected element's edge does not.
+        if sym not in self.ptable_selected and len(self.ptable_selected) >= self._ptable_max:
+            self.statusbar.showMessage(
+                f"Cannot select more than {self._ptable_max} elements", 4000)
+            return
+        self.ptable_selected[sym] = label
+        self.update_ptable_for_energy()
+        self._apply_ptable_selection()
+
+    def _apply_ptable_selection(self):
+        # Default order: K lines first, then L, then M (stable within each edge).
+        # The user can override this afterwards by dragging the plot-order list.
+        edge_rank = {"_L": 1, "_M": 2}
+        self.ptable_order = sorted(self.ptable_selected.values(),
+                                   key=lambda lbl: edge_rank.get(lbl[-2:], 0))
+        self._update_combos_from_ptable()
+
+    def _update_combos_from_ptable(self):
+        labels = list(self.ptable_order)
+        default_index = self._line_to_index["Fe"]
+        for i, cb in enumerate(self.xrf_combo_boxes):
+            cb.blockSignals(True)
+            cb.setCurrentIndex(self._line_to_index[labels[i]] if i < len(labels)
+                               else default_index)
+            cb.blockSignals(False)
+        self.lbl_ptable_count.setText(f"{len(labels)} / {self._ptable_max}")
+        self._refresh_order_list()
+        self.populate_elems_from_combobox()
+
+    def _refresh_order_list(self):
+        if not hasattr(self, "ptable_order_list"):
+            return
+        self.ptable_order_list.clear()
+        for label in self.ptable_order:
+            self.ptable_order_list.addItem(QtWidgets.QListWidgetItem(label))
+        self._highlight_live_items()
+
+    def _highlight_live_items(self):
+        # Bold + green the first `sb_live_elem_num` entries (the live-plotted ones).
+        if not hasattr(self, "ptable_order_list"):
+            return
+        n_live = self.sb_live_elem_num.value()
+        live_bg = QtGui.QColor(0, 200, 0)
+        for i in range(self.ptable_order_list.count()):
+            item = self.ptable_order_list.item(i)
+            f = item.font()
+            f.setBold(i < n_live)
+            item.setFont(f)
+            item.setBackground(live_bg if i < n_live else QtGui.QBrush())
+            item.setToolTip("Live-plotted" if i < n_live else "")
+
+    def _on_order_list_reordered(self):
+        new_order = [self.ptable_order_list.item(i).text()
+                     for i in range(self.ptable_order_list.count())]
+        self.ptable_order = new_order
+        # Keep ptable_selected in the same order so it survives later refreshes.
+        label_to_sym = {lbl: sym for sym, lbl in self.ptable_selected.items()}
+        self.ptable_selected = {label_to_sym[lbl]: lbl
+                                for lbl in new_order if lbl in label_to_sym}
+        self._ptable_user_modified = True
+        default_index = self._line_to_index["Fe"]
+        for i, cb in enumerate(self.xrf_combo_boxes):
+            cb.blockSignals(True)
+            cb.setCurrentIndex(self._line_to_index[new_order[i]] if i < len(new_order)
+                               else default_index)
+            cb.blockSignals(False)
+        self.lbl_ptable_count.setText(f"{len(new_order)} / {self._ptable_max}")
+        self._highlight_live_items()
+        self.populate_elems_from_combobox()
+
+    def clear_ptable_selection(self):
+        self._ptable_user_modified = True
+        self.ptable_selected.clear()
+        self.update_ptable_for_energy()
+        self._apply_ptable_selection()
+
+    def autofill_abundant_elements(self):
+        # Pick the most Earth-abundant elements excitable at the current beam
+        # energy, filling K edges first, then L, then M, up to the 16 boxes.
+        beam_ev = self._beam_energy_ev()
+        selected = {}
+        for edge in ("K", "L", "M"):
+            emap = self._edge_label_maps[edge]
+            energies = self._edge_energies[edge]
+            for sym in ABUNDANCE_ORDER:
+                if len(selected) >= self._ptable_max:
+                    break
+                if sym in selected or sym not in emap:
+                    continue
+                e = energies.get(sym)
+                if e is None or (beam_ev > 0 and e > beam_ev):
+                    continue
+                selected[sym] = emap[sym]
+            if len(selected) >= self._ptable_max:
+                break
+        self.ptable_selected = selected
+        self.update_ptable_for_energy()
+        self._apply_ptable_selection()
+
+    def _show_element_info(self, elem):
+        # Right-click handler: dump xraydb atomic + X-ray edge/line data.
+        lines = [
+            f"Atomic Symbol: {elem}",
+            f"Atomic Number: {xraydb.atomic_number(elem)}",
+            f"Atomic Mass:   {xraydb.atomic_mass(elem):.4f}",
+            "",
+            "X-ray Edges:",
+            f"{'Edge':>5}  {'Energy':>9}  {'Width':>7}  {'FluorYield':>10}  {'EdgeJump':>8}",
+        ]
+        widths = dict(xraydb.core_width(elem))
+        for key, val in xraydb.xray_edges(elem).items():
+            wid = widths.get(key, 0) or 0
+            lines.append(f"{key:>5}  {val.energy:9.1f}  {wid:7.4f}  "
+                         f"{val.fyield:10.5f}  {val.jump_ratio:8.5f}")
+
+        lines += ["", "X-ray Lines:",
+                  f"{'Line':>7}  {'Energy':>9}  {'Intensity':>10}  {'Levels':>11}"]
+        for key, val in xraydb.xray_lines(elem).items():
+            levels = f"{val.initial_level}-{val.final_level}"
+            lines.append(f"{key:>7}  {val.energy:9.1f}  "
+                         f"{val.intensity:10.5f}  {levels:>11}")
+
+        box = QMessageBox(self)
+        box.setWindowTitle(f"{elem} - X-ray properties")
+        box.setIcon(QMessageBox.Information)
+        box.setTextFormat(Qt.RichText)
+        # <pre> keeps the columns aligned with a monospace font.
+        box.setText("<pre>" + "\n".join(lines) + "</pre>")
+        box.exec_()
 
 
     @show_error_message_box
@@ -576,6 +1228,9 @@ class Ui(QtWidgets.QMainWindow):
 
         if auto:
              json_param_file = "/nsls2/data/hxn/shared/config/bluesky/profile_collection/startup/plot_elems.json"
+             if not os.path.isfile(json_param_file):
+                 print(f"XRF element list not found at {json_param_file}; skipping auto-import.")
+                 return
 
         else:
             # Open a file dialog to select a JSON file
@@ -605,6 +1260,19 @@ class Ui(QtWidgets.QMainWindow):
                     box.setCurrentIndex(i)
             box.setCurrentText(elem)
             #except:box.setCurrentText("Si")
+
+        # Reflect the imported list on the periodic table and keep it from being
+        # overwritten by the energy-triggered auto-fill.
+        self.ptable_selected = {}
+        self.ptable_order = []
+        for elem in roi_elems:
+            sym = str(elem).split("_")[0].capitalize()
+            if sym in self.ptable_buttons and str(elem) in self._line_to_index:
+                self.ptable_selected[sym] = str(elem)
+                self.ptable_order.append(str(elem))
+        self._ptable_user_modified = True
+        self.update_ptable_for_energy()
+        self._refresh_order_list()
 
     @show_error_message_box
     def export_xrf_elem_list(self, auto = False):
@@ -701,6 +1369,12 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_flyplan_to_qserver.clicked.connect(lambda:self.send_to_queue())
         self.pb_send_mosaic_to_queue.clicked.connect(lambda:self.send_mosaic_to_queue())
 
+        # Live estimate of optimized ranges and total time for the mosaic scan.
+        for _w in (self.sb_yrange_mosaic, self.sb_xrange_mosaic,
+                   self.dsb_overlap_mosaic, self.dsb_dwell, self.sb_stepsize_mosaic):
+            _w.valueChanged.connect(self.update_mosaic_estimate)
+        self.update_mosaic_estimate()
+
         self.cb_queue_use_curr_pos.stateChanged.connect(self.toggle_manual_roi_box)
 
         self.pb_get_current_position.clicked.connect(self.fill_current_pos)
@@ -792,7 +1466,16 @@ class Ui(QtWidgets.QMainWindow):
     
     def toggle_manual_roi_box(self, state):
 
-        self.gb_queue_server_plan.setEnabled(not(bool(state)))
+        # Lock the manual motor-position entries while "use current position" is on;
+        # disabling the whole group box would also disable the checkbox itself.
+        use_current = bool(state)
+        manual_roi_widgets = [
+            self.dsb_zpssx_manual_roi, self.dsb_zpssy_manual_roi, self.dsb_zpssz_manual_roi,
+            self.dsb_smarx_manual_roi, self.dsb_smary_manual_roi, self.dsb_smarz_manual_roi,
+            self.dsb_zpz1_manual_roi, self.dsb_zpsth_manual_roi,
+        ]
+        for widget in manual_roi_widgets:
+            widget.setEnabled(not use_current)
         self.fill_current_pos()
 
 
@@ -862,13 +1545,54 @@ class Ui(QtWidgets.QMainWindow):
                             scan_time_min = scan_time)))
 
     @show_error_message_box
+    def update_mosaic_estimate(self, *args):
+        # Mirror mosaic_overlap_scan's math so the user sees the optimized ranges
+        # and estimated fly time before the plan is queued (no hardware needed).
+        max_travel = 25
+        overlap_per = self.dsb_overlap_mosaic.value()
+        xlen = self.sb_xrange_mosaic.value()
+        ylen = self.sb_yrange_mosaic.value()
+        dwell = self.dsb_dwell.value()
+        step_size = self.sb_stepsize_mosaic.value()
+
+        scan_dim = max_travel - round(max_travel * overlap_per * 0.01)
+        if scan_dim <= 0 or step_size <= 0:
+            self.te_mosaic_estimate.setPlainText(
+                "Invalid parameters (overlap too high or step size is 0).")
+            return
+
+        x_tile = round(abs(xlen) / scan_dim)
+        y_tile = round(abs(ylen) / scan_dim)
+        if x_tile < 1 or y_tile < 1:
+            self.te_mosaic_estimate.setPlainText(
+                f"Range too small for one {scan_dim} um grid; increase X/Y range.")
+            return
+
+        xlen_updated = scan_dim * x_tile
+        ylen_updated = scan_dim * y_tile
+        num_steps = round(max_travel * 1000 / step_size)
+        num_flys = x_tile * y_tile
+        total_time = (num_steps ** 2) * dwell * 2 * num_flys / 60.0
+
+        unit = "minutes"
+        if total_time > 60:
+            total_time /= 60.0
+            unit = "hours"
+
+        self.te_mosaic_estimate.setPlainText(
+            f"Optimized X range : {xlen_updated} um\n"
+            f"Optimized Y range : {ylen_updated} um\n"
+            f"Grids             : {x_tile} x {y_tile}  (each {scan_dim} x {scan_dim} um)\n"
+            f"Steps per grid    : {num_steps} x {num_steps}\n"
+            f"# of fly scans    : {num_flys}\n"
+            f"Est. scan time    : {total_time:.2f} {unit}")
+
     def send_mosaic_to_queue(self):
         """
         Queue a mosaic overlap scan for execution by QServer.
         Uses current GUI widget values.
         """
         self.getScanValues()
-
         # --- Collect detectors and scan metadata ---
         det_names = [d.name for d in eval(self.cb_det_list_mosaic.currentText())]
         scan_name = self.le_mosaic_plan_name.text()
@@ -908,7 +1632,7 @@ class Ui(QtWidgets.QMainWindow):
 
 
 
-    #@show_error_message_box
+    @show_error_message_box
     def run_fly_scan(self):
         #if self.initParams() is None:
             #return  # Stop scan due to earlier error
@@ -1230,10 +1954,21 @@ class Ui(QtWidgets.QMainWindow):
     #energy change
     def connect_energy_change(self):
         #print("energy_change")
+        # Prefill dsb_target_e from the live mono energy once PVs connect.
+        self._target_e_initialized = False
         self.pb_move_energy.clicked.connect(lambda:self.change_energy(self.dsb_target_e.value()))
         self.pb_energy_change_w_sid.clicked.connect(lambda:self.move_energy_with_sid_gui(self.sb_energy_sid.value()))
         self.dsb_target_e.valueChanged.connect(lambda:self.update_energy_calc(self.dsb_target_e.value()))
         self.sb_harmonic.valueChanged.connect(lambda:self.update_energy_calc(self.dsb_target_e.value()))
+
+        # Seed the target energy with the current mono energy at startup instead
+        # of waiting for the first live-update tick (thread may be disabled).
+        if not OFFLINE_MODE:
+            current_e = caget("XF:03ID{}Energy-I")
+            if current_e and current_e > 0:
+                self._target_e_initialized = True
+                self.dsb_target_e.setValue(current_e)
+                self.update_energy_calc(current_e)
 
 
     def update_energy_calc(self, target_energy):
@@ -1515,6 +2250,31 @@ class Ui(QtWidgets.QMainWindow):
         self.statusbar.showMessage('BS Y moved in')
             
 
+    def _open_cam_page(self, url, suppress_interval_s=900):
+        # Ask before opening a webcam tab; a checkbox lets the user suppress the
+        # prompt for suppress_interval_s seconds so repeated clicks aren't annoying.
+        until = self._cam_page_suppressed_until.get(url)
+        if until is not None and datetime.datetime.now() < until:
+            return
+
+        msg_box = QMessageBox(self)
+        msg_box.setIcon(QMessageBox.Question)
+        msg_box.setWindowTitle("Camera Check")
+        msg_box.setText("Open the camera webpage to verify this motion is safe?")
+        yes_button = msg_box.addButton(QMessageBox.Yes)
+        msg_box.addButton(QMessageBox.No)
+        msg_box.setDefaultButton(yes_button)
+        dont_ask = QCheckBox("Don't ask again for 15 minutes")
+        msg_box.setCheckBox(dont_ask)
+        msg_box.exec_()
+
+        if dont_ask.isChecked():
+            self._cam_page_suppressed_until[url] = (
+                datetime.datetime.now() + datetime.timedelta(seconds=suppress_interval_s))
+
+        if msg_box.clickedButton() == yes_button:
+            self.client.open(url)
+
     def connect_detectors_and_cameras(self):
 
         # Detector/Camera Motions
@@ -1575,7 +2335,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="Merlin Stage Move", success_msg="Merlin Motion completed.")
     def merlinIN(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
@@ -1588,7 +2348,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="Merlin Stage Move", success_msg="Merlin Motion completed.")
     def merlinOUT(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
@@ -1602,7 +2362,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="Eiger Stage Move", success_msg="Eiger Motion completed.")
     def eigerIN(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
@@ -1618,8 +2378,8 @@ class Ui(QtWidgets.QMainWindow):
     @with_motion_feedback(title="Dexela Stage Move", success_msg="Dexela  Motion completed.")
     def dexela_motion(self, move_to = 0):
 
-        self.client.open('http://10.66.17.48')
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.48')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
 
         choice = QMessageBox.question(self, 'Dexela Motion Warning',
@@ -1669,7 +2429,7 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     @with_motion_feedback(title="CAM11 Stage Move", success_msg="CAM11  Motion completed.")
     def cam11IN(self):
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(2000)
         choice = QMessageBox.question(self, 'Detector Motion Warning',
                                       "Make sure this motion is safe. \n Move?", QMessageBox.Yes |
@@ -1776,7 +2536,7 @@ class Ui(QtWidgets.QMainWindow):
                                       QMessageBox.No, QMessageBox.No)
         QtTest.QTest.qWait(500)
         if choice == QMessageBox.Yes:
-            self.client.open('http://10.66.17.43')
+            self._open_cam_page('http://10.66.17.43')
             QtTest.QTest.qWait(5000)
             RE(mov_diff(delta, gamma, dist))
 
@@ -1788,7 +2548,7 @@ class Ui(QtWidgets.QMainWindow):
     def move_diff_z(self):
         dist = self.dsb_move_diff_z_rel_value.value()
 
-        self.client.open('http://10.66.17.43')
+        self._open_cam_page('http://10.66.17.43')
         QtTest.QTest.qWait(4000)
 
         choice = QMessageBox.question(self, "diff z stage motion",
@@ -1947,7 +2707,41 @@ class Ui(QtWidgets.QMainWindow):
 
         RE(zp_z_alignment(zpStart,zpEnd,zpSteps,scanMotor,scanStart,scanEnd,scanSteps,scanDwell,
                           elem= fitElem, linFlag = linFlag))
-        
+
+        # Find the focus (lowest fitted FWHM) across the zpSteps+1 line-scans.
+        best_z, best_fwhm = self._best_zp_focus_position(zpSteps + 1, fitElem, linFlag)
+        if best_z is None:
+            self.statusbar.showMessage("Could not determine best ZPZ1 focus from the fits")
+            return
+
+        choice = QMessageBox.question(self, "ZP Focus",
+                                      f"Lowest FWHM = {best_fwhm:.3f} at zpz1 = {best_z:.3f}."
+                                      "\n Move ZPZ1 to this focus position?",
+                                      QMessageBox.Yes |
+                                      QMessageBox.No, QMessageBox.No)
+        QtTest.QTest.qWait(500)
+        if choice == QMessageBox.Yes:
+            RE(mov_zpz1(best_z))
+        else:
+            pass
+
+    def _best_zp_focus_position(self, n_scans, elem, lin_flag, z_mtr='zpz1', mon='sclr1_ch4'):
+        # Pull the fitted FWHM and z position for each of the last n_scans focus
+        # line-scans and return the (z, fwhm) with the smallest FWHM; None if no
+        # usable fit was found.
+        last_sid = int(db[-1].start['scan_id'])
+        best_z = None
+        best_fwhm = None
+        for sid in range(last_sid - n_scans + 1, last_sid + 1):
+            _, fwhm, _, _, _, z_pos = get_knife_edge_data(int(sid), elem, z_mtr,
+                                                          mon=mon, linear_flag=lin_flag)
+            if not np.isfinite(fwhm):
+                continue
+            if best_fwhm is None or fwhm < best_fwhm:
+                best_fwhm = fwhm
+                best_z = z_pos
+        return best_z, best_fwhm
+
 
     @show_error_message_box
     def mll_focus_scan(self):
@@ -1979,47 +2773,47 @@ class Ui(QtWidgets.QMainWindow):
     
     @show_error_message_box
     def mll_rot_alignment_(self):
-        
-        # a_start = self.sb_mll_rot_angle_start.value()
-        # a_end = self.sb_mll_rot_angle_end.value()
-        # a_num = self.sb_mll_rot_angle_num.value()
-        # start = self.sb_mll_rot_scan_start.value()
-        # end = self.sb_mll_rot_scan_end.value()
-        # num = self.sb_mll_rot_scan_num.value()
-        # acq_time = self.sb_mll_rot_scan_exp_time.value()
-        # elem = self.cb_mll_rot_elem.currentText().split(':')[0]
-        # move_flag=0, 
-        # threshold = 
+        print("mll rot_alignment started")
+        a_start = self.sb_mll_rot_angle_start.value()
+        a_end = self.sb_mll_rot_angle_end.value()
+        a_num = self.sb_mll_rot_angle_num.value()
+        start = self.sb_mll_rot_scan_start_2.value()
+        end = self.sb_mll_rot_scan_end_2.value()
+        num = self.sb_mll_rot_scan_num.value()
+        acq_time = self.sb_mll_rot_scan_exp_time.value()
+        elem = self.cb_mll_rot_elem.currentText().split(':')[0]
+        # sb_mll_rot_scan_exp_time_2 is the "Threshold:" field in the .ui
+        threshold = self.sb_mll_rot_scan_exp_time_2.value()
 
+        RE(mll_rot_alignment(a_start,
+                             a_end,
+                             a_num,
+                             start,
+                             end,
+                             num,
+                             acq_time,
+                             elem=elem,
+                             move_flag=0,
+                             threshold=threshold))
 
-        # dx, dz = RE(mll_rot_alignment(   a_start, 
-        #                         a_end, 
-        #                         a_num, 
-        #                         start, 
-        #                         end, 
-        #                         num, 
-        #                         acq_time, 
-        #                         elem=elem, 
-        #                         move_flag=0, 
-        #                         threshold = 0.5))
+        dx, dz = get_mll_rot_alignment_result(int(-1*a_num), elem=elem,
+                             threshold=threshold, plot_flag=False)
 
-        # self.dsb_rot_align_dsx.setValue(dx)
-        # self.dsb_rot_align_dsz.setValue(dz)
-        # self.dsb_rot_align_sbx.setValue(-1*dx)
+        self.dsb_rot_align_dsx.setValue(float(dx))
+        self.dsb_rot_align_dsz.setValue(float(dz))
+        self.dsb_rot_align_sbx.setValue(float(-1*dx))
 
-        # choice = QMessageBox.question(self, "MLL Rot Align",
-        #                               f"The recommended correction is {dx = :.2f}, {dz = :.2f} and sbx = {-1*dx :.2f}"
-        #                               "\n Proceed?",
-        #                               QMessageBox.Yes |
-        #                               QMessageBox.No, QMessageBox.No)
-        # QtTest.QTest.qWait(500)
-        # if choice == QMessageBox.Yes:
-        #     RE(self.apply_mll_rot_algn_corr())
+        choice = QMessageBox.question(self, "MLL Rot Align",
+                                      f"The recommended correction is {dx = :.2f}, {dz = :.2f} and sbx = {-1*dx :.2f}"
+                                      "\n Proceed?",
+                                      QMessageBox.Yes |
+                                      QMessageBox.No, QMessageBox.No)
+        QtTest.QTest.qWait(500)
+        if choice == QMessageBox.Yes:
+            self.apply_mll_rot_algn_corr()
 
-        # else:
-        #     pass
-
-        pass
+        else:
+            pass
 
 
     @show_error_message_box
@@ -2034,8 +2828,7 @@ class Ui(QtWidgets.QMainWindow):
         acq_time = self.sb_zp_rot_scan_exp_time.value()
         elem = self.cb_zp_rot_elem.currentText().split(':')[0]
         move_flag=0, 
-        #threshold = self.sb_zp_rot_scan_elem_threshold.value()
-        threshold = 0.6
+        threshold = self.dsb_zp_rot_threshold.value()
 
 
         RE(zp_rot_alignment(a_start, 
@@ -2047,10 +2840,11 @@ class Ui(QtWidgets.QMainWindow):
                                 acq_time, 
                                 elem=elem, 
                                 move_flag=0, 
+                                neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), 
                                 threshold =threshold))
         
         dx,dz = get_zp_rot_alignment_result(int(-1*a_num), elem=elem, threshold=threshold,
-                            neg_flag=0, edge_flag=0, skip_scans=None, plot_flag=False)
+                            neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), edge_flag=0, skip_scans=None, plot_flag=False)
                             
         self.dsb_rot_align_smarx.setValue(float(dx))
         self.dsb_rot_align_smarz.setValue(float(dz))
@@ -2072,8 +2866,8 @@ class Ui(QtWidgets.QMainWindow):
 
     def apply_mll_rot_algn_corr(self):
 
-        dx = self.dsb_rot_align_dsx.value(dx)
-        dz = self.dsb_rot_align_dsz.value(dz)
+        dx = self.dsb_rot_align_dsx.value()
+        dz = self.dsb_rot_align_dsz.value()
 
         RE(bps.movr(dsx, dx, dsz, dz, sbx, -1*dx))
 
@@ -2275,7 +3069,15 @@ class Ui(QtWidgets.QMainWindow):
             self.sample_pos_roi_dict[item_text] = item_data
 
         if auto:
-            save_file_path = os.path.join(ui_path,"temp/gui_roi_positions.json")
+            # Timestamped filename so each auto save keeps a distinct state.
+            save_dir = "/data/users/current_user/temp"
+            os.makedirs(save_dir, exist_ok=True)
+            stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            save_file_path = os.path.join(save_dir, f"gui_roi_positions_{stamp}.json")
+            n = 1
+            while os.path.exists(save_file_path):
+                save_file_path = os.path.join(save_dir, f"gui_roi_positions_{stamp}_{n}.json")
+                n += 1
             # write the data to the temp location as JSON
 
         else:
@@ -2300,7 +3102,16 @@ class Ui(QtWidgets.QMainWindow):
         list_widget.clear()
 
         if auto:
-            file_path = os.path.join(ui_path,"temp/gui_roi_positions.json")
+            # Load the most recent timestamped save (fall back to legacy name).
+            save_dir = "/data/users/current_user/temp"
+            candidates = sorted(glob.glob(os.path.join(save_dir, "gui_roi_positions_*.json")))
+            legacy = os.path.join(save_dir, "gui_roi_positions.json")
+            if candidates:
+                file_path = candidates[-1]
+            elif os.path.isfile(legacy):
+                file_path = legacy
+            else:
+                file_path = ""
         else:
             file_path = QFileDialog().getOpenFileName(self,"Open JSON file", self.active_folder, "JSON Files (*.json)")[0]
             self.active_folder = file_path
@@ -2328,6 +3139,7 @@ class Ui(QtWidgets.QMainWindow):
             pass
 
 
+    @with_motion_feedback(title="Sample Stage Move", success_msg="Sample moved to selected position.")
     def move_stage_to_roi(self,list_widget):
         roi_num = list_widget.currentRow()
         roi_positions = list_widget.item(roi_num).data(QtCore.Qt.UserRole)
@@ -2347,6 +3159,7 @@ class Ui(QtWidgets.QMainWindow):
         self.export_listitems_to_json(list_widget)
 
     #@show_error_message_box
+    @with_motion_feedback(title="Recover ZP Scan Position", success_msg="Moved to scan position.")
     def recover_pos_from_sid_zp(self):
         current_sid = self.lcd_scanNumber.value()
         zp_flag = self.cb_sid_moveZPZ.isChecked()
@@ -2394,6 +3207,7 @@ class Ui(QtWidgets.QMainWindow):
 
         '''
 
+    @with_motion_feedback(title="Recover MLL Scan Position", success_msg="Moved to scan position.")
     def recover_pos_from_sid_mll(self):
         current_sid = self.lcd_scanNumber.value()
         sd = db[int(self.le_sid_position_mll.text())].start["scan_id"]
@@ -2477,20 +3291,42 @@ class Ui(QtWidgets.QMainWindow):
 
     #exit gui
 
+    def _re_is_idle(self):
+        # RE is injected by the beamline profile; treat as idle when absent (offline).
+        re = globals().get("RE", None)
+        return re is None or getattr(re, "state", "idle") == "idle"
+
+    def _stop_thread(self, thread, wait_ms=3000):
+        # Ask the loop to exit, then wait; only force-terminate as a last resort.
+        if thread is None or not thread.isRunning():
+            return
+        thread.requestInterruption()
+        thread.quit()
+        if not thread.wait(wait_ms):
+            thread.terminate()
+            thread.wait()
+
+    def _stop_all_threads(self):
+        for name in ("scanStatus_thread", "liveWorker", "pump_update_worker",
+                     "update_thread", "live_plot_worker_thread",
+                     "points_update_thread", "pump_worker_thread", "vent_thread",
+                     "he_backfill_worker_thread", "thread"):
+            self._stop_thread(getattr(self, name, None))
+
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
-        if reply == QMessageBox.Yes and RE.state == "idle":
-
-            event.accept()
-            self.scanStatus_thread.terminate()
-            self.liveWorker.terminate()
-            plt.close('all')
-            #self.updateTimer.stop()
-            QApplication.closeAllWindows()
-
-        else:
+        if reply != QMessageBox.Yes:
+            event.ignore()
+            return
+        if not self._re_is_idle():
             event.ignore()
             QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
+            return
+
+        self._stop_all_threads()
+        plt.close('all')
+        event.accept()
+        QApplication.closeAllWindows()
 
     def close_application(self):
 
@@ -2498,17 +3334,17 @@ class Ui(QtWidgets.QMainWindow):
                                       "Are you sure to quit?", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
 
-        if choice == QMessageBox.Yes and RE.state == "idle":
-            plt.close('all')
-            self.scanStatus_thread.terminate()
-            self.liveWorker.terminate()
-            QApplication.closeAllWindows()
-
-            print('quit application')
-            sys.exit()
-        else:
+        if choice != QMessageBox.Yes:
+            return
+        if not self._re_is_idle():
             QMessageBox.critical(self, "Close Error", "You cannot close the GUI while scan is in progress")
-            pass
+            return
+
+        self._stop_all_threads()
+        plt.close('all')
+        QApplication.closeAllWindows()
+        print('quit application')
+        sys.exit()
 
     def connect_sample_exchange(self):
         #sample exchange
@@ -2529,13 +3365,20 @@ class Ui(QtWidgets.QMainWindow):
 
         choice = QMessageBox.question(self, 'Start Pumping',
                                       f"HXN pumping will be excecuted with target value of {user_target_pressure}"
-                                      f"Turbo starts at ~ {fast_pump_start:.1f}"
+                                      f"Fast pumps starts at ~ {fast_pump_start:.1f}"
                                       f" Please confirm.", QMessageBox.Yes |
                                       QMessageBox.No, QMessageBox.No)
 
         if choice == QMessageBox.Yes:
-            #zps.zero.put(1)
-            #smll.zero.put(1)
+            
+            try:
+                RE(zps_zero_piezos())
+                RE(smll_zero_piezos())
+                RE(zps_sync_piezos())
+                RE(smll_sync_piezos())
+            except Exception as e:
+                print(f"Error while syncing piezos: {e}")
+                pass
             #panda_zero_all_encoders(si)
             # reset the progress bar
             self.prb_sample_exchange.reset()
@@ -2580,8 +3423,13 @@ class Ui(QtWidgets.QMainWindow):
                                       QMessageBox.No, QMessageBox.No)
 
         if choice == QMessageBox.Yes:
-            #zps.kill.put(1)
-            #smll.kill.put(1)
+            try:
+                RE(zps_kill_piezos())
+                RE(smll_kill_piezos())
+            except Exception as e:
+                print(f"Error while killing piezos: {e}")
+                pass
+            
             # reset the progress bar
             self.prb_sample_exchange.reset()
 
@@ -2748,6 +3596,45 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_peakBeamXY.clicked.connect(lambda:RE(peak_the_flux()))
         self.pb_recover_from_beamdump.clicked.connect(lambda:RE(recover_from_beamdump()))
 
+
+def _interruptible_wait(thread, total_ms, chunk_ms=200):
+    """Wait in small chunks so the thread exits promptly when interrupted."""
+    elapsed = 0
+    while elapsed < total_ms:
+        if thread.isInterruptionRequested():
+            return
+        step = min(chunk_ms, total_ms - elapsed)
+        if QtTest is not None:
+            QtTest.QTest.qWait(step)
+        else:
+            thread.msleep(step)
+        elapsed += step
+
+
+class QServerHeartbeat(QThread):
+    # Polls RM.status() on a background thread so the GUI can show a live
+    # QServer connection light without freezing. RM raises RequestTimeoutError
+    # when the RE Manager is unreachable.
+    status_update = pyqtSignal(bool, str, bool)
+
+    def __init__(self, poll_interval_ms=3000):
+        super().__init__()
+        self.poll_interval_ms = poll_interval_ms
+
+    def run(self):
+        while not self.isInterruptionRequested():
+            try:
+                status = RM.status()
+                self.status_update.emit(
+                    True, str(status.get("manager_state", "unknown")),
+                    bool(status.get("worker_environment_exists", False)))
+            except RM.RequestTimeoutError:
+                self.status_update.emit(False, "unreachable", False)
+            except Exception as exc:
+                self.status_update.emit(False, str(exc), False)
+            _interruptible_wait(self, self.poll_interval_ms)
+
+
 #from FXI--modified
 class liveStatus(QThread):
     current_sts = pyqtSignal(int)
@@ -2764,14 +3651,14 @@ class liveStatus(QThread):
             print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
             self.pv_obj = None
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 # Only read if connected
                 if self.pv_obj is not None and self.pv_obj.connected:
                     value = self.pv_obj.get(timeout=0.1)
                     if value is not None:
                         self.current_sts.emit(value)
-                QtTest.QTest.qWait(500)
+                _interruptible_wait(self, 500)
             except Exception as e:
                 # Silently continue if PV unavailable
                 pass
@@ -2816,11 +3703,11 @@ class liveUpdate(QThread):
                 self.pv_objects.append(None)
         print(f"  PV objects created, starting update loop...")
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 positions = self.return_values()
                 self.current_positions.emit(positions)
-                QtTest.QTest.qWait(self.update_interval_ms)
+                _interruptible_wait(self, self.update_interval_ms)
             except:
                 pass
 
@@ -2842,7 +3729,7 @@ class liveThresholdUpdate(QThread):
             print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
             self.pv_obj = None
         
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 # Only read if connected
                 if self.pv_obj is not None and self.pv_obj.connected:
@@ -2858,7 +3745,7 @@ class liveThresholdUpdate(QThread):
                 # PV unavailable, emit False
                 self.current_sts.emit(False)
 
-            QtTest.QTest.qWait(60000)
+            _interruptible_wait(self, 60000)
 
 class updateScanProgress(QThread):
 
@@ -2893,14 +3780,14 @@ class updateScanProgress(QThread):
         except:
             self.tot_scan_points.emit(0)
 
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 if self.update_pv_obj is not None and self.update_pv_obj.connected:
                     points = self.update_pv_obj.get(timeout=0.1)
                     self.completed_points.emit(points if points is not None else 0)
             except:
                 pass
-            QtTest.QTest.qWait(self.update_interval_ms)
+            _interruptible_wait(self, self.update_interval_ms)
             if caget(self.tot_pv) == caget(self.update_pv):
                 break
 
@@ -3022,7 +3909,7 @@ class LivePressureValueThread(QThread):
             self.pv_obj = None
         
         start_time = 0
-        while True:
+        while not self.isInterruptionRequested():
             try:
                 if self.pv_obj is not None and self.pv_obj.connected:
                     pressure = self.pv_obj.get(timeout=0.1)
@@ -3034,7 +3921,7 @@ class LivePressureValueThread(QThread):
             except Exception as e:
                 self.current_time_pressure.emit((start_time, 0.0))
             
-            QtTest.QTest.qWait(int(self.wait_time))
+            _interruptible_wait(self, int(self.wait_time))
             start_time += self.wait_time
 
 
