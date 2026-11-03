@@ -46,6 +46,8 @@ from mll_tomo_gui import *
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
+profiles_path = os.path.join(ui_path, 'microscope_profiles.json')
+MICROSCOPE_MODES = ("ZP", "MLL")
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
@@ -167,12 +169,10 @@ class Ui(QtWidgets.QMainWindow):
         #                        'dssy': dssy,
         #                        'dssz': dssz}
 
-        self.fly_motor_dict = {'dssx': dssx,
-                               'dssy': dssy,
-                               'dssz': dssz,
-                               'zpssx': zpssx,
-                               'zpssy': zpssy,
-                               'zpssz': zpssz,}
+        # Fly motors, tabs and checkboxes come from microscope_profiles.json.
+        self.microscope_profiles = self._load_microscope_profiles()
+        self._setup_microscope_selector()
+        self.apply_microscope_mode(self.microscope_profiles["active"])
 
         # self.fly_det_dict = {'dets1': dets1,
         #                      'dets2': dets2,
@@ -190,13 +190,8 @@ class Ui(QtWidgets.QMainWindow):
         #                      'dets4': "[fs,xspress3,merlin2]",
         #                      'dets_fs': "[fs,xspress3]"}
 
-        #TODO add a qbox with mll or zp option to set the configs
-
         self.cb_dets.addItems([det_name for det_name in self.fly_det_dict.keys()])
         self.cb_det_list_mosaic.addItems([det_name for det_name in self.fly_det_dict.keys()])
-        self.cb_motor1.addItems([name for name in self.fly_motor_dict.keys()])
-        self.cb_motor2.addItems([name for name in self.fly_motor_dict.keys()])
-        self.cb_motor2.setCurrentIndex(1)
 
         print("Connecting signal handlers...")
         self.connect_flyscan_signals()
@@ -277,6 +272,96 @@ class Ui(QtWidgets.QMainWindow):
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
     
+    def _load_microscope_profiles(self):
+        with open(profiles_path, "r") as f:
+            profiles = json.load(f)
+        # Catch widgets renamed/removed in Designer at startup, not mid-switch.
+        problems = []
+        for mode in MICROSCOPE_MODES:
+            for tabs_name, page_name in profiles[mode]["pages"].items():
+                tabs = self.findChild(QtWidgets.QTabWidget, tabs_name)
+                page = self.findChild(QtWidgets.QWidget, page_name)
+                if tabs is None or page is None or tabs.indexOf(page) < 0:
+                    problems.append(f"{mode}: page '{page_name}' in '{tabs_name}'")
+            for name in profiles[mode]["checked"]:
+                if self.findChild(QtWidgets.QAbstractButton, name) is None:
+                    problems.append(f"{mode}: button '{name}'")
+        if problems:
+            raise ValueError("microscope_profiles.json references unknown widgets:\n"
+                             + "\n".join(problems))
+        return profiles
+
+    def _setup_microscope_selector(self):
+        selector = QtWidgets.QWidget(self)
+        layout = QtWidgets.QHBoxLayout(selector)
+        layout.setContentsMargins(0, 0, 8, 0)
+        layout.addWidget(QLabel("Microscope:"))
+        self.cb_microscope_mode = QtWidgets.QComboBox()
+        self.cb_microscope_mode.addItems(MICROSCOPE_MODES)
+        self.cb_microscope_mode.setCurrentText(self.microscope_profiles["active"])
+        self.cb_microscope_mode.textActivated.connect(self.switch_microscope_mode)
+        layout.addWidget(self.cb_microscope_mode)
+        self.menubar.setCornerWidget(selector, Qt.TopRightCorner)
+
+    @show_error_message_box
+    def switch_microscope_mode(self, mode):
+        current = self.microscope_profiles["active"]
+        # Keep the selector on the current mode until the switch succeeds.
+        self.cb_microscope_mode.setCurrentText(current)
+        if mode == current:
+            return
+        if not self._re_is_idle():
+            QMessageBox.critical(self, "Switch Microscope",
+                                 "Cannot switch microscope while a scan is in progress.")
+            return
+        choice = QMessageBox.question(
+            self, "Switch Microscope",
+            f"Switch the GUI from {current} to {mode}?\n\n"
+            f"The {current} tabs will be hidden, and this choice is saved "
+            f"for future sessions.",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice != QMessageBox.Yes:
+            return
+
+        self.apply_microscope_mode(mode)
+        self.cb_microscope_mode.setCurrentText(mode)
+        self.microscope_profiles["active"] = mode
+        with open(profiles_path, "w") as f:
+            json.dump(self.microscope_profiles, f, indent=2)
+
+    def apply_microscope_mode(self, mode):
+        profile = self.microscope_profiles[mode]
+        # Motors are injected by the beamline profile; check before touching the UI.
+        missing = [m for m in profile["fly_motors"] if m not in globals()]
+        if missing:
+            raise ValueError(f"{mode} fly motors are not defined in this session: {missing}")
+
+        for tabs_name, page_name in profile["pages"].items():
+            tabs = self.findChild(QtWidgets.QTabWidget, tabs_name)
+            page = self.findChild(QtWidgets.QWidget, page_name)
+            tabs.setTabVisible(tabs.indexOf(page), True)
+            tabs.setCurrentWidget(page)
+        # Hide the other microscope's pages so its stages can't be driven by mistake.
+        for other in MICROSCOPE_MODES:
+            if other == mode:
+                continue
+            for tabs_name, page_name in self.microscope_profiles[other]["pages"].items():
+                tabs = self.findChild(QtWidgets.QTabWidget, tabs_name)
+                page = self.findChild(QtWidgets.QWidget, page_name)
+                tabs.setTabVisible(tabs.indexOf(page), False)
+
+        for name, state in profile["checked"].items():
+            self.findChild(QtWidgets.QAbstractButton, name).setChecked(state)
+
+        self.fly_motor_dict = {m: globals()[m] for m in profile["fly_motors"]}
+        for cb in (self.cb_motor1, self.cb_motor2):
+            cb.blockSignals(True)
+            cb.clear()
+            cb.addItems(list(self.fly_motor_dict))
+            cb.blockSignals(False)
+        self.cb_motor2.setCurrentIndex(1)
+        self.statusbar.showMessage(f"Microscope mode: {mode}")
+
     def _make_window_responsive(self):
         # The .ui is designed at a fixed size; wrap the central widget in a
         # scroll area so oversized content stays reachable on smaller displays.
