@@ -14,7 +14,8 @@ import json
 import re
 import sys
 import glob
-import datetime
+# hxn_data_transfer star-imports the datetime class; import it the same way so it can't shadow a module.
+from datetime import datetime, timedelta
 import traceback
 import logging
 
@@ -2339,7 +2340,7 @@ class Ui(QtWidgets.QMainWindow):
         # Ask before opening a webcam tab; a checkbox lets the user suppress the
         # prompt for suppress_interval_s seconds so repeated clicks aren't annoying.
         until = self._cam_page_suppressed_until.get(url)
-        if until is not None and datetime.datetime.now() < until:
+        if until is not None and datetime.now() < until:
             return
 
         msg_box = QMessageBox(self)
@@ -2355,7 +2356,7 @@ class Ui(QtWidgets.QMainWindow):
 
         if dont_ask.isChecked():
             self._cam_page_suppressed_until[url] = (
-                datetime.datetime.now() + datetime.timedelta(seconds=suppress_interval_s))
+                datetime.now() + timedelta(seconds=suppress_interval_s))
 
         if msg_box.clickedButton() == yes_button:
             self.client.open(url)
@@ -3157,7 +3158,7 @@ class Ui(QtWidgets.QMainWindow):
             # Timestamped filename so each auto save keeps a distinct state.
             save_dir = "/data/users/current_user/temp"
             os.makedirs(save_dir, exist_ok=True)
-            stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             save_file_path = os.path.join(save_dir, f"gui_roi_positions_{stamp}.json")
             n = 1
             while os.path.exists(save_file_path):
