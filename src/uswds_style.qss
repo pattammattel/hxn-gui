@@ -1,0 +1,10 @@
+/* Reserve space in the QGroupBox top margin for its title so top-row
+   widgets never overlap it (cascades to every group box in the GUI). */
+QGroupBox {
+    margin-top: 14px;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 4px;
+}

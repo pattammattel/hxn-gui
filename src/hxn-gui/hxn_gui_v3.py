@@ -156,22 +156,23 @@ class Ui(QtWidgets.QMainWindow):
         if OFFLINE_MODE:
             self.thread_settings = {key: False for key in self.thread_settings}
         print(f"Thread settings: {self.thread_settings}")
+        # Global stylesheet (incl. QGroupBox title spacing); uncomment to enable.
         # with open(style_path, "r") as f:
         #     self.setStyleSheet(f.read())
 
-        self.fly_motor_dict = {'zpssx': zpssx,
-                               'zpssy': zpssy,
-                               'zpssz': zpssz,
-                               'dssx': dssx,
-                               'dssy': dssy,
-                               'dssz': dssz}
-
-        # self.fly_motor_dict = {'dssx': dssx,
-        #                        'dssy': dssy,
-        #                        'dssz': dssz,
-        #                        'zpssx': zpssx,
+        # self.fly_motor_dict = {'zpssx': zpssx,
         #                        'zpssy': zpssy,
-        #                        'zpssz': zpssz,}
+        #                        'zpssz': zpssz,
+        #                        'dssx': dssx,
+        #                        'dssy': dssy,
+        #                        'dssz': dssz}
+
+        self.fly_motor_dict = {'dssx': dssx,
+                               'dssy': dssy,
+                               'dssz': dssz,
+                               'zpssx': zpssx,
+                               'zpssy': zpssy,
+                               'zpssz': zpssz,}
 
         # self.fly_det_dict = {'dets1': dets1,
         #                      'dets2': dets2,
@@ -404,6 +405,24 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def start_qserver(self):
+        # A reachable RM.status() means the RE Manager is already running;
+        # launching a second instance fails, so confirm before proceeding.
+        try:
+            RM.status()
+            already_running = True
+        except RM.RequestTimeoutError:
+            already_running = False
+
+        if already_running:
+            choice = QMessageBox.question(
+                self, "QServer Already Running",
+                "QServer (RE Manager) appears to be already running. Starting "
+                "another instance will fail.\n\nDo you really want to start it "
+                "anyway?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if choice != QMessageBox.Yes:
+                return
+
         # QServer (RE Manager) runs as a separate process started by the
         # run-queue-server shell script; launch it in its own terminal tab.
         subprocess.Popen(
@@ -412,10 +431,10 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def start_qmonitor(self):
-        # run-queue-monitor opens its own Qt GUI; keep it in its own terminal
-        # tab so its console output stays visible.
+        # run-queue-monitor opens its own Qt GUI; launch it in a new terminal
+        # window (--tab can silently fail when no gnome-terminal window exists).
         subprocess.Popen(
-            ["gnome-terminal", "-t", "QMonitor", "--tab", "-e",
+            ["gnome-terminal", "-t", "QMonitor", "--window", "-e",
              "run-queue-monitor", "--active"])
         QMessageBox.information(
             self, "QMonitor Started",
@@ -438,7 +457,42 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def update_bsui_env(self):
-        self._qserver_request(RM.environment_update, "Update BSUI Env")
+        # environment_update only re-syncs the RE reference and plan/device
+        # lists from the current namespace; it does NOT re-run the startup
+        # files. Closing then reopening re-executes the startup scripts so
+        # edits to the startup .py files are picked up.
+        choice = QMessageBox.question(
+            self, "Reload Environment",
+            "Updating re-runs the QServer startup files by closing and then "
+            "reopening the worker environment. Any running plan must finish "
+            "first.\n\nProceed?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice != QMessageBox.Yes:
+            return
+
+        progress = QProgressDialog(
+            "Reloading QServer environment (close then open)...",
+            None, 0, 0, self)
+        progress.setWindowTitle("Please Wait")
+        progress.setWindowModality(Qt.ApplicationModal)
+        progress.setCancelButton(None)
+        progress.show()
+        QApplication.processEvents()
+
+        if RM.status().get("worker_environment_exists", False):
+            RM.environment_close()
+            RM.wait_for_idle()
+        RM.environment_open()
+        RM.wait_for_idle()
+
+        progress.close()
+        status = RM.status()
+        QMessageBox.information(
+            self, "Reload Environment",
+            f"Environment reloaded.\n"
+            f"Manager state: {status.get('manager_state', 'unknown')}\n"
+            f"Worker environment exists: "
+            f"{status.get('worker_environment_exists', False)}")
 
     def _qserver_request(self, api_call, title):
         # Run a QServer API call and report the returned dict in a message box.
@@ -497,11 +551,13 @@ class Ui(QtWidgets.QMainWindow):
                 self.qserver_heartbeat_thread = None
             self.pb_qserver_heartbeat.setText("Start Live Status")
             self._set_qserver_light("gray", "Live status off", "Live status off")
+            self._set_qserver_env(None)
 
-    def _on_qserver_heartbeat(self, reachable, state):
+    def _on_qserver_heartbeat(self, reachable, state, env_exists):
         if not reachable:
             self._set_qserver_light(
                 "#d83933", f"QServer unreachable ({state})", "unreachable")
+            self._set_qserver_env(None)
             return
         # Colour reflects the documented RE Manager manager_state values.
         busy_states = {"starting_queue", "executing_queue", "executing_task"}
@@ -520,11 +576,24 @@ class Ui(QtWidgets.QMainWindow):
         else:
             color = "#71767a"
         self._set_qserver_light(color, f"QServer: {state}", state)
+        self._set_qserver_env(env_exists)
 
     def _set_qserver_light(self, color, tooltip, state_text):
         self.label_qserver_light.setStyleSheet(f"color: {color}; font-size: 18px;")
         self.label_qserver_light.setToolTip(tooltip)
         self.label_qserver_state.setText(state_text)
+
+    def _set_qserver_env(self, env_exists):
+        # env_exists is None when the heartbeat is off or QServer is unreachable.
+        if env_exists is None:
+            self.label_qserver_env.setText("env: —")
+            self.label_qserver_env.setStyleSheet("color: #71767a;")
+        elif env_exists:
+            self.label_qserver_env.setText("env: open")
+            self.label_qserver_env.setStyleSheet("color: #00a91c; font-weight: bold;")
+        else:
+            self.label_qserver_env.setText("env: closed")
+            self.label_qserver_env.setStyleSheet("color: #d83933; font-weight: bold;")
 
     def runTask(self, task, *args, **kwargs):
         self.pop_up = QMessageBox(self)
@@ -3546,7 +3615,7 @@ class QServerHeartbeat(QThread):
     # Polls RM.status() on a background thread so the GUI can show a live
     # QServer connection light without freezing. RM raises RequestTimeoutError
     # when the RE Manager is unreachable.
-    status_update = pyqtSignal(bool, str)
+    status_update = pyqtSignal(bool, str, bool)
 
     def __init__(self, poll_interval_ms=3000):
         super().__init__()
@@ -3557,11 +3626,12 @@ class QServerHeartbeat(QThread):
             try:
                 status = RM.status()
                 self.status_update.emit(
-                    True, str(status.get("manager_state", "unknown")))
+                    True, str(status.get("manager_state", "unknown")),
+                    bool(status.get("worker_environment_exists", False)))
             except RM.RequestTimeoutError:
-                self.status_update.emit(False, "unreachable")
+                self.status_update.emit(False, "unreachable", False)
             except Exception as exc:
-                self.status_update.emit(False, str(exc))
+                self.status_update.emit(False, str(exc), False)
             _interruptible_wait(self, self.poll_interval_ms)
 
 

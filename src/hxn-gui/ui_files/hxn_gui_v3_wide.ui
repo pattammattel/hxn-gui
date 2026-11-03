@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1164</height>
+    <height>1182</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -494,7 +494,7 @@ QProgressBar {
 
 QGroupBox:title {
     subcontrol-origin: margin;
-    subcontrol-position:top  left;
+    subcontrol-position:top  left; padding: 0 4px;
 }
 
 QGroupBox { 
@@ -502,6 +502,8 @@ QGroupBox {
      border-radius: 3px; 
 	 font-size:18px;
 	 font-weight: bold;
+	 margin-top: 14px;
+	
  } 
 
 QPushButton:hover{ 
@@ -531,7 +533,8 @@ QRadioButton::indicator:checked {
 QRadioButton::indicator:unchecked {
     background: 3px solid rgb(255,255, 255);
 	border: 3px solid rgb(0,0, 0);	
-}
+};
+
 
 
 	</string>
@@ -730,14 +733,35 @@ Export List
               <property name="verticalSpacing">
                <number>15</number>
               </property>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_22">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
+              <item row="0" column="6">
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <item>
+                 <widget class="QLabel" name="label_36">
+                  <property name="text">
+                   <string>7</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_7"/>
+                </item>
+               </layout>
               </item>
-              <item row="1" column="0">
+              <item row="1" column="5">
+               <layout class="QVBoxLayout" name="verticalLayout_19">
+                <item>
+                 <widget class="QLabel" name="label_39">
+                  <property name="text">
+                   <string>14</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_14"/>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="0">
                <layout class="QVBoxLayout" name="verticalLayout_22">
                 <item>
                  <widget class="QLabel" name="label_23">
@@ -751,7 +775,7 @@ Export List
                 </item>
                </layout>
               </item>
-              <item row="1" column="1">
+              <item row="0" column="1">
                <layout class="QVBoxLayout" name="verticalLayout_23">
                 <item>
                  <widget class="QLabel" name="label_24">
@@ -765,35 +789,21 @@ Export List
                 </item>
                </layout>
               </item>
-              <item row="1" column="2">
-               <layout class="QVBoxLayout" name="verticalLayout">
+              <item row="0" column="7">
+               <layout class="QVBoxLayout" name="verticalLayout_13">
                 <item>
-                 <widget class="QLabel" name="label_38">
+                 <widget class="QLabel" name="label_31">
                   <property name="text">
-                   <string>3</string>
+                   <string>8</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="cb_elem_3"/>
+                 <widget class="QComboBox" name="cb_elem_8"/>
                 </item>
                </layout>
               </item>
-              <item row="1" column="3">
-               <layout class="QVBoxLayout" name="verticalLayout_3">
-                <item>
-                 <widget class="QLabel" name="label_33">
-                  <property name="text">
-                   <string>4</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_4"/>
-                </item>
-               </layout>
-              </item>
-              <item row="1" column="4">
+              <item row="0" column="4">
                <layout class="QVBoxLayout" name="verticalLayout_4">
                 <item>
                  <widget class="QLabel" name="label_35">
@@ -807,7 +817,7 @@ Export List
                 </item>
                </layout>
               </item>
-              <item row="1" column="5">
+              <item row="0" column="5">
                <layout class="QVBoxLayout" name="verticalLayout_10">
                 <item>
                  <widget class="QLabel" name="label_30">
@@ -822,118 +832,6 @@ Export List
                </layout>
               </item>
               <item row="1" column="6">
-               <layout class="QVBoxLayout" name="verticalLayout_12">
-                <item>
-                 <widget class="QLabel" name="label_36">
-                  <property name="text">
-                   <string>7</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_7"/>
-                </item>
-               </layout>
-              </item>
-              <item row="1" column="7">
-               <layout class="QVBoxLayout" name="verticalLayout_13">
-                <item>
-                 <widget class="QLabel" name="label_31">
-                  <property name="text">
-                   <string>8</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_8"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="0">
-               <layout class="QVBoxLayout" name="verticalLayout_14">
-                <item>
-                 <widget class="QLabel" name="label_37">
-                  <property name="text">
-                   <string>9</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_9"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="1">
-               <layout class="QVBoxLayout" name="verticalLayout_15">
-                <item>
-                 <widget class="QLabel" name="label_34">
-                  <property name="text">
-                   <string>10</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_10"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="2">
-               <layout class="QVBoxLayout" name="verticalLayout_16">
-                <item>
-                 <widget class="QLabel" name="label_29">
-                  <property name="text">
-                   <string>11</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_11"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="3">
-               <layout class="QVBoxLayout" name="verticalLayout_18">
-                <item>
-                 <widget class="QLabel" name="label_28">
-                  <property name="text">
-                   <string>12</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_12"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="4">
-               <layout class="QVBoxLayout" name="verticalLayout_17">
-                <item>
-                 <widget class="QLabel" name="label_26">
-                  <property name="text">
-                   <string>13</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_13"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="5">
-               <layout class="QVBoxLayout" name="verticalLayout_19">
-                <item>
-                 <widget class="QLabel" name="label_39">
-                  <property name="text">
-                   <string>14</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="cb_elem_14"/>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="6">
                <layout class="QVBoxLayout" name="verticalLayout_20">
                 <item>
                  <widget class="QLabel" name="label_40">
@@ -947,7 +845,77 @@ Export List
                 </item>
                </layout>
               </item>
-              <item row="2" column="7">
+              <item row="1" column="2">
+               <layout class="QVBoxLayout" name="verticalLayout_16">
+                <item>
+                 <widget class="QLabel" name="label_29">
+                  <property name="text">
+                   <string>11</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_11"/>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="2">
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                 <widget class="QLabel" name="label_38">
+                  <property name="text">
+                   <string>3</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_3"/>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="0">
+               <layout class="QVBoxLayout" name="verticalLayout_14">
+                <item>
+                 <widget class="QLabel" name="label_37">
+                  <property name="text">
+                   <string>9</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_9"/>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="3">
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <item>
+                 <widget class="QLabel" name="label_33">
+                  <property name="text">
+                   <string>4</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_4"/>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="3">
+               <layout class="QVBoxLayout" name="verticalLayout_18">
+                <item>
+                 <widget class="QLabel" name="label_28">
+                  <property name="text">
+                   <string>12</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_12"/>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="7">
                <layout class="QVBoxLayout" name="verticalLayout_21">
                 <item>
                  <widget class="QLabel" name="label_41">
@@ -958,6 +926,34 @@ Export List
                 </item>
                 <item>
                  <widget class="QComboBox" name="cb_elem_16"/>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="4">
+               <layout class="QVBoxLayout" name="verticalLayout_17">
+                <item>
+                 <widget class="QLabel" name="label_26">
+                  <property name="text">
+                   <string>13</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_13"/>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="1">
+               <layout class="QVBoxLayout" name="verticalLayout_15">
+                <item>
+                 <widget class="QLabel" name="label_34">
+                  <property name="text">
+                   <string>10</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="cb_elem_10"/>
                 </item>
                </layout>
               </item>
@@ -982,13 +978,6 @@ Export List
            <string>Create Directory</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_38">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_15">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0" colspan="2">
             <layout class="QGridLayout" name="gridLayout_34">
              <item row="0" column="0">
@@ -2031,6 +2020,64 @@ Show Scan Pos
               </property>
               <layout class="QGridLayout" name="gridLayout">
                <item row="1" column="0">
+                <layout class="QGridLayout" name="gridLayout_123">
+                 <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_80">
+                   <item>
+                    <widget class="QPushButton" name="pb_roiList_export_zp">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>  Export List  </string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pb_roiList_import_zp">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>   Import List   </string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QPushButton" name="pb_roiList_clear_zp">
+                   <property name="text">
+                    <string>Clear All</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="pb_roiList_clear_sel_zp">
+                   <property name="text">
+                    <string>Clear Selected</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="1" rowspan="2">
+                <widget class="QListWidget" name="zp_sample_roi_list_widget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
                 <layout class="QGridLayout" name="gridLayout_122">
                  <item row="2" column="0">
                   <widget class="QPushButton" name="pb_copy_curr_pos_zp">
@@ -2080,65 +2127,7 @@ Show Scan Pos
                  </item>
                 </layout>
                </item>
-               <item row="2" column="0">
-                <layout class="QGridLayout" name="gridLayout_123">
-                 <item row="0" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_80">
-                   <item>
-                    <widget class="QPushButton" name="pb_roiList_export_zp">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>  Export List  </string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="pb_roiList_import_zp">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="text">
-                      <string>   Import List   </string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QPushButton" name="pb_roiList_clear_zp">
-                   <property name="text">
-                    <string>Clear All</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QPushButton" name="pb_roiList_clear_sel_zp">
-                   <property name="text">
-                    <string>Clear Selected</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="1" rowspan="2">
-                <widget class="QListWidget" name="zp_sample_roi_list_widget">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2" rowspan="2">
+               <item row="0" column="2" rowspan="2">
                 <layout class="QVBoxLayout" name="verticalLayout_8">
                  <item>
                   <widget class="QLabel" name="label_163">
@@ -2233,19 +2222,6 @@ Show Meta Data
                   </widget>
                  </item>
                 </layout>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_47">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
                </item>
               </layout>
              </widget>
@@ -3506,8 +3482,11 @@ font: 15pt &quot;Modern No. 20&quot;;
                <string>CAM/DET IN and OUT</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_7">
-               <item row="3" column="2">
-                <widget class="QPushButton" name="pb_dexela_OUT">
+               <item row="0" column="2">
+                <widget class="QPushButton" name="pb_cam6OUT">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -3515,11 +3494,174 @@ font: 15pt &quot;Modern No. 20&quot;;
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string>Dexela OUT</string>
+                  <string>  CAM6 OUT  </string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="5">
+               <item row="1" column="3">
+                <widget class="QLabel" name="label_74">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>IN Pos. = </string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pb_dexela_IN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>   Dexela IN    </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pb_vortexIN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>XRF Det IN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="3">
+                <widget class="QPushButton" name="pb_merlinIN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string> Merlin IN  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QPushButton" name="pb_telescope">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>   Telescope IN </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QPushButton" name="pb_cam11IN">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  CAM 11 IN   </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="4">
+                <widget class="QPushButton" name="pb_merlinOUT">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Det Tower OUT</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QDoubleSpinBox" name="dsb_flur_in_pos">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-100.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>-7.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-9.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QPushButton" name="pb_eiger_in">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Eiger IN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="5">
+                <widget class="QDoubleSpinBox" name="db_fs_det">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-150.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="5">
                 <widget class="QDoubleSpinBox" name="db_dexela">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3550,7 +3692,64 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </property>
                 </widget>
                </item>
-               <item row="4" column="5">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pb_cam6IN">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>  CAM6 IN  </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="5">
+                <widget class="QDoubleSpinBox" name="db_cam06x">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::UpDownArrows</enum>
+                 </property>
+                 <property name="suffix">
+                  <string> mm</string>
+                 </property>
+                 <property name="decimals">
+                  <number>1</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-99.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QPushButton" name="pb_laser_in">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Laser IN</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="5">
                 <widget class="QDoubleSpinBox" name="db_diffx">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3581,217 +3780,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </property>
                 </widget>
                </item>
-               <item row="1" column="5">
-                <widget class="QDoubleSpinBox" name="db_cam06x">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>1</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-99.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_68">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_flur_in_pos">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>1</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-100.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>-7.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-9.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
                <item row="1" column="2">
-                <widget class="QPushButton" name="pb_cam6OUT">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM6 OUT  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="3">
-                <widget class="QLabel" name="label_74">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>IN Pos. = </string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="4">
-                <widget class="QPushButton" name="pb_merlinOUT">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Det Tower OUT</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <widget class="QPushButton" name="pb_cam11IN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM 11 IN   </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="3">
-                <widget class="QPushButton" name="pb_telescope">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>   Telescope IN </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="5">
-                <widget class="QDoubleSpinBox" name="db_fs_det">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="readOnly">
-                  <bool>true</bool>
-                 </property>
-                 <property name="buttonSymbols">
-                  <enum>QAbstractSpinBox::UpDownArrows</enum>
-                 </property>
-                 <property name="suffix">
-                  <string> mm</string>
-                 </property>
-                 <property name="decimals">
-                  <number>1</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-150.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QPushButton" name="pb_vortexIN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>XRF Det IN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QPushButton" name="pb_cam6IN">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>  CAM6 IN  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="4">
-                <widget class="QPushButton" name="pb_laser_in">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Laser IN</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
                 <widget class="QPushButton" name="pb_vortexOUT">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3804,8 +3793,8 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </property>
                 </widget>
                </item>
-               <item row="3" column="3">
-                <widget class="QPushButton" name="pb_merlinIN">
+               <item row="2" column="2">
+                <widget class="QPushButton" name="pb_dexela_OUT">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -3813,33 +3802,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string> Merlin IN  </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="pb_dexela_IN">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>   Dexela IN    </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QPushButton" name="pb_eiger_in">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Eiger IN</string>
+                  <string>Dexela OUT</string>
                  </property>
                 </widget>
                </item>
@@ -3858,7 +3821,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                <string>Abort Motion</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_117">
-               <item row="1" column="0">
+               <item row="0" column="0">
                 <widget class="QPushButton" name="pb_stop_fluor">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3874,36 +3837,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_55">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
                <item row="2" column="0">
-                <widget class="QPushButton" name="pb_stop_dexela">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="styleSheet">
-                  <string notr="true">color: rgb(239, 41, 41);</string>
-                 </property>
-                 <property name="text">
-                  <string>Stop Dexela</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
                 <widget class="QPushButton" name="pb_stop_cam11">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3919,7 +3853,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </property>
                 </widget>
                </item>
-               <item row="4" column="0">
+               <item row="3" column="0">
                 <widget class="QPushButton" name="pb_stop_merlin">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3932,6 +3866,22 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </property>
                  <property name="text">
                   <string>Stop Merlin/Eiger</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pb_stop_dexela">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(239, 41, 41);</string>
+                 </property>
+                 <property name="text">
+                  <string>Stop Dexela</string>
                  </property>
                 </widget>
                </item>
@@ -3950,20 +3900,145 @@ font: 15pt &quot;Modern No. 20&quot;;
                <string>Diff Stage Motion</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_42">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_45">
+               <item row="2" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_23">
+                 <item>
+                  <widget class="QLabel" name="label_73">
+                   <property name="text">
+                    <string>diff_z</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="dsb_move_diff_z_rel_value">
+                   <property name="suffix">
+                    <string> mm</string>
+                   </property>
+                   <property name="minimum">
+                    <double>-50.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>50.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_move_diff_z">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Move diff_z</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="3" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                 <item>
+                  <widget class="QPushButton" name="pb_abort_diff">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Abort Diff. Motion</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pb_copy_pos2angle">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>Copy Results</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cb_mll_theta_for_diff">
+                   <property name="text">
+                    <string>MLL User</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="1">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_2theta">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>2theta = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> deg</string>
+                   </property>
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <double>25.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="sp_diff_det_r">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="prefix">
+                    <string>r = </string>
+                   </property>
+                   <property name="suffix">
+                    <string> mm</string>
+                   </property>
+                   <property name="maximum">
+                    <double>5000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>500.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="3" column="1">
+                <widget class="QPushButton" name="pb_move_diff">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
                  <property name="text">
-                  <string/>
+                  <string>Move Diff. Stage</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
+               <item row="0" column="1">
                 <layout class="QHBoxLayout" name="horizontalLayout_9">
                  <item>
                   <widget class="QDoubleSpinBox" name="sp_diff_det_calc_x">
@@ -4014,92 +4089,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                  </item>
                 </layout>
                </item>
-               <item row="2" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
-                 <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_calc_2theta">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>2theta = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> deg</string>
-                   </property>
-                   <property name="decimals">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <double>25.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="sp_diff_det_r">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="prefix">
-                    <string>r = </string>
-                   </property>
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="maximum">
-                    <double>5000.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>500.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="3" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_23">
-                 <item>
-                  <widget class="QLabel" name="label_73">
-                   <property name="text">
-                    <string>diff_z</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QDoubleSpinBox" name="dsb_move_diff_z_rel_value">
-                   <property name="suffix">
-                    <string> mm</string>
-                   </property>
-                   <property name="minimum">
-                    <double>-50.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>50.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_move_diff_z">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Move diff_z</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="1" column="0" rowspan="3">
+               <item row="0" column="0" rowspan="3">
                 <layout class="QGridLayout" name="gridLayout_137">
                  <item row="0" column="0">
                   <layout class="QHBoxLayout" name="horizontalLayout_21">
@@ -4203,59 +4193,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                   </layout>
                  </item>
                 </layout>
-               </item>
-               <item row="4" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_13">
-                 <item>
-                  <widget class="QPushButton" name="pb_abort_diff">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Abort Diff. Motion</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pb_copy_pos2angle">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="text">
-                    <string>Copy Results</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="cb_mll_theta_for_diff">
-                   <property name="text">
-                    <string>MLL User</string>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="4" column="1">
-                <widget class="QPushButton" name="pb_move_diff">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Move Diff. Stage</string>
-                 </property>
-                </widget>
                </item>
               </layout>
              </widget>
@@ -5172,6 +5109,24 @@ font: 15pt &quot;Modern No. 20&quot;;
           </property>
           <layout class="QGridLayout" name="gridLayout_55">
            <item row="3" column="0">
+            <widget class="QPushButton" name="pb_close_all_plot">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: rgb(255, 0, 0);</string>
+             </property>
+             <property name="text">
+              <string>
+  Close All Plots 
+</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
             <layout class="QGridLayout" name="gridLayout_54">
              <property name="rightMargin">
               <number>10</number>
@@ -5271,27 +5226,7 @@ ERF Fit
              </item>
             </layout>
            </item>
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pb_plot">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton:pressed{ 
-	background-color: rgb(255, 0, 0); 
-	}</string>
-             </property>
-             <property name="text">
-              <string>  
-Plot
-</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
+           <item row="0" column="0">
             <layout class="QGridLayout" name="gridLayout_51">
              <property name="rightMargin">
               <number>0</number>
@@ -5371,8 +5306,8 @@ Plot
              </item>
             </layout>
            </item>
-           <item row="4" column="0">
-            <widget class="QPushButton" name="pb_close_all_plot">
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pb_plot">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -5380,19 +5315,14 @@ Plot
               </sizepolicy>
              </property>
              <property name="styleSheet">
-              <string notr="true">color: rgb(255, 0, 0);</string>
+              <string notr="true">QPushButton:pressed{ 
+	background-color: rgb(255, 0, 0); 
+	}</string>
              </property>
              <property name="text">
-              <string>
-  Close All Plots 
+              <string>  
+Plot
 </string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_21">
-             <property name="text">
-              <string/>
              </property>
             </widget>
            </item>
@@ -6446,11 +6376,11 @@ ZP Tomo Widget
            </item>
            <item row="0" column="2">
             <widget class="QLabel" name="label_qserver_light">
-             <property name="text">
-              <string>●</string>
-             </property>
              <property name="styleSheet">
               <string notr="true">color: gray; font-size: 18px;</string>
+             </property>
+             <property name="text">
+              <string>●</string>
              </property>
             </widget>
            </item>
@@ -6458,6 +6388,16 @@ ZP Tomo Widget
             <widget class="QLabel" name="label_qserver_state">
              <property name="text">
               <string>Live status off</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QLabel" name="label_qserver_env">
+             <property name="styleSheet">
+              <string notr="true">color: #71767a;</string>
+             </property>
+             <property name="text">
+              <string>env: —</string>
              </property>
             </widget>
            </item>
@@ -6965,14 +6905,81 @@ li.checked::marker { content: &quot;\2612&quot;; }
            <property name="rightMargin">
             <number>25</number>
            </property>
-           <item row="0" column="2" rowspan="2">
-            <widget class="QLabel" name="label_44">
-             <property name="text">
-              <string/>
+           <item row="2" column="2">
+            <widget class="QGroupBox" name="groupBox_30">
+             <property name="title">
+              <string>Pumps</string>
              </property>
+             <layout class="QGridLayout" name="gridLayout_102">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_147">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QRadioButton" name="rb_pumpB_slow">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(245, 121, 0);
+font: 18pt &quot;Cantarell&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>     B   </string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QRadioButton" name="rb_pumpA_slow">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(245, 121, 0);
+font: 18pt &quot;Cantarell&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>     A   </string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="2" column="0">
             <widget class="QGroupBox" name="groupBox_28">
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
@@ -7058,7 +7065,7 @@ indicator {
              </layout>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="0" column="0">
             <widget class="QLabel" name="label_144">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -7069,80 +7076,6 @@ indicator {
              <property name="text">
               <string/>
              </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QGroupBox" name="groupBox_30">
-             <property name="title">
-              <string>Pumps</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_102">
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_147">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="1">
-               <widget class="QRadioButton" name="rb_pumpB_slow">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(245, 121, 0);
-font: 18pt &quot;Cantarell&quot;;</string>
-                </property>
-                <property name="text">
-                 <string>     B   </string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QRadioButton" name="rb_pumpA_slow">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">color: rgb(245, 121, 0);
-font: 18pt &quot;Cantarell&quot;;</string>
-                </property>
-                <property name="text">
-                 <string>     A   </string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </widget>
            </item>
           </layout>
@@ -9425,19 +9358,6 @@ MLL Sample IN
               </property>
               <layout class="QGridLayout" name="gridLayout_17">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_137">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
                 <layout class="QGridLayout" name="gridLayout_131">
                  <item row="2" column="0">
                   <layout class="QGridLayout" name="gridLayout_48">
@@ -9922,14 +9842,375 @@ Start Focus Series
                <property name="verticalSpacing">
                 <number>0</number>
                </property>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_80">
+               <item row="2" column="0">
+                <widget class="QPushButton" name="pb_mll_rot_align_start">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
-                  <string/>
+                  <string>
+Start
+</string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="0">
+                <widget class="QFrame" name="frame">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_11">
+                  <item row="1" column="1">
+                   <layout class="QHBoxLayout" name="horizontalLayout_76">
+                    <item>
+                     <widget class="QLabel" name="label_112">
+                      <property name="text">
+                       <string>Start</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="sb_mll_rot_scan_start_2">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="suffix">
+                       <string> um</string>
+                      </property>
+                      <property name="minimum">
+                       <double>-15.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>15.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>-1.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="1">
+                   <layout class="QHBoxLayout" name="horizontalLayout_22">
+                    <item>
+                     <widget class="QLabel" name="label_142">
+                      <property name="text">
+                       <string>Dwell Time</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="sb_mll_rot_scan_exp_time">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="decimals">
+                       <number>3</number>
+                      </property>
+                      <property name="minimum">
+                       <double>0.005000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>0.500000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>0.010000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.050000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="3">
+                   <layout class="QHBoxLayout" name="horizontalLayout_99">
+                    <item>
+                     <widget class="QLabel" name="label_140">
+                      <property name="text">
+                       <string>No. of Steps</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="sb_mll_rot_scan_num">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="suffix">
+                       <string/>
+                      </property>
+                      <property name="minimum">
+                       <number>10</number>
+                      </property>
+                      <property name="maximum">
+                       <number>1000</number>
+                      </property>
+                      <property name="singleStep">
+                       <number>50</number>
+                      </property>
+                      <property name="value">
+                       <number>100</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="2">
+                   <layout class="QHBoxLayout" name="horizontalLayout_94">
+                    <item>
+                     <widget class="QLabel" name="label_139">
+                      <property name="text">
+                       <string>End</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="sb_mll_rot_scan_end_2">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="suffix">
+                       <string> um</string>
+                      </property>
+                      <property name="minimum">
+                       <double>-15.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>15.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>1.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="0" rowspan="2">
+                   <widget class="QLabel" name="label_85">
+                    <property name="text">
+                     <string>FlyScan Param.</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="1" rowspan="3">
+                <widget class="QWidget" name="widget_11" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_20">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_86">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Correction</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_96">
+                    <item>
+                     <widget class="QLabel" name="label_88">
+                      <property name="text">
+                       <string>dsth</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="dsb_rot_align_dsth">
+                      <property name="suffix">
+                       <string> deg</string>
+                      </property>
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-120.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>120.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>5.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pb_rot_align_dsth_move">
+                      <property name="text">
+                       <string>
+Move
+</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="2" column="0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_97">
+                    <item>
+                     <widget class="QLabel" name="label_89">
+                      <property name="text">
+                       <string>dsx</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="dsb_rot_align_dsx">
+                      <property name="suffix">
+                       <string> um</string>
+                      </property>
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-1000.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>1000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pb_rot_align_dsx_move">
+                      <property name="text">
+                       <string>
+Move
+</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_98">
+                    <item>
+                     <widget class="QLabel" name="label_90">
+                      <property name="text">
+                       <string>dsz</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="dsb_rot_align_dsz">
+                      <property name="suffix">
+                       <string> um</string>
+                      </property>
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-1000.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>1000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pb_rot_align_dsz_move">
+                      <property name="text">
+                       <string>
+Move
+</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="4" column="0">
+                   <layout class="QHBoxLayout" name="horizontalLayout_101">
+                    <item>
+                     <widget class="QLabel" name="label_91">
+                      <property name="text">
+                       <string>sbx</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="dsb_rot_align_sbx">
+                      <property name="suffix">
+                       <string> um</string>
+                      </property>
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-1000.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>1000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pb_rot_align_sbx_move">
+                      <property name="text">
+                       <string>
+Move
+</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="5" column="0">
+                   <widget class="QPushButton" name="pb_rot_align_all_move">
+                    <property name="text">
+                     <string>
+Apply All Corrections 
+</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="0">
                 <widget class="QWidget" name="widget_10" native="true">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -10130,374 +10411,6 @@ Start Focus Series
                     </property>
                     <property name="wordWrap">
                      <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QFrame" name="frame">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_11">
-                  <item row="1" column="1">
-                   <layout class="QHBoxLayout" name="horizontalLayout_76">
-                    <item>
-                     <widget class="QLabel" name="label_112">
-                      <property name="text">
-                       <string>Start</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="sb_mll_rot_scan_start_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="suffix">
-                       <string> um</string>
-                      </property>
-                      <property name="minimum">
-                       <double>-15.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>15.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>-1.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="2" column="1">
-                   <layout class="QHBoxLayout" name="horizontalLayout_22">
-                    <item>
-                     <widget class="QLabel" name="label_142">
-                      <property name="text">
-                       <string>Dwell Time</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="sb_mll_rot_scan_exp_time">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="decimals">
-                       <number>3</number>
-                      </property>
-                      <property name="minimum">
-                       <double>0.005000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>0.500000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>0.010000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.050000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="1" column="3">
-                   <layout class="QHBoxLayout" name="horizontalLayout_99">
-                    <item>
-                     <widget class="QLabel" name="label_140">
-                      <property name="text">
-                       <string>No. of Steps</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QSpinBox" name="sb_mll_rot_scan_num">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="suffix">
-                       <string/>
-                      </property>
-                      <property name="minimum">
-                       <number>10</number>
-                      </property>
-                      <property name="maximum">
-                       <number>1000</number>
-                      </property>
-                      <property name="singleStep">
-                       <number>50</number>
-                      </property>
-                      <property name="value">
-                       <number>100</number>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="1" column="2">
-                   <layout class="QHBoxLayout" name="horizontalLayout_94">
-                    <item>
-                     <widget class="QLabel" name="label_139">
-                      <property name="text">
-                       <string>End</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="sb_mll_rot_scan_end_2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="suffix">
-                       <string> um</string>
-                      </property>
-                      <property name="minimum">
-                       <double>-15.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>15.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>1.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="1" column="0" rowspan="2">
-                   <widget class="QLabel" name="label_85">
-                    <property name="text">
-                     <string>FlyScan Param.</string>
-                    </property>
-                    <property name="wordWrap">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QPushButton" name="pb_mll_rot_align_start">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>
-Start
-</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1" rowspan="3">
-                <widget class="QWidget" name="widget_11" native="true">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_20">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_86">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="text">
-                     <string>Correction</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_96">
-                    <item>
-                     <widget class="QLabel" name="label_88">
-                      <property name="text">
-                       <string>dsth</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="dsb_rot_align_dsth">
-                      <property name="suffix">
-                       <string> deg</string>
-                      </property>
-                      <property name="decimals">
-                       <number>1</number>
-                      </property>
-                      <property name="minimum">
-                       <double>-120.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>120.000000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>5.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pb_rot_align_dsth_move">
-                      <property name="text">
-                       <string>
-Move
-</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="2" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_97">
-                    <item>
-                     <widget class="QLabel" name="label_89">
-                      <property name="text">
-                       <string>dsx</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="dsb_rot_align_dsx">
-                      <property name="suffix">
-                       <string> um</string>
-                      </property>
-                      <property name="decimals">
-                       <number>1</number>
-                      </property>
-                      <property name="minimum">
-                       <double>-1000.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>1000.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pb_rot_align_dsx_move">
-                      <property name="text">
-                       <string>
-Move
-</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="3" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_98">
-                    <item>
-                     <widget class="QLabel" name="label_90">
-                      <property name="text">
-                       <string>dsz</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="dsb_rot_align_dsz">
-                      <property name="suffix">
-                       <string> um</string>
-                      </property>
-                      <property name="decimals">
-                       <number>1</number>
-                      </property>
-                      <property name="minimum">
-                       <double>-1000.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>1000.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pb_rot_align_dsz_move">
-                      <property name="text">
-                       <string>
-Move
-</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="4" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_101">
-                    <item>
-                     <widget class="QLabel" name="label_91">
-                      <property name="text">
-                       <string>sbx</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QDoubleSpinBox" name="dsb_rot_align_sbx">
-                      <property name="suffix">
-                       <string> um</string>
-                      </property>
-                      <property name="decimals">
-                       <number>1</number>
-                      </property>
-                      <property name="minimum">
-                       <double>-1000.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>1000.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>0.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="pb_rot_align_sbx_move">
-                      <property name="text">
-                       <string>
-Move
-</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                  <item row="5" column="0">
-                   <widget class="QPushButton" name="pb_rot_align_all_move">
-                    <property name="text">
-                     <string>
-Apply All Corrections 
-</string>
                     </property>
                    </widget>
                   </item>
@@ -10787,40 +10700,79 @@ Apply All Corrections
            <string>Set Energy</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_99">
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="sb_harmonic">
-             <property name="minimum">
-              <number>-1</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>-1</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QCheckBox" name="cb_change_energy_only">
-             <property name="toolTip">
-              <string>does not mover mirrors or pitch, ugap and bragg only</string>
-             </property>
-             <property name="text">
-              <string>Change energy only</string>
-             </property>
-             <property name="checked">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
+           <item row="1" column="0">
             <widget class="QLabel" name="label_148">
              <property name="text">
               <string>      Harmonic: </string>
              </property>
             </widget>
            </item>
-           <item row="6" column="0" colspan="2">
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="dsb_target_e">
+             <property name="styleSheet">
+              <string notr="true">font: 14pt &quot;Cantarell&quot;;</string>
+             </property>
+             <property name="suffix">
+              <string> keV</string>
+             </property>
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="minimum">
+              <double>5.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>25.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>12.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QGroupBox" name="groupBox_9">
+             <property name="title">
+              <string>Optmize</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_116">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_151">
+                <property name="text">
+                 <string>Max. Iter.</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" colspan="2">
+               <widget class="QCheckBox" name="cb_beam_at_ssa2">
+                <property name="text">
+                 <string>Find beam at SSA2</string>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="sb_max_iter">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_81">
+             <property name="text">
+              <string>  Target Energy: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2">
             <widget class="QGroupBox" name="groupBox">
              <layout class="QGridLayout" name="gridLayout_96">
               <item row="1" column="0">
@@ -10864,36 +10816,153 @@ Apply All Corrections
              </layout>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_81">
-             <property name="text">
-              <string>  Target Energy: </string>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="sb_harmonic">
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
              </property>
             </widget>
            </item>
-           <item row="1" column="2" rowspan="5">
+           <item row="5" column="2">
+            <layout class="QGridLayout" name="gridLayout_106">
+             <item row="1" column="1">
+              <widget class="QLabel" name="label_178">
+               <property name="text">
+                <string>Zone Plate Focus </string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QDoubleSpinBox" name="dsb_ZPZ1TargetPos_energy">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="suffix">
+                <string> mm</string>
+               </property>
+               <property name="decimals">
+                <number>4</number>
+               </property>
+               <property name="minimum">
+                <double>-100.000000000000000</double>
+               </property>
+               <property name="maximum">
+                <double>20.000000000000000</double>
+               </property>
+               <property name="value">
+                <double>-15.000000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QPushButton" name="pb_movezpz1_energy">
+               <property name="text">
+                <string>Move ZPZ1</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="pb_move_energy">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>
+ Move   
+</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" rowspan="5">
             <widget class="QGroupBox" name="groupBox_31">
              <property name="title">
               <string>Estimated Positions</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_114">
-              <item row="0" column="0">
-               <spacer name="verticalSpacer_19">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Ignored</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
+              <item row="1" column="0">
+               <layout class="QGridLayout" name="gridLayout_109">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_132">
+                  <property name="text">
+                   <string>DCM  Pitch  </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QDoubleSpinBox" name="dsb_target_pitch">
+                  <property name="suffix">
+                   <string>  mrad</string>
+                  </property>
+                  <property name="decimals">
+                   <number>4</number>
+                  </property>
+                  <property name="minimum">
+                   <double>-5.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>5.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.005000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.960500000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
-              <item row="3" column="0">
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_112">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_149">
+                  <property name="text">
+                   <string>Gap</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QDoubleSpinBox" name="dsb_target_ugap">
+                  <property name="suffix">
+                   <string> um</string>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="minimum">
+                   <double>4000.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>25000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>5.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>5920.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="2" column="0">
                <layout class="QGridLayout" name="gridLayout_113">
                 <item row="3" column="0">
                  <widget class="QLabel" name="label_150">
@@ -11006,205 +11075,19 @@ Apply All Corrections
                 </item>
                </layout>
               </item>
-              <item row="1" column="0">
-               <layout class="QGridLayout" name="gridLayout_112">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_149">
-                  <property name="text">
-                   <string>Gap</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QDoubleSpinBox" name="dsb_target_ugap">
-                  <property name="suffix">
-                   <string> um</string>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="minimum">
-                   <double>4000.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>25000.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>5.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>5920.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item row="2" column="0">
-               <layout class="QGridLayout" name="gridLayout_109">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_132">
-                  <property name="text">
-                   <string>DCM  Pitch  </string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QDoubleSpinBox" name="dsb_target_pitch">
-                  <property name="suffix">
-                   <string>  mrad</string>
-                  </property>
-                  <property name="decimals">
-                   <number>4</number>
-                  </property>
-                  <property name="minimum">
-                   <double>-5.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>5.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.005000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.960500000000000</double>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
              </layout>
             </widget>
            </item>
-           <item row="6" column="2">
-            <layout class="QGridLayout" name="gridLayout_106">
-             <item row="1" column="1">
-              <widget class="QLabel" name="label_178">
-               <property name="text">
-                <string>Zone Plate Focus </string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QDoubleSpinBox" name="dsb_ZPZ1TargetPos_energy">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="suffix">
-                <string> mm</string>
-               </property>
-               <property name="decimals">
-                <number>4</number>
-               </property>
-               <property name="minimum">
-                <double>-100.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>20.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>-15.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QPushButton" name="pb_movezpz1_energy">
-               <property name="text">
-                <string>Move ZPZ1</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="5" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBox_9">
-             <property name="title">
-              <string>Optmize</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_116">
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="sb_max_iter">
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_151">
-                <property name="text">
-                 <string>Max. Iter.</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0" colspan="2">
-               <widget class="QCheckBox" name="cb_beam_at_ssa2">
-                <property name="text">
-                 <string>Find beam at SSA2</string>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_152">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="4" column="0" colspan="2">
-            <widget class="QPushButton" name="pb_move_energy">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+           <item row="2" column="1">
+            <widget class="QCheckBox" name="cb_change_energy_only">
+             <property name="toolTip">
+              <string>does not mover mirrors or pitch, ugap and bragg only</string>
              </property>
              <property name="text">
-              <string>
- Move   
-</string>
+              <string>Change energy only</string>
              </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="dsb_target_e">
-             <property name="styleSheet">
-              <string notr="true">font: 14pt &quot;Cantarell&quot;;</string>
-             </property>
-             <property name="suffix">
-              <string> keV</string>
-             </property>
-             <property name="decimals">
-              <number>2</number>
-             </property>
-             <property name="minimum">
-              <double>5.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>25.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.500000000000000</double>
-             </property>
-             <property name="value">
-              <double>12.000000000000000</double>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -11387,7 +11270,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>33</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
