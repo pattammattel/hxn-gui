@@ -2005,18 +2005,26 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_move_sbz_neg.clicked.connect(lambda: self.move_sbz(neg_=True))
         self.pb_mll_stop_all_sample.clicked.connect(lambda:stop_all_mll_motion())
         #self.pb_osa_out.clicked.connect(lambda: self.runTask(lambda:self.ZP_OSA_OUT()))
-        self.pb_mll_osa_out.clicked.connect(lambda:self.mll_osa_OUT())
-        self.pb_mll_osa_in.clicked.connect(lambda:self.mll_osa_IN())
-        self.pb_mll_bs_out.clicked.connect(lambda:RE(mll_bs_out()))
-        self.pb_mll_bs_in.clicked.connect(lambda:RE(mll_bs_in()))
+        self.pb_mll_osa_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA out.", self.mll_osa_OUT))
+        self.pb_mll_osa_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA in.", self.mll_osa_IN))
+        self.pb_mll_bs_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop out.", lambda:RE(mll_bs_out())))
+        self.pb_mll_bs_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop in.", lambda:RE(mll_bs_in())))
         #self.pb_mll_lens_out.clicked.connect(lambda: self.runTask(lambda:RE(mll_lens_out())))
         #self.pb_mll_lens_in.clicked.connect(lambda: self.runTask(lambda:RE(mll_lens_in())))
-        self.pb_mll_lens_out.clicked.connect(lambda:RE(mll_lens_out()))
-        self.pb_mll_lens_in.clicked.connect(lambda:RE(mll_lens_in()))
-        self.pb_mlls_to_upstream.clicked.connect(lambda: self.runTask(lambda:RE(mll_to_upstream())))
-        self.pb_mlls_to_downstream.clicked.connect(lambda: self.runTask(lambda:RE(mll_to_downstream())))
-        self.pb_mll_sample_in.clicked.connect(lambda:RE(mll_sample_in()))
-        self.pb_mll_sample_out.clicked.connect(lambda:RE(mll_sample_out()))
+        self.pb_mll_lens_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses out.", lambda:RE(mll_lens_out())))
+        self.pb_mll_lens_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses in.", lambda:RE(mll_lens_in())))
+        self.pb_mlls_to_upstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs upstream.", lambda:self.runTask(lambda:RE(mll_to_upstream()))))
+        self.pb_mlls_to_downstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs downstream.", lambda:self.runTask(lambda:RE(mll_to_downstream()))))
+        self.pb_mll_sample_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample in.", lambda:RE(mll_sample_in())))
+        self.pb_mll_sample_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample out.", lambda:RE(mll_sample_out())))
+
+    def _confirm_and_run(self, description, action):
+        choice = QMessageBox.question(
+            self, "Confirm MLL Motion",
+            f"{description}\n\nMake sure this motion is safe. Proceed?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice == QMessageBox.Yes:
+            action()
 
     def move_dsx(self, neg_=False):
         self.move_motor_with_pv(self.db_move_dsx, dsx, 1, neg=neg_)
@@ -2746,8 +2754,8 @@ class Ui(QtWidgets.QMainWindow):
 
         self.pb_zp_cam11_view.clicked.connect(lambda:self.zp_to_cam11_view_())
         self.pb_zp_nanobeam.clicked.connect(lambda:self.zp_to_nanobeam_())
-        self.pb_mll_cam11_view.clicked.connect(lambda:self.mll_to_cam11_view_())
-        self.pb_mll_nanobeam.clicked.connect(lambda:self.mll_to_nanobeam_())
+        self.pb_mll_cam11_view.clicked.connect(lambda:self._confirm_and_run("Move the MLL microscope to the CAM11 view.", self.mll_to_cam11_view_))
+        self.pb_mll_nanobeam.clicked.connect(lambda:self._confirm_and_run("Move the MLL microscope to nanobeam.", self.mll_to_nanobeam_))
 
 
 
