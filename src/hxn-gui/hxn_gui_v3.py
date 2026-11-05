@@ -244,8 +244,8 @@ class Ui(QtWidgets.QMainWindow):
         print("Running initParams()...")
         try:
             self.initParams()
-        except Exception as e:
-            print(f"Warning during initParams: {e}")
+        except Exception as exc:
+            print(f"Warning during initParams: {exc}")
             # Set some defaults to prevent crashes
             self.scan_plan = ""
         QApplication.processEvents()
@@ -404,8 +404,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start live update thread...")
                 self.liveUpdateThread()
                 print("  Live update thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start live update thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start live update thread: {exc}")
         else:
             print("  Live update thread disabled by user")
         
@@ -415,8 +415,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start scan status thread...")
                 self.scanStatusThread()
                 print("  Scan status thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start scan status thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start scan status thread: {exc}")
         else:
             print("  Scan status thread disabled by user")
         
@@ -426,8 +426,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start pump update thread...")
                 self.pump_update_thread()
                 print("  Pump update thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start pump update thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start pump update thread: {exc}")
         else:
             print("  Pump update thread disabled by user")
         
@@ -437,8 +437,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start flytube pressure thread...")
                 self.flytube_pressure_status()
                 print("  Flytube pressure thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start flytube pressure thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start flytube pressure thread: {exc}")
         else:
             print("  Flytube pressure thread disabled by user")
         
@@ -754,8 +754,8 @@ class Ui(QtWidgets.QMainWindow):
 
                 }
             print("  Live PV dictionary created successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to create live PV dictionary: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to create live PV dictionary: {exc}")
             self.live_PVs = {}
 
     def create_pump_pv_dict(self):
@@ -769,8 +769,8 @@ class Ui(QtWidgets.QMainWindow):
 
                 }
             print("  Pump PV dictionary created successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to create pump PV dictionary: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to create pump PV dictionary: {exc}")
             self.pump_PVs = {}
 
     def handle_value_signals(self,pv_val_list):
@@ -820,8 +820,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting flytube pressure thread...")
             self.update_thread.start()
             print("  Flytube pressure thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start flytube pressure thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start flytube pressure thread: {exc}")
 
     def handle_threshold(self, sts):
 
@@ -850,8 +850,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting scan status thread...")
             self.scanStatus_thread.start()
             print("  Scan status thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start scan status thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start scan status thread: {exc}")
 
     def liveUpdateThread(self):
         try:
@@ -862,8 +862,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting live update thread...")
             self.liveWorker.start()
             print("  Live update thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start live update thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start live update thread: {exc}")
 
     def pump_update_thread(self):
         try:
@@ -874,8 +874,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting pump update thread...")
             self.pump_update_worker.start()
             print("  Pump update thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start pump update thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start pump update thread: {exc}")
 
 
     #setup user
@@ -2200,8 +2200,8 @@ class Ui(QtWidgets.QMainWindow):
                 RE(find_beam_at_ssa2(max_iter=self.sb_max_iter.value()))
 
             QMessageBox.information(self, "Done", "Motion complete.")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Motion failed:\n{str(e)}")
+        except Exception as exc:
+            QMessageBox.critical(self, "Error", f"Motion failed:\n{str(exc)}")
         finally:
             progress.close()
     
@@ -3458,12 +3458,14 @@ class Ui(QtWidgets.QMainWindow):
         if choice == QMessageBox.Yes:
             
             try:
-                RE(zps_zero_piezos())
-                RE(smll_zero_piezos())
-                RE(zps_sync_piezos())
-                RE(smll_sync_piezos())
-            except Exception as e:
-                print(f"Error while syncing piezos: {e}")
+                if self.microscope_profiles["active"] == "ZP":
+                    RE(zps_zero_piezos())
+                    RE(zps_sync_piezos())
+                else:
+                    RE(mll_zero_piezos())
+                    RE(mll_sync_piezos())
+            except Exception as exc:
+                print(f"Error while syncing piezos: {exc}")
                 pass
             #panda_zero_all_encoders(si)
             # reset the progress bar
@@ -3510,10 +3512,12 @@ class Ui(QtWidgets.QMainWindow):
 
         if choice == QMessageBox.Yes:
             try:
-                RE(zps_kill_piezos())
-                RE(smll_kill_piezos())
-            except Exception as e:
-                print(f"Error while killing piezos: {e}")
+                if self.microscope_profiles["active"] == "ZP":
+                    RE(zps_kill_piezos())
+                else:
+                    RE(mll_kill_piezos())
+            except Exception as exc:
+                print(f"Error while killing piezos: {exc}")
                 pass
             
             # reset the progress bar
@@ -3733,8 +3737,8 @@ class liveStatus(QThread):
         # Create PV object in background thread - doesn't block GUI
         try:
             self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {exc}")
             self.pv_obj = None
         
         while not self.isInterruptionRequested():
@@ -3745,7 +3749,7 @@ class liveStatus(QThread):
                     if value is not None:
                         self.current_sts.emit(value)
                 _interruptible_wait(self, 500)
-            except Exception as e:
+            except Exception:
                 # Silently continue if PV unavailable
                 pass
 
@@ -3770,7 +3774,7 @@ class liveUpdate(QThread):
                 else:
                     # PV not connected, use None to indicate no data
                     readings.append(None)
-            except Exception as e:
+            except Exception:
                 # Read failed, use None to indicate no data
                 readings.append(None)
         
@@ -3784,8 +3788,8 @@ class liveUpdate(QThread):
             try:
                 pv_obj = EpicsPV(pv_name, connection_timeout=1.0, auto_monitor=False)
                 self.pv_objects.append(pv_obj)
-            except Exception as e:
-                print(f"  Warning: Could not create PV object for {pv_name}: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not create PV object for {pv_name}: {exc}")
                 self.pv_objects.append(None)
         print(f"  PV objects created, starting update loop...")
         
@@ -3811,8 +3815,8 @@ class liveThresholdUpdate(QThread):
         # Create PV object in background thread - doesn't block GUI
         try:
             self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {exc}")
             self.pv_obj = None
         
         while not self.isInterruptionRequested():
@@ -3827,7 +3831,7 @@ class liveThresholdUpdate(QThread):
                 else:
                     # Not connected, emit False
                     self.current_sts.emit(False)
-            except Exception as e:
+            except Exception:
                 # PV unavailable, emit False
                 self.current_sts.emit(False)
 
@@ -3851,8 +3855,8 @@ class updateScanProgress(QThread):
         try:
             self.tot_pv_obj = EpicsPV(self.tot_pv_name, connection_timeout=1.0, auto_monitor=False)
             self.update_pv_obj = EpicsPV(self.update_pv_name, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create scan progress PV objects: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create scan progress PV objects: {exc}")
             self.tot_pv_obj = None
             self.update_pv_obj = None
         
@@ -3990,8 +3994,8 @@ class LivePressureValueThread(QThread):
         # Create PV object in background thread - doesn't block GUI
         try:
             self.pv_obj = EpicsPV(self.pressure_pv, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create pressure PV object: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create pressure PV object: {exc}")
             self.pv_obj = None
         
         start_time = 0
@@ -4004,7 +4008,7 @@ class LivePressureValueThread(QThread):
                 else:
                     # PV not connected, emit default value
                     self.current_time_pressure.emit((start_time, 0.0))
-            except Exception as e:
+            except Exception:
                 self.current_time_pressure.emit((start_time, 0.0))
             
             _interruptible_wait(self, int(self.wait_time))
