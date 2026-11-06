@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1182</height>
+    <height>1179</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -543,7 +543,7 @@ QRadioButton::indicator:unchecked {
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -6528,7 +6528,7 @@ ZP Tomo Widget
         <item>
          <widget class="QScrollArea" name="scrollArea_tomo">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -6542,12 +6542,18 @@ ZP Tomo Widget
              <x>0</x>
              <y>0</y>
              <width>1890</width>
-             <height>1475</height>
+             <height>538</height>
             </rect>
            </property>
-           <layout class="QGridLayout" name="gridLayout_tomo">
-            <item row="2" column="0">
+           <layout class="QGridLayout" name="gridLayout_75">
+            <item row="0" column="1">
              <widget class="QGroupBox" name="groupBox_tomo_angle_info">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="title">
                <string>Angles</string>
               </property>
@@ -6641,49 +6647,41 @@ ZP Tomo Widget
               </layout>
              </widget>
             </item>
-            <item row="3" column="2" alignment="Qt::AlignTop">
-             <widget class="QGroupBox" name="groupBox_tomo_align_using_previous">
-              <property name="title">
-               <string>Align Using Previous</string>
+            <item row="0" column="2" rowspan="2">
+             <widget class="QGroupBox" name="groupBox_tomo_xalign">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
-              <layout class="QFormLayout" name="formLayout_tomo_align_using_previous">
+              <property name="title">
+               <string>X Alignment</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_tomo_xalign">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__enable">
+                <widget class="QLabel" name="label_tomo__xalign__do_align">
                  <property name="text">
-                  <string>enable</string>
+                  <string>do align</string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QCheckBox" name="tomo__align_using_previous__enable">
+                <widget class="QCheckBox" name="tomo__xalign__do_align">
                  <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__elem">
-                 <property name="text">
-                  <string>elem</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="tomo__align_using_previous__elem">
-                 <property name="editable">
                   <bool>true</bool>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__threshold">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__start">
                  <property name="text">
-                  <string>threshold</string>
+                  <string>start</string>
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__align_using_previous__threshold">
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__start">
                  <property name="decimals">
                   <number>4</number>
                  </property>
@@ -6694,60 +6692,537 @@ ZP Tomo Widget
                   <double>1000000.000000000000000</double>
                  </property>
                  <property name="value">
-                  <double>0.100000000000000</double>
+                  <double>-10.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__end">
+                 <property name="text">
+                  <string>end</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__end">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>10.000000000000000</double>
                  </property>
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__apply_to">
+                <widget class="QLabel" name="label_tomo__xalign__num">
                  <property name="text">
-                  <string>apply to</string>
+                  <string>num</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLineEdit" name="tomo__align_using_previous__apply_to">
-                 <property name="toolTip">
-                  <string>Comma-separated values</string>
+                <widget class="QSpinBox" name="tomo__xalign__num">
+                 <property name="maximum">
+                  <number>1000000</number>
                  </property>
-                 <property name="text">
-                  <string>dsx, dsy</string>
+                 <property name="value">
+                  <number>200</number>
                  </property>
                 </widget>
                </item>
                <item row="4" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__move_x">
+                <widget class="QLabel" name="label_tomo__xalign__exposure">
                  <property name="text">
-                  <string>move x</string>
+                  <string>exposure</string>
                  </property>
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="QCheckBox" name="tomo__align_using_previous__move_x">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__exposure">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.030000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__elem">
+                 <property name="text">
+                  <string>elem</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QComboBox" name="tomo__xalign__elem">
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__center_with">
+                 <property name="text">
+                  <string>center with</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QComboBox" name="tomo__xalign__center_with">
+                 <item>
+                  <property name="text">
+                   <string>line_center</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>edge</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__threshold">
+                 <property name="text">
+                  <string>threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__threshold">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.500000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__move_coarse">
+                 <property name="text">
+                  <string>move coarse</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QCheckBox" name="tomo__xalign__move_coarse">
                  <property name="checked">
                   <bool>false</bool>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__move_y">
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__neg_flag">
                  <property name="text">
-                  <string>move y</string>
+                  <string>neg flag</string>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="1">
-                <widget class="QCheckBox" name="tomo__align_using_previous__move_y">
+               <item row="9" column="1">
+                <widget class="QCheckBox" name="tomo__xalign__neg_flag">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__offset">
+                 <property name="text">
+                  <string>offset</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__offset">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__zero_before_scan">
+                 <property name="text">
+                  <string>zero before scan</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QCheckBox" name="tomo__xalign__zero_before_scan">
                  <property name="checked">
                   <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__initial_position">
+                 <property name="text">
+                  <string>initial position</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__initial_position">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="label_tomo__xalign__align_movement_limit">
+                 <property name="text">
+                  <string>align movement limit</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__xalign__align_movement_limit">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>3.000000000000000</double>
                  </property>
                 </widget>
                </item>
               </layout>
              </widget>
             </item>
-            <item row="0" column="0">
+            <item row="0" column="3" rowspan="2">
+             <widget class="QGroupBox" name="groupBox_tomo_yalign">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Y Alignment</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_tomo_yalign">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__do_align">
+                 <property name="text">
+                  <string>do align</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="tomo__yalign__do_align">
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__start">
+                 <property name="text">
+                  <string>start</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__start">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-10.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__end">
+                 <property name="text">
+                  <string>end</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__end">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__num">
+                 <property name="text">
+                  <string>num</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="tomo__yalign__num">
+                 <property name="maximum">
+                  <number>1000000</number>
+                 </property>
+                 <property name="value">
+                  <number>200</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__exposure">
+                 <property name="text">
+                  <string>exposure</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__exposure">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.030000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__elem">
+                 <property name="text">
+                  <string>elem</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QComboBox" name="tomo__yalign__elem">
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__center_with">
+                 <property name="text">
+                  <string>center with</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QComboBox" name="tomo__yalign__center_with">
+                 <item>
+                  <property name="text">
+                   <string>line_center</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>edge</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__threshold">
+                 <property name="text">
+                  <string>threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__threshold">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.500000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__move_coarse">
+                 <property name="text">
+                  <string>move coarse</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QCheckBox" name="tomo__yalign__move_coarse">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__neg_flag">
+                 <property name="text">
+                  <string>neg flag</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QCheckBox" name="tomo__yalign__neg_flag">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__offset">
+                 <property name="text">
+                  <string>offset</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__offset">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>4.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__zero_before_scan">
+                 <property name="text">
+                  <string>zero before scan</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QCheckBox" name="tomo__yalign__zero_before_scan">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__initial_position">
+                 <property name="text">
+                  <string>initial position</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__initial_position">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-4.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="label_tomo__yalign__align_movement_limit">
+                 <property name="text">
+                  <string>align movement limit</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__yalign__align_movement_limit">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>5.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="0" rowspan="2">
              <widget class="QGroupBox" name="groupBox_tomo_general">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="title">
                <string>General</string>
               </property>
@@ -7038,739 +7513,14 @@ ZP Tomo Widget
               </layout>
              </widget>
             </item>
-            <item row="0" column="2">
-             <widget class="QGroupBox" name="groupBox_tomo_xalign">
-              <property name="title">
-               <string>X Alignment</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_tomo_xalign">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__do_align">
-                 <property name="text">
-                  <string>do align</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="tomo__xalign__do_align">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__start">
-                 <property name="text">
-                  <string>start</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__start">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-10.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__end">
-                 <property name="text">
-                  <string>end</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__end">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>10.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__num">
-                 <property name="text">
-                  <string>num</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QSpinBox" name="tomo__xalign__num">
-                 <property name="maximum">
-                  <number>1000000</number>
-                 </property>
-                 <property name="value">
-                  <number>200</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__exposure">
-                 <property name="text">
-                  <string>exposure</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__exposure">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.030000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__elem">
-                 <property name="text">
-                  <string>elem</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QComboBox" name="tomo__xalign__elem">
-                 <property name="editable">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__center_with">
-                 <property name="text">
-                  <string>center with</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QComboBox" name="tomo__xalign__center_with">
-                 <item>
-                  <property name="text">
-                   <string>line_center</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>edge</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__threshold">
-                 <property name="text">
-                  <string>threshold</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__threshold">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.500000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__move_coarse">
-                 <property name="text">
-                  <string>move coarse</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="1">
-                <widget class="QCheckBox" name="tomo__xalign__move_coarse">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__neg_flag">
-                 <property name="text">
-                  <string>neg flag</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="1">
-                <widget class="QCheckBox" name="tomo__xalign__neg_flag">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__offset">
-                 <property name="text">
-                  <string>offset</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__offset">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__zero_before_scan">
-                 <property name="text">
-                  <string>zero before scan</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="1">
-                <widget class="QCheckBox" name="tomo__xalign__zero_before_scan">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="12" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__initial_position">
-                 <property name="text">
-                  <string>initial position</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="12" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__initial_position">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="0">
-                <widget class="QLabel" name="label_tomo__xalign__align_movement_limit">
-                 <property name="text">
-                  <string>align movement limit</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__xalign__align_movement_limit">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>3.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QGroupBox" name="groupBox_tomo_yalign">
-              <property name="title">
-               <string>Y Alignment</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_tomo_yalign">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__do_align">
-                 <property name="text">
-                  <string>do align</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="tomo__yalign__do_align">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__start">
-                 <property name="text">
-                  <string>start</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__start">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-10.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__end">
-                 <property name="text">
-                  <string>end</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__end">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__num">
-                 <property name="text">
-                  <string>num</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QSpinBox" name="tomo__yalign__num">
-                 <property name="maximum">
-                  <number>1000000</number>
-                 </property>
-                 <property name="value">
-                  <number>200</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__exposure">
-                 <property name="text">
-                  <string>exposure</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__exposure">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.030000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__elem">
-                 <property name="text">
-                  <string>elem</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QComboBox" name="tomo__yalign__elem">
-                 <property name="editable">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__center_with">
-                 <property name="text">
-                  <string>center with</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QComboBox" name="tomo__yalign__center_with">
-                 <item>
-                  <property name="text">
-                   <string>line_center</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>edge</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__threshold">
-                 <property name="text">
-                  <string>threshold</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__threshold">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.500000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__move_coarse">
-                 <property name="text">
-                  <string>move coarse</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="1">
-                <widget class="QCheckBox" name="tomo__yalign__move_coarse">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__neg_flag">
-                 <property name="text">
-                  <string>neg flag</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="1">
-                <widget class="QCheckBox" name="tomo__yalign__neg_flag">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__offset">
-                 <property name="text">
-                  <string>offset</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__offset">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>4.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__zero_before_scan">
-                 <property name="text">
-                  <string>zero before scan</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="1">
-                <widget class="QCheckBox" name="tomo__yalign__zero_before_scan">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="12" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__initial_position">
-                 <property name="text">
-                  <string>initial position</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="12" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__initial_position">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-4.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="0">
-                <widget class="QLabel" name="label_tomo__yalign__align_movement_limit">
-                 <property name="text">
-                  <string>align movement limit</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__yalign__align_movement_limit">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>5.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_tomo_fly2d_scan">
-              <property name="title">
-               <string>2D Scan</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_tomo_fly2d_scan">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__det">
-                 <property name="text">
-                  <string>det</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="tomo__fly2d_scan__det">
-                 <property name="editable">
-                  <bool>true</bool>
-                 </property>
-                 <property name="currentText">
-                  <string>dets_fast</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__x_start">
-                 <property name="text">
-                  <string>x start</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__x_start">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-1.500000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__x_end">
-                 <property name="text">
-                  <string>x end</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__x_end">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.500000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__x_num">
-                 <property name="text">
-                  <string>x num</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QSpinBox" name="tomo__fly2d_scan__x_num">
-                 <property name="maximum">
-                  <number>1000000</number>
-                 </property>
-                 <property name="value">
-                  <number>150</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__y_start">
-                 <property name="text">
-                  <string>y start</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__y_start">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-5.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__y_end">
-                 <property name="text">
-                  <string>y end</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__y_end">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__y_num">
-                 <property name="text">
-                  <string>y num</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QSpinBox" name="tomo__fly2d_scan__y_num">
-                 <property name="maximum">
-                  <number>1000000</number>
-                 </property>
-                 <property name="value">
-                  <number>250</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_tomo__fly2d_scan__exposure">
-                 <property name="text">
-                  <string>exposure</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__exposure">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.005000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="2">
+            <item row="0" column="4" rowspan="2">
              <widget class="QGroupBox" name="groupBox_tomo_align_2d_com">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="title">
                <string>2D COM Alignment</string>
               </property>
@@ -8060,6 +7810,298 @@ ZP Tomo Widget
                 <widget class="QCheckBox" name="tomo__align_2d_com__zero_before_scan">
                  <property name="checked">
                   <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="5" rowspan="2">
+             <widget class="QGroupBox" name="groupBox_tomo_align_using_previous">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Align Using Previous</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_tomo_align_using_previous">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__enable">
+                 <property name="text">
+                  <string>enable</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="tomo__align_using_previous__enable">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__elem">
+                 <property name="text">
+                  <string>elem</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="tomo__align_using_previous__elem">
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__threshold">
+                 <property name="text">
+                  <string>threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__align_using_previous__threshold">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.100000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__apply_to">
+                 <property name="text">
+                  <string>apply to</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="tomo__align_using_previous__apply_to">
+                 <property name="toolTip">
+                  <string>Comma-separated values</string>
+                 </property>
+                 <property name="text">
+                  <string>dsx, dsy</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__move_x">
+                 <property name="text">
+                  <string>move x</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QCheckBox" name="tomo__align_using_previous__move_x">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__move_y">
+                 <property name="text">
+                  <string>move y</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QCheckBox" name="tomo__align_using_previous__move_y">
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QGroupBox" name="groupBox_tomo_fly2d_scan">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>2D Scan</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_tomo_fly2d_scan">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__det">
+                 <property name="text">
+                  <string>det</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="tomo__fly2d_scan__det">
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="currentText">
+                  <string>dets_fast</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__x_start">
+                 <property name="text">
+                  <string>x start</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__x_start">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-1.500000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__x_end">
+                 <property name="text">
+                  <string>x end</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__x_end">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>1.500000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__x_num">
+                 <property name="text">
+                  <string>x num</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="tomo__fly2d_scan__x_num">
+                 <property name="maximum">
+                  <number>1000000</number>
+                 </property>
+                 <property name="value">
+                  <number>150</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__y_start">
+                 <property name="text">
+                  <string>y start</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__y_start">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-5.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__y_end">
+                 <property name="text">
+                  <string>y end</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__y_end">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__y_num">
+                 <property name="text">
+                  <string>y num</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QSpinBox" name="tomo__fly2d_scan__y_num">
+                 <property name="maximum">
+                  <number>1000000</number>
+                 </property>
+                 <property name="value">
+                  <number>250</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_tomo__fly2d_scan__exposure">
+                 <property name="text">
+                  <string>exposure</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__fly2d_scan__exposure">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.005000000000000</double>
                  </property>
                 </widget>
                </item>
@@ -12903,7 +12945,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>33</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
