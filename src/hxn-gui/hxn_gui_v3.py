@@ -2903,7 +2903,10 @@ class Ui(QtWidgets.QMainWindow):
         fitElem = self.cb_mll_focus_elem.currentText().split(':')[0]
         linFlag = self.cb_linearflag_mll_focus.isChecked()
 
-        RE(mll_z_alignment(z_motor,
+        # RE() returns run uids, not the plan's return value, so capture it here.
+        result = {}
+        def _capture():
+            result["best_z"] = yield from mll_z_alignment(z_motor,
                            z_start,
                            z_end,
                            z_steps,
@@ -2913,7 +2916,16 @@ class Ui(QtWidgets.QMainWindow):
                            scanSteps,
                            scanDwell,
                            elem= fitElem, 
-                           lin_flag = linFlag))
+                           lin_flag = linFlag)
+        RE(_capture())
+        best_z = result["best_z"]
+
+        choice = QMessageBox.question(self, "MLL Focus",
+                                      f"Best focus at {z_motor.name} = {best_z:.3f}."
+                                      f"\nMove {z_motor.name} to this position?",
+                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice == QMessageBox.Yes:
+            RE(bps.mov(z_motor, best_z))
     
     @show_error_message_box
     def mll_rot_alignment_(self):
@@ -2929,7 +2941,10 @@ class Ui(QtWidgets.QMainWindow):
         # sb_mll_rot_scan_exp_time_2 is the "Threshold:" field in the .ui
         threshold = self.sb_mll_rot_scan_exp_time_2.value()
 
-        RE(mll_rot_alignment(a_start,
+        # RE() returns run uids, not the plan's return value, so capture it here.
+        result = {}
+        def _capture():
+            result["dx_dz"] = yield from mll_rot_alignment(a_start,
                              a_end,
                              a_num,
                              start,
@@ -2938,10 +2953,12 @@ class Ui(QtWidgets.QMainWindow):
                              acq_time,
                              elem=elem,
                              move_flag=0,
-                             threshold=threshold))
+                             threshold=threshold)
+        RE(_capture())
+        dx, dz = result["dx_dz"]
 
-        dx, dz = get_mll_rot_alignment_result(int(-1*a_num), elem=elem,
-                             threshold=threshold, plot_flag=False)
+        # dx, dz = get_mll_rot_alignment_result(int(-1*a_num), elem=elem,
+        #                      threshold=threshold, plot_flag=False)
 
         self.dsb_rot_align_dsx.setValue(float(dx))
         self.dsb_rot_align_dsz.setValue(float(dz))
@@ -2975,7 +2992,10 @@ class Ui(QtWidgets.QMainWindow):
         threshold = self.dsb_zp_rot_threshold.value()
 
 
-        RE(zp_rot_alignment(a_start, 
+        # RE() returns run uids, not the plan's return value, so capture it here.
+        result = {}
+        def _capture():
+            result["dx_dz"] = yield from zp_rot_alignment(a_start, 
                                 a_end, 
                                 a_num, 
                                 start, 
@@ -2985,10 +3005,9 @@ class Ui(QtWidgets.QMainWindow):
                                 elem=elem, 
                                 move_flag=0, 
                                 neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), 
-                                threshold =threshold))
-        
-        dx,dz = get_zp_rot_alignment_result(int(-1*a_num), elem=elem, threshold=threshold,
-                            neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), edge_flag=0, skip_scans=None, plot_flag=False)
+                                threshold =threshold)
+        RE(_capture())
+        dx, dz = result["dx_dz"]
                             
         self.dsb_rot_align_smarx.setValue(float(dx))
         self.dsb_rot_align_smarz.setValue(float(dz))
