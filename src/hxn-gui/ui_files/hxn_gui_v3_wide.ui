@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1182</height>
+    <height>1179</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -6552,6 +6552,25 @@ ZP Tomo Widget
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_75">
+            <item row="1" column="5">
+             <widget class="QGroupBox" name="groupBox_tomo_summary">
+              <property name="title">
+               <string>Scan Summary</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_tomo_summary">
+               <item>
+                <widget class="QPlainTextEdit" name="te_tomo_summary">
+                 <property name="styleSheet">
+                  <string>font-family: monospace;</string>
+                 </property>
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
             <item row="0" column="0" rowspan="2">
              <widget class="QGroupBox" name="groupBox_tomo_general">
               <property name="sizePolicy">
@@ -12951,7 +12970,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>33</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">

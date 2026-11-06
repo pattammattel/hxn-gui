@@ -57,6 +57,8 @@ TOMO_NUMBER_LIST_KEYS = {"add_angles", "remove_angles"}
 # Editing the 2D scan prefills the 1D align scans: wider range at the same step size, longer dwell.
 TOMO_ALIGN_RANGE_SCALE = 1.5
 TOMO_ALIGN_DWELL_SCALE = 4
+# Rough per-angle overhead (theta move, shutter, plan sleeps, PDF); tune from real scans.
+TOMO_OVERHEAD_PER_ANGLE_S = 30
 # Owned by run_tomo_json once it starts (angles are fixed; th/y_init are measured), so never overwritten mid-scan.
 TOMO_RUNTIME_KEYS = ("th_init", "y_init", "stop_iter", "pause_scan", "angle_info")
 det_and_camera_names_motion = ['cam11','merlin','eiger']
@@ -340,6 +342,7 @@ class Ui(QtWidgets.QMainWindow):
         self.apply_microscope_mode(mode)
         self.cb_microscope_mode.setCurrentText(mode)
         self.microscope_profiles["active"] = mode
+        self.update_tomo_summary()
         with open(profiles_path, "w") as f:
             json.dump(self.microscope_profiles, f, indent=2)
 
@@ -759,6 +762,22 @@ class Ui(QtWidgets.QMainWindow):
         self.tomo__fly2d_scan__exposure.valueChanged.connect(
             lambda _v: self._prefill_tomo_align_dwell())
 
+        for widget in self.tomo_widgets.values():
+            if isinstance(widget, QCheckBox):
+                signal = widget.toggled
+            elif isinstance(widget, QtWidgets.QComboBox):
+                signal = widget.currentTextChanged
+            elif isinstance(widget, QtWidgets.QLineEdit):
+                signal = widget.textChanged
+            else:
+                signal = widget.valueChanged
+            signal.connect(lambda *_: self.update_tomo_summary())
+        # Keeps the expected finish time current while the parameters sit unchanged.
+        self.tomo_summary_timer = QTimer(self)
+        self.tomo_summary_timer.timeout.connect(self.update_tomo_summary)
+        self.tomo_summary_timer.start(60000)
+        self.update_tomo_summary()
+
         self.pb_tomo_import.clicked.connect(lambda: self.import_tomo_json())
         self.pb_tomo_export.clicked.connect(lambda: self.export_tomo_json())
         self.pb_tomo_reset.clicked.connect(lambda: self.reset_tomo_params())
@@ -784,6 +803,60 @@ class Ui(QtWidgets.QMainWindow):
         dwell = self.tomo__fly2d_scan__exposure.value() * TOMO_ALIGN_DWELL_SCALE
         self.tomo__xalign__exposure.setValue(dwell)
         self.tomo__yalign__exposure.setValue(dwell)
+
+    def update_tomo_summary(self):
+        # Runs on every keystroke, so half-typed lists are expected rather than errors.
+        try:
+            p = self.collect_tomo_params()
+        except ValueError as exc:
+            self.te_tomo_summary.setPlainText(f"Waiting for valid input:\n{exc}")
+            return
+        scan, info = p["fly2d_scan"], p["angle_info"]
+        if info["angle_step"] <= 0 or scan["x_num"] <= 0 or scan["y_num"] <= 0:
+            self.te_tomo_summary.setPlainText("Angle step and 2D scan points must be greater than 0.")
+            return
+        angles = np.linspace(info["start"], info["end"],
+                             int(1 + abs(info["end"] - info["start"]) / info["angle_step"]))
+        angles = [a for a in angles if a not in p["remove_angles"]]
+        if not angles:
+            self.te_tomo_summary.setPlainText("No angles left after 'remove angles'.")
+            return
+
+        # Mirrors run_tomo_json: align scans, then the 2D scan whose x points shrink with angle unless scaled.
+        seconds = 0
+        for angle in angles:
+            on_x = abs(angle) < p["axis_switch_angle"]
+            factor = abs(np.cos(np.radians(angle))) if on_x else abs(np.sin(np.radians(angle)))
+            x_num = scan["x_num"] if p["scale_scan_range"] else round(scan["x_num"] * factor)
+            seconds += x_num * scan["y_num"] * scan["exposure"]
+            if p["xalign"]["do_align"]:
+                seconds += p["xalign"]["num"] * p["xalign"]["exposure"]
+            elif p["align_2d_com"]["do_align"]:
+                com = p["align_2d_com"]
+                seconds += com["x_num"] * com["y_num"] * com["exposure"]
+            if p["yalign"]["do_align"]:
+                seconds += p["yalign"]["num"] * p["yalign"]["exposure"]
+            seconds += TOMO_OVERHEAD_PER_ANGLE_S
+
+        x_range = scan["x_end"] - scan["x_start"]
+        y_range = scan["y_end"] - scan["y_start"]
+        hours, rest = divmod(int(seconds), 3600)
+        finish = datetime.now() + timedelta(seconds=seconds)
+        motors = p["fly_motors"]
+        self.te_tomo_summary.setPlainText("\n".join([
+            f"Microscope : {self.microscope_profiles['active']} "
+            f"({motors[0]}/{motors[2]}, {motors[1]}; theta {p['th_motor']})",
+            f"2D scan    : {abs(x_range):.2f} x {abs(y_range):.2f} um, "
+            f"{scan['x_num']} x {scan['y_num']} pts, {scan['exposure'] * 1000:.1f} ms",
+            f"Pixel size : x {abs(x_range) / scan['x_num'] * 1000:.1f} nm, "
+            f"y {abs(y_range) / scan['y_num'] * 1000:.1f} nm",
+            f"Angles     : {info['start']:g} to {info['end']:g}, step {info['angle_step']:g} deg "
+            f"-> {len(angles)} scans",
+            f"Per angle  : ~{seconds / len(angles) / 60:.1f} min "
+            f"(incl. ~{TOMO_OVERHEAD_PER_ANGLE_S} s overhead)",
+            f"Total time : ~{hours} h {rest // 60:02d} min",
+            f"Finish at  : {finish:%a %Y-%m-%d %H:%M} (if started now)",
+        ]))
 
     @show_error_message_box
     def preview_tomo_json(self):
@@ -866,6 +939,7 @@ class Ui(QtWidgets.QMainWindow):
             with QtCore.QSignalBlocker(widget):
                 self._tomo_set_value(widget, value)
         self.tomo_params = merged
+        self.update_tomo_summary()
 
     @show_error_message_box
     def import_tomo_json(self):
