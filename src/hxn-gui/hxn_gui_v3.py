@@ -54,6 +54,9 @@ MICROSCOPE_MODES = ("ZP", "MLL")
 # Tomography tab: widgets live in the .ui and are named tomo__<group>__<key> after their JSON path.
 tomo_defaults_path = os.path.join(ui_path, 'json_plans', 'tomo_default_params.json')
 TOMO_NUMBER_LIST_KEYS = {"add_angles", "remove_angles"}
+# Editing the 2D scan prefills the 1D align scans: wider range at the same step size, longer dwell.
+TOMO_ALIGN_RANGE_SCALE = 1.5
+TOMO_ALIGN_DWELL_SCALE = 4
 # Owned by run_tomo_json once it starts (angles are fixed; th/y_init are measured), so never overwritten mid-scan.
 TOMO_RUNTIME_KEYS = ("th_init", "y_init", "stop_iter", "pause_scan", "angle_info")
 det_and_camera_names_motion = ['cam11','merlin','eiger']
@@ -749,15 +752,56 @@ class Ui(QtWidgets.QMainWindow):
                 widget.addItems(self.roi_elements)
         self.apply_tomo_params(self.tomo_defaults)
 
+        for axis in ("x", "y"):
+            for field in ("start", "end", "num"):
+                getattr(self, f"tomo__fly2d_scan__{axis}_{field}").valueChanged.connect(
+                    lambda _v, a=axis: self._prefill_tomo_align(a))
+        self.tomo__fly2d_scan__exposure.valueChanged.connect(
+            lambda _v: self._prefill_tomo_align_dwell())
+
         self.pb_tomo_import.clicked.connect(lambda: self.import_tomo_json())
         self.pb_tomo_export.clicked.connect(lambda: self.export_tomo_json())
         self.pb_tomo_reset.clicked.connect(lambda: self.reset_tomo_params())
+        self.pb_tomo_preview.clicked.connect(lambda: self.preview_tomo_json())
         self.pb_run_tomo_json.clicked.connect(lambda: self.run_tomo_from_gui())
         # run_tomo_json re-reads its JSON before each angle; these update the running file.
         self.tomo_running_json = None
         self.pb_pause_tomo.toggled.connect(self.toggle_tomo_pause)
         self.pb_stop_tomo.clicked.connect(lambda: self.stop_tomo_scan())
         self.pb_apply_tomo.clicked.connect(lambda: self.apply_tomo_changes())
+
+    def _prefill_tomo_align(self, axis):
+        start = getattr(self, f"tomo__fly2d_scan__{axis}_start").value()
+        end = getattr(self, f"tomo__fly2d_scan__{axis}_end").value()
+        num = getattr(self, f"tomo__fly2d_scan__{axis}_num").value()
+        center = (start + end) / 2
+        half = (end - start) / 2 * TOMO_ALIGN_RANGE_SCALE
+        getattr(self, f"tomo__{axis}align__start").setValue(round(center - half, 2))
+        getattr(self, f"tomo__{axis}align__end").setValue(round(center + half, 2))
+        getattr(self, f"tomo__{axis}align__num").setValue(round(num * TOMO_ALIGN_RANGE_SCALE))
+
+    def _prefill_tomo_align_dwell(self):
+        dwell = self.tomo__fly2d_scan__exposure.value() * TOMO_ALIGN_DWELL_SCALE
+        self.tomo__xalign__exposure.setValue(dwell)
+        self.tomo__yalign__exposure.setValue(dwell)
+
+    @show_error_message_box
+    def preview_tomo_json(self):
+        text = json.dumps(self.collect_tomo_params(), indent=6)
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Tomo JSON Preview")
+        dialog.resize(600, 750)
+        layout = QtWidgets.QVBoxLayout(dialog)
+        view = QtWidgets.QPlainTextEdit(text)
+        view.setReadOnly(True)
+        view.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
+        layout.addWidget(view)
+        buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Close)
+        copy_button = buttons.addButton("Copy", QtWidgets.QDialogButtonBox.ActionRole)
+        copy_button.clicked.connect(lambda: QApplication.clipboard().setText(text))
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        dialog.exec_()
 
     def _tomo_set_value(self, widget, value):
         if isinstance(widget, QCheckBox):
@@ -818,7 +862,9 @@ class Ui(QtWidgets.QMainWindow):
             value = merged
             for key in path:
                 value = value[key]
-            self._tomo_set_value(widget, value)
+            # Loading must not trigger the align prefill and overwrite the file's align values.
+            with QtCore.QSignalBlocker(widget):
+                self._tomo_set_value(widget, value)
         self.tomo_params = merged
 
     @show_error_message_box

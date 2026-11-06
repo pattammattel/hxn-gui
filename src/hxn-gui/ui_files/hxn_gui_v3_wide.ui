@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1940</width>
-    <height>1179</height>
+    <height>1182</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -6443,92 +6443,98 @@ ZP Tomo Widget
        <attribute name="title">
         <string>Tomography</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_tomo">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_tomo_buttons">
-          <item>
-           <widget class="QPushButton" name="pb_tomo_import">
-            <property name="text">
-             <string>Import JSON</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_tomo_export">
-            <property name="text">
-             <string>Export JSON</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_tomo_reset">
-            <property name="text">
-             <string>Reset to Defaults</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_pause_tomo">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="styleSheet">
-             <string>QPushButton {background-color: #ffbe2e; color: #1b1b1b; font-weight: bold; padding: 4px 16px; border-radius: 4px;}
+       <layout class="QGridLayout" name="gridLayout_78">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pb_tomo_import">
+          <property name="text">
+           <string>Import JSON</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pb_tomo_export">
+          <property name="text">
+           <string>Export JSON</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pb_tomo_reset">
+          <property name="text">
+           <string>Reset to Defaults</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="pb_tomo_preview">
+          <property name="toolTip">
+           <string>Show the JSON that will be sent to run_tomo_json.</string>
+          </property>
+          <property name="text">
+           <string>Preview JSON</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QPushButton" name="pb_pause_tomo">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton {background-color: #ffbe2e; color: #1b1b1b; font-weight: bold; padding: 4px 16px; border-radius: 4px;}
       QPushButton:disabled {background-color: #dfe1e2; color: #71767a;}</string>
-            </property>
-            <property name="text">
-             <string>Pause</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_stop_tomo">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="styleSheet">
-             <string>QPushButton {background-color: #d83933; color: white; font-weight: bold; padding: 4px 16px; border-radius: 4px;}
+          </property>
+          <property name="text">
+           <string>Pause</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QPushButton" name="pb_stop_tomo">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string>QPushButton {background-color: #d83933; color: white; font-weight: bold; padding: 4px 16px; border-radius: 4px;}
       QPushButton:disabled {background-color: #dfe1e2; color: #71767a;}</string>
-            </property>
-            <property name="text">
-             <string>Stop After Current Angle</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_apply_tomo">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>Edits take effect from the next angle.</string>
-            </property>
-            <property name="text">
-             <string>Apply Changes to Running Scan</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pb_run_tomo_json">
-            <property name="styleSheet">
-             <string>QPushButton {background-color: #005ea2; color: white; font-weight: bold; padding: 4px 16px; border-radius: 4px;}
+          </property>
+          <property name="text">
+           <string>Stop After Current Angle</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QPushButton" name="pb_apply_tomo">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="toolTip">
+           <string>Edits take effect from the next angle.</string>
+          </property>
+          <property name="text">
+           <string>Apply Changes to Running Scan</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QPushButton" name="pb_run_tomo_json">
+          <property name="styleSheet">
+           <string>QPushButton {background-color: #005ea2; color: white; font-weight: bold; padding: 4px 16px; border-radius: 4px;}
       QPushButton:hover {background-color: #1a4480;}
       QPushButton:disabled {background-color: #dfe1e2; color: #71767a;}</string>
-            </property>
-            <property name="text">
-             <string>Run Tomo Scan</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+          </property>
+          <property name="text">
+           <string>Run Tomo Scan</string>
+          </property>
+         </widget>
         </item>
-        <item>
+        <item row="1" column="0" colspan="8">
          <widget class="QScrollArea" name="scrollArea_tomo">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -6541,11 +6547,309 @@ ZP Tomo Widget
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1890</width>
-             <height>538</height>
+             <width>1874</width>
+             <height>868</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_75">
+            <item row="0" column="0" rowspan="2">
+             <widget class="QGroupBox" name="groupBox_tomo_general">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>General</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_tomo_general">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_tomo__scan_label">
+                 <property name="text">
+                  <string>scan label</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="tomo__scan_label">
+                 <property name="text">
+                  <string>tomo_test</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_tomo__flying_panda">
+                 <property name="text">
+                  <string>flying panda</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="tomo__flying_panda">
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_tomo__axis_switch_angle">
+                 <property name="text">
+                  <string>axis switch angle</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__axis_switch_angle">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>45.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_tomo__scale_scan_range">
+                 <property name="text">
+                  <string>scale scan range</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QCheckBox" name="tomo__scale_scan_range">
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_tomo__stop_iter">
+                 <property name="text">
+                  <string>stop iter</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QCheckBox" name="tomo__stop_iter">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_tomo__save_log_to">
+                 <property name="text">
+                  <string>save log to</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="tomo__save_log_to">
+                 <property name="text">
+                  <string>/data/users/current_user</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_tomo__add_angles">
+                 <property name="text">
+                  <string>add angles</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QLineEdit" name="tomo__add_angles">
+                 <property name="toolTip">
+                  <string>Comma-separated values</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_tomo__remove_angles">
+                 <property name="text">
+                  <string>remove angles</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLineEdit" name="tomo__remove_angles">
+                 <property name="toolTip">
+                  <string>Comma-separated values</string>
+                 </property>
+                 <property name="text">
+                  <string>0.1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="label_tomo__stop_pdf">
+                 <property name="text">
+                  <string>stop pdf</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QCheckBox" name="tomo__stop_pdf">
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_tomo__pdf_elems">
+                 <property name="text">
+                  <string>pdf elems</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="1">
+                <widget class="QLineEdit" name="tomo__pdf_elems">
+                 <property name="toolTip">
+                  <string>Comma-separated values</string>
+                 </property>
+                 <property name="text">
+                  <string>Fe, Cr</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_tomo__pause_scan">
+                 <property name="text">
+                  <string>pause scan</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QCheckBox" name="tomo__pause_scan">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="label_tomo__test">
+                 <property name="text">
+                  <string>test</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QCheckBox" name="tomo__test">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_tomo__do_y_offset">
+                 <property name="text">
+                  <string>do y offset</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QCheckBox" name="tomo__do_y_offset">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="label_tomo__ic_threshold">
+                 <property name="text">
+                  <string>ic threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__ic_threshold">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.800000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="0">
+                <widget class="QLabel" name="label_tomo__th_init">
+                 <property name="text">
+                  <string>th init</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__th_init">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>-90.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="0">
+                <widget class="QLabel" name="label_tomo__y_init">
+                 <property name="text">
+                  <string>y init</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__y_init">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.003500000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="16" column="0">
+                <widget class="QLabel" name="label_tomo__Notes">
+                 <property name="text">
+                  <string>Notes</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="16" column="1">
+                <widget class="QLineEdit" name="tomo__Notes">
+                 <property name="text">
+                  <string>tomo_test</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
             <item row="0" column="1">
              <widget class="QGroupBox" name="groupBox_tomo_angle_info">
               <property name="sizePolicy">
@@ -7215,304 +7519,6 @@ ZP Tomo Widget
               </layout>
              </widget>
             </item>
-            <item row="0" column="0" rowspan="2">
-             <widget class="QGroupBox" name="groupBox_tomo_general">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>General</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_tomo_general">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_tomo__scan_label">
-                 <property name="text">
-                  <string>scan label</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QLineEdit" name="tomo__scan_label">
-                 <property name="text">
-                  <string>tomo_test</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_tomo__flying_panda">
-                 <property name="text">
-                  <string>flying panda</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QCheckBox" name="tomo__flying_panda">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_tomo__axis_switch_angle">
-                 <property name="text">
-                  <string>axis switch angle</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__axis_switch_angle">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>45.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_tomo__scale_scan_range">
-                 <property name="text">
-                  <string>scale scan range</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QCheckBox" name="tomo__scale_scan_range">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_tomo__stop_iter">
-                 <property name="text">
-                  <string>stop iter</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QCheckBox" name="tomo__stop_iter">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_tomo__save_log_to">
-                 <property name="text">
-                  <string>save log to</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QLineEdit" name="tomo__save_log_to">
-                 <property name="text">
-                  <string>/data/users/current_user</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_tomo__add_angles">
-                 <property name="text">
-                  <string>add angles</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="1">
-                <widget class="QLineEdit" name="tomo__add_angles">
-                 <property name="toolTip">
-                  <string>Comma-separated values</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_tomo__remove_angles">
-                 <property name="text">
-                  <string>remove angles</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="7" column="1">
-                <widget class="QLineEdit" name="tomo__remove_angles">
-                 <property name="toolTip">
-                  <string>Comma-separated values</string>
-                 </property>
-                 <property name="text">
-                  <string>0.1</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="0">
-                <widget class="QLabel" name="label_tomo__stop_pdf">
-                 <property name="text">
-                  <string>stop pdf</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="8" column="1">
-                <widget class="QCheckBox" name="tomo__stop_pdf">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="0">
-                <widget class="QLabel" name="label_tomo__pdf_elems">
-                 <property name="text">
-                  <string>pdf elems</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="1">
-                <widget class="QLineEdit" name="tomo__pdf_elems">
-                 <property name="toolTip">
-                  <string>Comma-separated values</string>
-                 </property>
-                 <property name="text">
-                  <string>Fe, Cr</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="label_tomo__pause_scan">
-                 <property name="text">
-                  <string>pause scan</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="1">
-                <widget class="QCheckBox" name="tomo__pause_scan">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="0">
-                <widget class="QLabel" name="label_tomo__test">
-                 <property name="text">
-                  <string>test</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="1">
-                <widget class="QCheckBox" name="tomo__test">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="12" column="0">
-                <widget class="QLabel" name="label_tomo__do_y_offset">
-                 <property name="text">
-                  <string>do y offset</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="12" column="1">
-                <widget class="QCheckBox" name="tomo__do_y_offset">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="0">
-                <widget class="QLabel" name="label_tomo__ic_threshold">
-                 <property name="text">
-                  <string>ic threshold</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__ic_threshold">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.800000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="14" column="0">
-                <widget class="QLabel" name="label_tomo__th_init">
-                 <property name="text">
-                  <string>th init</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="14" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__th_init">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>-90.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="15" column="0">
-                <widget class="QLabel" name="label_tomo__y_init">
-                 <property name="text">
-                  <string>y init</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="15" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__y_init">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.003500000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="16" column="0">
-                <widget class="QLabel" name="label_tomo__Notes">
-                 <property name="text">
-                  <string>Notes</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="16" column="1">
-                <widget class="QLineEdit" name="tomo__Notes">
-                 <property name="text">
-                  <string>tomo_test</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item row="0" column="4" rowspan="2">
              <widget class="QGroupBox" name="groupBox_tomo_align_2d_com">
               <property name="sizePolicy">
@@ -7816,121 +7822,10 @@ ZP Tomo Widget
               </layout>
              </widget>
             </item>
-            <item row="0" column="5" rowspan="2">
-             <widget class="QGroupBox" name="groupBox_tomo_align_using_previous">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="title">
-               <string>Align Using Previous</string>
-              </property>
-              <layout class="QFormLayout" name="formLayout_tomo_align_using_previous">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__enable">
-                 <property name="text">
-                  <string>enable</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="tomo__align_using_previous__enable">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__elem">
-                 <property name="text">
-                  <string>elem</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="tomo__align_using_previous__elem">
-                 <property name="editable">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__threshold">
-                 <property name="text">
-                  <string>threshold</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QDoubleSpinBox" name="tomo__align_using_previous__threshold">
-                 <property name="decimals">
-                  <number>4</number>
-                 </property>
-                 <property name="minimum">
-                  <double>-1000000.000000000000000</double>
-                 </property>
-                 <property name="maximum">
-                  <double>1000000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>0.100000000000000</double>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__apply_to">
-                 <property name="text">
-                  <string>apply to</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QLineEdit" name="tomo__align_using_previous__apply_to">
-                 <property name="toolTip">
-                  <string>Comma-separated values</string>
-                 </property>
-                 <property name="text">
-                  <string>dsx, dsy</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__move_x">
-                 <property name="text">
-                  <string>move x</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QCheckBox" name="tomo__align_using_previous__move_x">
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_tomo__align_using_previous__move_y">
-                 <property name="text">
-                  <string>move y</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QCheckBox" name="tomo__align_using_previous__move_y">
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QGroupBox" name="groupBox_tomo_fly2d_scan">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -8102,6 +7997,117 @@ ZP Tomo Widget
                  </property>
                  <property name="value">
                   <double>0.005000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QGroupBox" name="groupBox_tomo_align_using_previous">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Align Using Previous</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout_tomo_align_using_previous">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__enable">
+                 <property name="text">
+                  <string>enable</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="tomo__align_using_previous__enable">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__elem">
+                 <property name="text">
+                  <string>elem</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="tomo__align_using_previous__elem">
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__threshold">
+                 <property name="text">
+                  <string>threshold</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QDoubleSpinBox" name="tomo__align_using_previous__threshold">
+                 <property name="decimals">
+                  <number>4</number>
+                 </property>
+                 <property name="minimum">
+                  <double>-1000000.000000000000000</double>
+                 </property>
+                 <property name="maximum">
+                  <double>1000000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.100000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__apply_to">
+                 <property name="text">
+                  <string>apply to</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="tomo__align_using_previous__apply_to">
+                 <property name="toolTip">
+                  <string>Comma-separated values</string>
+                 </property>
+                 <property name="text">
+                  <string>dsx, dsy</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__move_x">
+                 <property name="text">
+                  <string>move x</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QCheckBox" name="tomo__align_using_previous__move_x">
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_tomo__align_using_previous__move_y">
+                 <property name="text">
+                  <string>move y</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QCheckBox" name="tomo__align_using_previous__move_y">
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -12945,7 +12951,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>30</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
