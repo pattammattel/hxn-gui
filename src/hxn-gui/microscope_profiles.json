@@ -10,7 +10,8 @@
       "rb_mosaic_zp": true,
       "cb_mll_theta_for_diff": false
     },
-    "fly_motors": ["zpssx", "zpssy", "zpssz"]
+    "fly_motors": ["zpssx", "zpssy", "zpssz"],
+    "th_motor": "zpsth"
   },
   "MLL": {
     "pages": {
@@ -22,6 +23,7 @@
       "rb_mosaic_mll": true,
       "cb_mll_theta_for_diff": true
     },
-    "fly_motors": ["dssx", "dssy", "dssz"]
+    "fly_motors": ["dssx", "dssy", "dssz"],
+    "th_motor": "dsth"
   }
 }
