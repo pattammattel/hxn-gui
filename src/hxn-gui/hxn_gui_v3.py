@@ -14,7 +14,8 @@ import json
 import re
 import sys
 import glob
-import datetime
+# hxn_data_transfer star-imports the datetime class; import it the same way so it can't shadow a module.
+from datetime import datetime, timedelta
 import traceback
 import logging
 
@@ -46,6 +47,8 @@ from mll_tomo_gui import *
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
+profiles_path = os.path.join(ui_path, 'microscope_profiles.json')
+MICROSCOPE_MODES = ("ZP", "MLL")
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
@@ -167,12 +170,10 @@ class Ui(QtWidgets.QMainWindow):
         #                        'dssy': dssy,
         #                        'dssz': dssz}
 
-        self.fly_motor_dict = {'dssx': dssx,
-                               'dssy': dssy,
-                               'dssz': dssz,
-                               'zpssx': zpssx,
-                               'zpssy': zpssy,
-                               'zpssz': zpssz,}
+        # Fly motors, tabs and checkboxes come from microscope_profiles.json.
+        self.microscope_profiles = self._load_microscope_profiles()
+        self._setup_microscope_selector()
+        self.apply_microscope_mode(self.microscope_profiles["active"])
 
         # self.fly_det_dict = {'dets1': dets1,
         #                      'dets2': dets2,
@@ -190,13 +191,8 @@ class Ui(QtWidgets.QMainWindow):
         #                      'dets4': "[fs,xspress3,merlin2]",
         #                      'dets_fs': "[fs,xspress3]"}
 
-        #TODO add a qbox with mll or zp option to set the configs
-
         self.cb_dets.addItems([det_name for det_name in self.fly_det_dict.keys()])
         self.cb_det_list_mosaic.addItems([det_name for det_name in self.fly_det_dict.keys()])
-        self.cb_motor1.addItems([name for name in self.fly_motor_dict.keys()])
-        self.cb_motor2.addItems([name for name in self.fly_motor_dict.keys()])
-        self.cb_motor2.setCurrentIndex(1)
 
         print("Connecting signal handlers...")
         self.connect_flyscan_signals()
@@ -248,8 +244,8 @@ class Ui(QtWidgets.QMainWindow):
         print("Running initParams()...")
         try:
             self.initParams()
-        except Exception as e:
-            print(f"Warning during initParams: {e}")
+        except Exception as exc:
+            print(f"Warning during initParams: {exc}")
             # Set some defaults to prevent crashes
             self.scan_plan = ""
         QApplication.processEvents()
@@ -277,6 +273,96 @@ class Ui(QtWidgets.QMainWindow):
         print("GUI initialization complete!")
         print("Window should be visible and responsive now")
     
+    def _load_microscope_profiles(self):
+        with open(profiles_path, "r") as f:
+            profiles = json.load(f)
+        # Catch widgets renamed/removed in Designer at startup, not mid-switch.
+        problems = []
+        for mode in MICROSCOPE_MODES:
+            for tabs_name, page_name in profiles[mode]["pages"].items():
+                tabs = self.findChild(QtWidgets.QTabWidget, tabs_name)
+                page = self.findChild(QtWidgets.QWidget, page_name)
+                if tabs is None or page is None or tabs.indexOf(page) < 0:
+                    problems.append(f"{mode}: page '{page_name}' in '{tabs_name}'")
+            for name in profiles[mode]["checked"]:
+                if self.findChild(QtWidgets.QAbstractButton, name) is None:
+                    problems.append(f"{mode}: button '{name}'")
+        if problems:
+            raise ValueError("microscope_profiles.json references unknown widgets:\n"
+                             + "\n".join(problems))
+        return profiles
+
+    def _setup_microscope_selector(self):
+        selector = QtWidgets.QWidget(self)
+        layout = QtWidgets.QHBoxLayout(selector)
+        layout.setContentsMargins(0, 0, 8, 0)
+        layout.addWidget(QLabel("Microscope:"))
+        self.cb_microscope_mode = QtWidgets.QComboBox()
+        self.cb_microscope_mode.addItems(MICROSCOPE_MODES)
+        self.cb_microscope_mode.setCurrentText(self.microscope_profiles["active"])
+        self.cb_microscope_mode.textActivated.connect(self.switch_microscope_mode)
+        layout.addWidget(self.cb_microscope_mode)
+        self.menubar.setCornerWidget(selector, Qt.TopRightCorner)
+
+    @show_error_message_box
+    def switch_microscope_mode(self, mode):
+        current = self.microscope_profiles["active"]
+        # Keep the selector on the current mode until the switch succeeds.
+        self.cb_microscope_mode.setCurrentText(current)
+        if mode == current:
+            return
+        if not self._re_is_idle():
+            QMessageBox.critical(self, "Switch Microscope",
+                                 "Cannot switch microscope while a scan is in progress.")
+            return
+        choice = QMessageBox.question(
+            self, "Switch Microscope",
+            f"Switch the GUI from {current} to {mode}?\n\n"
+            f"The {current} tabs will be hidden, and this choice is saved "
+            f"for future sessions.",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice != QMessageBox.Yes:
+            return
+
+        self.apply_microscope_mode(mode)
+        self.cb_microscope_mode.setCurrentText(mode)
+        self.microscope_profiles["active"] = mode
+        with open(profiles_path, "w") as f:
+            json.dump(self.microscope_profiles, f, indent=2)
+
+    def apply_microscope_mode(self, mode):
+        profile = self.microscope_profiles[mode]
+        # Motors are injected by the beamline profile; check before touching the UI.
+        missing = [m for m in profile["fly_motors"] if m not in globals()]
+        if missing:
+            raise ValueError(f"{mode} fly motors are not defined in this session: {missing}")
+
+        for tabs_name, page_name in profile["pages"].items():
+            tabs = self.findChild(QtWidgets.QTabWidget, tabs_name)
+            page = self.findChild(QtWidgets.QWidget, page_name)
+            tabs.setTabVisible(tabs.indexOf(page), True)
+            tabs.setCurrentWidget(page)
+        # Hide the other microscope's pages so its stages can't be driven by mistake.
+        for other in MICROSCOPE_MODES:
+            if other == mode:
+                continue
+            for tabs_name, page_name in self.microscope_profiles[other]["pages"].items():
+                tabs = self.findChild(QtWidgets.QTabWidget, tabs_name)
+                page = self.findChild(QtWidgets.QWidget, page_name)
+                tabs.setTabVisible(tabs.indexOf(page), False)
+
+        for name, state in profile["checked"].items():
+            self.findChild(QtWidgets.QAbstractButton, name).setChecked(state)
+
+        self.fly_motor_dict = {m: globals()[m] for m in profile["fly_motors"]}
+        for cb in (self.cb_motor1, self.cb_motor2):
+            cb.blockSignals(True)
+            cb.clear()
+            cb.addItems(list(self.fly_motor_dict))
+            cb.blockSignals(False)
+        self.cb_motor2.setCurrentIndex(1)
+        self.statusbar.showMessage(f"Microscope mode: {mode}")
+
     def _make_window_responsive(self):
         # The .ui is designed at a fixed size; wrap the central widget in a
         # scroll area so oversized content stays reachable on smaller displays.
@@ -318,8 +404,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start live update thread...")
                 self.liveUpdateThread()
                 print("  Live update thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start live update thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start live update thread: {exc}")
         else:
             print("  Live update thread disabled by user")
         
@@ -329,8 +415,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start scan status thread...")
                 self.scanStatusThread()
                 print("  Scan status thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start scan status thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start scan status thread: {exc}")
         else:
             print("  Scan status thread disabled by user")
         
@@ -340,8 +426,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start pump update thread...")
                 self.pump_update_thread()
                 print("  Pump update thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start pump update thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start pump update thread: {exc}")
         else:
             print("  Pump update thread disabled by user")
         
@@ -351,8 +437,8 @@ class Ui(QtWidgets.QMainWindow):
                 print("  Attempting to start flytube pressure thread...")
                 self.flytube_pressure_status()
                 print("  Flytube pressure thread started")
-            except Exception as e:
-                print(f"  Warning: Could not start flytube pressure thread: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not start flytube pressure thread: {exc}")
         else:
             print("  Flytube pressure thread disabled by user")
         
@@ -668,8 +754,8 @@ class Ui(QtWidgets.QMainWindow):
 
                 }
             print("  Live PV dictionary created successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to create live PV dictionary: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to create live PV dictionary: {exc}")
             self.live_PVs = {}
 
     def create_pump_pv_dict(self):
@@ -683,8 +769,8 @@ class Ui(QtWidgets.QMainWindow):
 
                 }
             print("  Pump PV dictionary created successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to create pump PV dictionary: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to create pump PV dictionary: {exc}")
             self.pump_PVs = {}
 
     def handle_value_signals(self,pv_val_list):
@@ -734,8 +820,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting flytube pressure thread...")
             self.update_thread.start()
             print("  Flytube pressure thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start flytube pressure thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start flytube pressure thread: {exc}")
 
     def handle_threshold(self, sts):
 
@@ -764,8 +850,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting scan status thread...")
             self.scanStatus_thread.start()
             print("  Scan status thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start scan status thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start scan status thread: {exc}")
 
     def liveUpdateThread(self):
         try:
@@ -776,8 +862,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting live update thread...")
             self.liveWorker.start()
             print("  Live update thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start live update thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start live update thread: {exc}")
 
     def pump_update_thread(self):
         try:
@@ -788,8 +874,8 @@ class Ui(QtWidgets.QMainWindow):
             print("  Starting pump update thread...")
             self.pump_update_worker.start()
             print("  Pump update thread started successfully")
-        except Exception as e:
-            print(f"  Warning: Failed to start pump update thread: {e}")
+        except Exception as exc:
+            print(f"  Warning: Failed to start pump update thread: {exc}")
 
 
     #setup user
@@ -1919,18 +2005,27 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_move_sbz_neg.clicked.connect(lambda: self.move_sbz(neg_=True))
         self.pb_mll_stop_all_sample.clicked.connect(lambda:stop_all_mll_motion())
         #self.pb_osa_out.clicked.connect(lambda: self.runTask(lambda:self.ZP_OSA_OUT()))
-        self.pb_mll_osa_out.clicked.connect(lambda:self.mll_osa_OUT())
-        self.pb_mll_osa_in.clicked.connect(lambda:self.mll_osa_IN())
-        self.pb_mll_bs_out.clicked.connect(lambda:RE(mll_bs_out()))
-        self.pb_mll_bs_in.clicked.connect(lambda:RE(mll_bs_in()))
+        self.pb_mll_osa_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA out.", self.mll_osa_OUT))
+        self.pb_mll_osa_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA in.", self.mll_osa_IN))
+        self.pb_mll_bs_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop out.", self.mll_bs_out_))
+        self.pb_mll_bs_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop in.", self.mll_bs_in_))
         #self.pb_mll_lens_out.clicked.connect(lambda: self.runTask(lambda:RE(mll_lens_out())))
         #self.pb_mll_lens_in.clicked.connect(lambda: self.runTask(lambda:RE(mll_lens_in())))
-        self.pb_mll_lens_out.clicked.connect(lambda:RE(mll_lens_out()))
-        self.pb_mll_lens_in.clicked.connect(lambda:RE(mll_lens_in()))
-        self.pb_mlls_to_upstream.clicked.connect(lambda: self.runTask(lambda:RE(mll_to_upstream())))
-        self.pb_mlls_to_downstream.clicked.connect(lambda: self.runTask(lambda:RE(mll_to_downstream())))
-        self.pb_mll_sample_in.clicked.connect(lambda:RE(mll_sample_in()))
-        self.pb_mll_sample_out.clicked.connect(lambda:RE(mll_sample_out()))
+        self.pb_mll_lens_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses out.", self.mll_lens_out_))
+        self.pb_mll_lens_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses in.", self.mll_lens_in_))
+        self.pb_mlls_to_upstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs upstream.", self.mll_to_upstream_))
+        self.pb_mlls_to_downstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs downstream.", self.mll_to_downstream_))
+        self.pb_mll_sample_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample in.", self.mll_sample_in_))
+        self.pb_mll_sample_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample out.", self.mll_sample_out_))
+
+    @show_error_message_box
+    def _confirm_and_run(self, description, action):
+        choice = QMessageBox.question(
+            self, "Confirm MLL Motion",
+            f"{description}\n\nMake sure this motion is safe. Proceed?",
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice == QMessageBox.Yes:
+            action()
 
     def move_dsx(self, neg_=False):
         self.move_motor_with_pv(self.db_move_dsx, dsx, 1, neg=neg_)
@@ -2114,8 +2209,8 @@ class Ui(QtWidgets.QMainWindow):
                 RE(find_beam_at_ssa2(max_iter=self.sb_max_iter.value()))
 
             QMessageBox.information(self, "Done", "Motion complete.")
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Motion failed:\n{str(e)}")
+        except Exception as exc:
+            QMessageBox.critical(self, "Error", f"Motion failed:\n{str(exc)}")
         finally:
             progress.close()
     
@@ -2196,7 +2291,7 @@ class Ui(QtWidgets.QMainWindow):
         RE(mll_to_cam11_view())
 
     @show_error_message_box
-    @with_motion_feedback(title="ZP to nanobeam", success_msg="ZP microscope is ready for nanobeam.")
+    @with_motion_feedback(title="MLL to nanobeam", success_msg="MLL microscope is ready for nanobeam.")
     def mll_to_nanobeam_(self):
         RE(mll_to_nanobeam())
 
@@ -2215,6 +2310,7 @@ class Ui(QtWidgets.QMainWindow):
         self.statusbar.showMessage('OSA Y IN')
 
     @show_error_message_box
+    @with_motion_feedback(title="MLL OSA Move", success_msg="MLL OSA X moved IN.")
     def mll_osa_IN(self):
 
         if not abs(mllosa.osax.position)<10:
@@ -2225,6 +2321,7 @@ class Ui(QtWidgets.QMainWindow):
             raise ValueError(f"OSA_X position not close to zero osax = {mllosa.osax.position :.1f}")
     
     @show_error_message_box
+    @with_motion_feedback(title="MLL OSA Move", success_msg="MLL OSA X moved OUT.")
     def mll_osa_OUT(self):
         #closing c shutter for safety
         caput("XF:03IDC-ES{Zeb:2}:SOFT_IN:B0", 0)
@@ -2235,16 +2332,63 @@ class Ui(QtWidgets.QMainWindow):
         else:
             raise ValueError(f"OSA_X position not close to zero osax = {mllosa.osax.position :.1f}")
 
-        
-    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     @show_error_message_box
+    @with_motion_feedback(title="MLL BS Move", success_msg="MLL beamstop moved OUT.")
+    def mll_bs_out_(self):
+        RE(mll_bs_out())
+        self.statusbar.showMessage('MLL beamstop moved OUT')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL BS Move", success_msg="MLL beamstop moved IN.")
+    def mll_bs_in_(self):
+        RE(mll_bs_in())
+        self.statusbar.showMessage('MLL beamstop moved IN')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Lens Move", success_msg="MLL lenses moved OUT.")
+    def mll_lens_out_(self):
+        RE(mll_lens_out())
+        self.statusbar.showMessage('MLL lenses moved OUT')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Lens Move", success_msg="MLL lenses moved IN.")
+    def mll_lens_in_(self):
+        RE(mll_lens_in())
+        self.statusbar.showMessage('MLL lenses moved IN')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Move", success_msg="MLLs moved upstream.")
+    def mll_to_upstream_(self):
+        RE(mll_to_upstream())
+        self.statusbar.showMessage('MLLs moved upstream')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Move", success_msg="MLLs moved downstream.")
+    def mll_to_downstream_(self):
+        RE(mll_to_downstream())
+        self.statusbar.showMessage('MLLs moved downstream')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Sample Move", success_msg="MLL sample moved IN.")
+    def mll_sample_in_(self):
+        RE(mll_sample_in())
+        self.statusbar.showMessage('MLL sample moved IN')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Sample Move", success_msg="MLL sample moved OUT.")
+    def mll_sample_out_(self):
+        RE(mll_sample_out())
+        self.statusbar.showMessage('MLL sample moved OUT')
+
+    @show_error_message_box
+    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     def ZP_BS_OUT(self):
 
         RE(zp_bs_out())
         self.statusbar.showMessage('BS Y moved OUT')
 
-    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     @show_error_message_box
+    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     def ZP_BS_IN(self):
         RE(zp_bs_in())
         self.statusbar.showMessage('BS Y moved in')
@@ -2254,7 +2398,7 @@ class Ui(QtWidgets.QMainWindow):
         # Ask before opening a webcam tab; a checkbox lets the user suppress the
         # prompt for suppress_interval_s seconds so repeated clicks aren't annoying.
         until = self._cam_page_suppressed_until.get(url)
-        if until is not None and datetime.datetime.now() < until:
+        if until is not None and datetime.now() < until:
             return
 
         msg_box = QMessageBox(self)
@@ -2270,7 +2414,7 @@ class Ui(QtWidgets.QMainWindow):
 
         if dont_ask.isChecked():
             self._cam_page_suppressed_until[url] = (
-                datetime.datetime.now() + datetime.timedelta(seconds=suppress_interval_s))
+                datetime.now() + timedelta(seconds=suppress_interval_s))
 
         if msg_box.clickedButton() == yes_button:
             self.client.open(url)
@@ -2660,8 +2804,8 @@ class Ui(QtWidgets.QMainWindow):
 
         self.pb_zp_cam11_view.clicked.connect(lambda:self.zp_to_cam11_view_())
         self.pb_zp_nanobeam.clicked.connect(lambda:self.zp_to_nanobeam_())
-        self.pb_mll_cam11_view.clicked.connect(lambda:self.mll_to_cam11_view_())
-        self.pb_mll_nanobeam.clicked.connect(lambda:self.mll_to_nanobeam_())
+        self.pb_mll_cam11_view.clicked.connect(lambda:self._confirm_and_run("Move the MLL microscope to the CAM11 view.", self.mll_to_cam11_view_))
+        self.pb_mll_nanobeam.clicked.connect(lambda:self._confirm_and_run("Move the MLL microscope to nanobeam.", self.mll_to_nanobeam_))
 
 
 
@@ -2759,7 +2903,10 @@ class Ui(QtWidgets.QMainWindow):
         fitElem = self.cb_mll_focus_elem.currentText().split(':')[0]
         linFlag = self.cb_linearflag_mll_focus.isChecked()
 
-        RE(mll_z_alignment(z_motor,
+        # RE() returns run uids, not the plan's return value, so capture it here.
+        result = {}
+        def _capture():
+            result["best_z"] = yield from mll_z_alignment(z_motor,
                            z_start,
                            z_end,
                            z_steps,
@@ -2769,7 +2916,16 @@ class Ui(QtWidgets.QMainWindow):
                            scanSteps,
                            scanDwell,
                            elem= fitElem, 
-                           lin_flag = linFlag))
+                           lin_flag = linFlag)
+        RE(_capture())
+        best_z = result["best_z"]
+
+        choice = QMessageBox.question(self, "MLL Focus",
+                                      f"Best focus at {z_motor.name} = {best_z:.3f}."
+                                      f"\nMove {z_motor.name} to this position?",
+                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if choice == QMessageBox.Yes:
+            RE(bps.mov(z_motor, best_z))
     
     @show_error_message_box
     def mll_rot_alignment_(self):
@@ -2785,7 +2941,10 @@ class Ui(QtWidgets.QMainWindow):
         # sb_mll_rot_scan_exp_time_2 is the "Threshold:" field in the .ui
         threshold = self.sb_mll_rot_scan_exp_time_2.value()
 
-        RE(mll_rot_alignment(a_start,
+        # RE() returns run uids, not the plan's return value, so capture it here.
+        result = {}
+        def _capture():
+            result["dx_dz"] = yield from mll_rot_alignment(a_start,
                              a_end,
                              a_num,
                              start,
@@ -2794,10 +2953,12 @@ class Ui(QtWidgets.QMainWindow):
                              acq_time,
                              elem=elem,
                              move_flag=0,
-                             threshold=threshold))
+                             threshold=threshold)
+        RE(_capture())
+        dx, dz = result["dx_dz"]
 
-        dx, dz = get_mll_rot_alignment_result(int(-1*a_num), elem=elem,
-                             threshold=threshold, plot_flag=False)
+        # dx, dz = get_mll_rot_alignment_result(int(-1*a_num), elem=elem,
+        #                      threshold=threshold, plot_flag=False)
 
         self.dsb_rot_align_dsx.setValue(float(dx))
         self.dsb_rot_align_dsz.setValue(float(dz))
@@ -2831,7 +2992,10 @@ class Ui(QtWidgets.QMainWindow):
         threshold = self.dsb_zp_rot_threshold.value()
 
 
-        RE(zp_rot_alignment(a_start, 
+        # RE() returns run uids, not the plan's return value, so capture it here.
+        result = {}
+        def _capture():
+            result["dx_dz"] = yield from zp_rot_alignment(a_start, 
                                 a_end, 
                                 a_num, 
                                 start, 
@@ -2841,10 +3005,9 @@ class Ui(QtWidgets.QMainWindow):
                                 elem=elem, 
                                 move_flag=0, 
                                 neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), 
-                                threshold =threshold))
-        
-        dx,dz = get_zp_rot_alignment_result(int(-1*a_num), elem=elem, threshold=threshold,
-                            neg_flag=int(self.cb_zp_rot_neg_flag.isChecked()), edge_flag=0, skip_scans=None, plot_flag=False)
+                                threshold =threshold)
+        RE(_capture())
+        dx, dz = result["dx_dz"]
                             
         self.dsb_rot_align_smarx.setValue(float(dx))
         self.dsb_rot_align_smarz.setValue(float(dz))
@@ -3072,7 +3235,7 @@ class Ui(QtWidgets.QMainWindow):
             # Timestamped filename so each auto save keeps a distinct state.
             save_dir = "/data/users/current_user/temp"
             os.makedirs(save_dir, exist_ok=True)
-            stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             save_file_path = os.path.join(save_dir, f"gui_roi_positions_{stamp}.json")
             n = 1
             while os.path.exists(save_file_path):
@@ -3372,12 +3535,14 @@ class Ui(QtWidgets.QMainWindow):
         if choice == QMessageBox.Yes:
             
             try:
-                RE(zps_zero_piezos())
-                RE(smll_zero_piezos())
-                RE(zps_sync_piezos())
-                RE(smll_sync_piezos())
-            except Exception as e:
-                print(f"Error while syncing piezos: {e}")
+                if self.microscope_profiles["active"] == "ZP":
+                    RE(zps_zero_piezos())
+                    RE(zps_sync_piezos())
+                else:
+                    RE(mll_zero_piezos())
+                    RE(mll_sync_piezos())
+            except Exception as exc:
+                print(f"Error while syncing piezos: {exc}")
                 pass
             #panda_zero_all_encoders(si)
             # reset the progress bar
@@ -3424,10 +3589,12 @@ class Ui(QtWidgets.QMainWindow):
 
         if choice == QMessageBox.Yes:
             try:
-                RE(zps_kill_piezos())
-                RE(smll_kill_piezos())
-            except Exception as e:
-                print(f"Error while killing piezos: {e}")
+                if self.microscope_profiles["active"] == "ZP":
+                    RE(zps_kill_piezos())
+                else:
+                    RE(mll_kill_piezos())
+            except Exception as exc:
+                print(f"Error while killing piezos: {exc}")
                 pass
             
             # reset the progress bar
@@ -3647,8 +3814,8 @@ class liveStatus(QThread):
         # Create PV object in background thread - doesn't block GUI
         try:
             self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {exc}")
             self.pv_obj = None
         
         while not self.isInterruptionRequested():
@@ -3659,7 +3826,7 @@ class liveStatus(QThread):
                     if value is not None:
                         self.current_sts.emit(value)
                 _interruptible_wait(self, 500)
-            except Exception as e:
+            except Exception:
                 # Silently continue if PV unavailable
                 pass
 
@@ -3684,7 +3851,7 @@ class liveUpdate(QThread):
                 else:
                     # PV not connected, use None to indicate no data
                     readings.append(None)
-            except Exception as e:
+            except Exception:
                 # Read failed, use None to indicate no data
                 readings.append(None)
         
@@ -3698,8 +3865,8 @@ class liveUpdate(QThread):
             try:
                 pv_obj = EpicsPV(pv_name, connection_timeout=1.0, auto_monitor=False)
                 self.pv_objects.append(pv_obj)
-            except Exception as e:
-                print(f"  Warning: Could not create PV object for {pv_name}: {e}")
+            except Exception as exc:
+                print(f"  Warning: Could not create PV object for {pv_name}: {exc}")
                 self.pv_objects.append(None)
         print(f"  PV objects created, starting update loop...")
         
@@ -3725,8 +3892,8 @@ class liveThresholdUpdate(QThread):
         # Create PV object in background thread - doesn't block GUI
         try:
             self.pv_obj = EpicsPV(self.PV_name, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create PV object for {self.PV_name}: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create PV object for {self.PV_name}: {exc}")
             self.pv_obj = None
         
         while not self.isInterruptionRequested():
@@ -3741,7 +3908,7 @@ class liveThresholdUpdate(QThread):
                 else:
                     # Not connected, emit False
                     self.current_sts.emit(False)
-            except Exception as e:
+            except Exception:
                 # PV unavailable, emit False
                 self.current_sts.emit(False)
 
@@ -3765,8 +3932,8 @@ class updateScanProgress(QThread):
         try:
             self.tot_pv_obj = EpicsPV(self.tot_pv_name, connection_timeout=1.0, auto_monitor=False)
             self.update_pv_obj = EpicsPV(self.update_pv_name, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create scan progress PV objects: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create scan progress PV objects: {exc}")
             self.tot_pv_obj = None
             self.update_pv_obj = None
         
@@ -3904,8 +4071,8 @@ class LivePressureValueThread(QThread):
         # Create PV object in background thread - doesn't block GUI
         try:
             self.pv_obj = EpicsPV(self.pressure_pv, connection_timeout=1.0, auto_monitor=False)
-        except Exception as e:
-            print(f"  Warning: Could not create pressure PV object: {e}")
+        except Exception as exc:
+            print(f"  Warning: Could not create pressure PV object: {exc}")
             self.pv_obj = None
         
         start_time = 0
@@ -3918,7 +4085,7 @@ class LivePressureValueThread(QThread):
                 else:
                     # PV not connected, emit default value
                     self.current_time_pressure.emit((start_time, 0.0))
-            except Exception as e:
+            except Exception:
                 self.current_time_pressure.emit((start_time, 0.0))
             
             _interruptible_wait(self, int(self.wait_time))

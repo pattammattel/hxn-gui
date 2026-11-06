@@ -1,0 +1,27 @@
+{
+  "active": "MLL",
+  "ZP": {
+    "pages": {
+      "tabWidget": "tab_8",
+      "tabWidget_3": "tab_5"
+    },
+    "checked": {
+      "rb_zp_manual_roi": true,
+      "rb_mosaic_zp": true,
+      "cb_mll_theta_for_diff": false
+    },
+    "fly_motors": ["zpssx", "zpssy", "zpssz"]
+  },
+  "MLL": {
+    "pages": {
+      "tabWidget": "tab",
+      "tabWidget_3": "tab_9"
+    },
+    "checked": {
+      "rb_mll_manual_roi": true,
+      "rb_mosaic_mll": true,
+      "cb_mll_theta_for_diff": true
+    },
+    "fly_motors": ["dssx", "dssy", "dssz"]
+  }
+}
