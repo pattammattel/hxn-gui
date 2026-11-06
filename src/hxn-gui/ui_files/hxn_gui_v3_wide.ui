@@ -6534,7 +6534,7 @@ ZP Tomo Widget
         <item row="1" column="0" colspan="8">
          <widget class="QScrollArea" name="scrollArea_tomo">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -6548,7 +6548,7 @@ ZP Tomo Widget
              <x>0</x>
              <y>0</y>
              <width>1890</width>
-             <height>538</height>
+             <height>877</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_75">
@@ -12976,7 +12976,7 @@ Apply All Corrections
      <x>0</x>
      <y>0</y>
      <width>1940</width>
-     <height>30</height>
+     <height>33</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp_2">
