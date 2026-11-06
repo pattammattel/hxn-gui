@@ -1,9 +1,49 @@
 import numpy as np
 import traceback
+import getpass
+import platform
+import socket
+from datetime import datetime
 from contextlib import contextmanager
 from functools import wraps
 from qtpy.QtWidgets import QProgressDialog, QMessageBox, QApplication
 from qtpy.QtCore import Qt, QRunnable, QThreadPool, Slot as pyqtSlot, QObject, Signal as pyqtSignal
+
+def format_error_report(action, exc, tb_text):
+    rule = "=" * 60
+    sub_rule = "-" * 60
+    return "\n".join([
+        rule,
+        "HXN GUI Error Report",
+        rule,
+        f"Time    : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Action  : {action}",
+        f"User    : {getpass.getuser()}",
+        f"Host    : {socket.gethostname()}",
+        f"Python  : {platform.python_version()}",
+        sub_rule,
+        f"Error   : {type(exc).__name__}: {exc}",
+        sub_rule,
+        "Traceback:",
+        tb_text.rstrip(),
+        rule,
+    ])
+
+
+def show_error_report(parent, title, summary, action, exc):
+    # Call from inside an except block so format_exc() has the active traceback.
+    report = format_error_report(action, exc, traceback.format_exc())
+    box = QMessageBox(parent)
+    box.setIcon(QMessageBox.Critical)
+    box.setWindowTitle(title)
+    box.setText(f"{summary}:\n{exc}")
+    box.setDetailedText(report)
+    copy_button = box.addButton("Copy Error && Close", QMessageBox.ActionRole)
+    box.addButton(QMessageBox.Close)
+    box.exec_()
+    if box.clickedButton() == copy_button:
+        QApplication.clipboard().setText(report)
+
 
 def with_motion_feedback(title="Motion", success_msg="Motion complete.", error_msg="Motion failed"):
     def decorator(func):
@@ -20,8 +60,9 @@ def with_motion_feedback(title="Motion", success_msg="Motion complete.", error_m
                 result = func(self, *args, **kwargs)
                 QMessageBox.information(self, title, success_msg)
                 return result
-            except Exception as e:
-                QMessageBox.critical(self, title, f"{error_msg}:\n{str(e)}")
+            except Exception as exc:
+                progress.close()
+                show_error_report(self, title, error_msg, f"{func.__name__} ({title})", exc)
             finally:
                 progress.close()
         return wrapper
@@ -48,14 +89,8 @@ def show_error_message_box(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception as e:
-            box = QMessageBox(None)
-            box.setIcon(QMessageBox.Critical)
-            box.setWindowTitle("Error")
-            box.setText(f"An error occurred: {str(e)}")
-            # Full traceback tucked behind "Show Details..." for debugging.
-            box.setDetailedText(traceback.format_exc())
-            box.exec_()
+        except Exception as exc:
+            show_error_report(None, "Error", "An error occurred", func.__name__, exc)
             return None
     return wrapper
 

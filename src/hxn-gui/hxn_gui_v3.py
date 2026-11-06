@@ -2007,17 +2007,18 @@ class Ui(QtWidgets.QMainWindow):
         #self.pb_osa_out.clicked.connect(lambda: self.runTask(lambda:self.ZP_OSA_OUT()))
         self.pb_mll_osa_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA out.", self.mll_osa_OUT))
         self.pb_mll_osa_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA in.", self.mll_osa_IN))
-        self.pb_mll_bs_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop out.", lambda:RE(mll_bs_out())))
-        self.pb_mll_bs_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop in.", lambda:RE(mll_bs_in())))
+        self.pb_mll_bs_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop out.", self.mll_bs_out_))
+        self.pb_mll_bs_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL beamstop in.", self.mll_bs_in_))
         #self.pb_mll_lens_out.clicked.connect(lambda: self.runTask(lambda:RE(mll_lens_out())))
         #self.pb_mll_lens_in.clicked.connect(lambda: self.runTask(lambda:RE(mll_lens_in())))
-        self.pb_mll_lens_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses out.", lambda:RE(mll_lens_out())))
-        self.pb_mll_lens_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses in.", lambda:RE(mll_lens_in())))
-        self.pb_mlls_to_upstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs upstream.", lambda:self.runTask(lambda:RE(mll_to_upstream()))))
-        self.pb_mlls_to_downstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs downstream.", lambda:self.runTask(lambda:RE(mll_to_downstream()))))
-        self.pb_mll_sample_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample in.", lambda:RE(mll_sample_in())))
-        self.pb_mll_sample_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample out.", lambda:RE(mll_sample_out())))
+        self.pb_mll_lens_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses out.", self.mll_lens_out_))
+        self.pb_mll_lens_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL lenses in.", self.mll_lens_in_))
+        self.pb_mlls_to_upstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs upstream.", self.mll_to_upstream_))
+        self.pb_mlls_to_downstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs downstream.", self.mll_to_downstream_))
+        self.pb_mll_sample_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample in.", self.mll_sample_in_))
+        self.pb_mll_sample_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample out.", self.mll_sample_out_))
 
+    @show_error_message_box
     def _confirm_and_run(self, description, action):
         choice = QMessageBox.question(
             self, "Confirm MLL Motion",
@@ -2290,7 +2291,7 @@ class Ui(QtWidgets.QMainWindow):
         RE(mll_to_cam11_view())
 
     @show_error_message_box
-    @with_motion_feedback(title="ZP to nanobeam", success_msg="ZP microscope is ready for nanobeam.")
+    @with_motion_feedback(title="MLL to nanobeam", success_msg="MLL microscope is ready for nanobeam.")
     def mll_to_nanobeam_(self):
         RE(mll_to_nanobeam())
 
@@ -2309,6 +2310,7 @@ class Ui(QtWidgets.QMainWindow):
         self.statusbar.showMessage('OSA Y IN')
 
     @show_error_message_box
+    @with_motion_feedback(title="MLL OSA Move", success_msg="MLL OSA X moved IN.")
     def mll_osa_IN(self):
 
         if not abs(mllosa.osax.position)<10:
@@ -2319,6 +2321,7 @@ class Ui(QtWidgets.QMainWindow):
             raise ValueError(f"OSA_X position not close to zero osax = {mllosa.osax.position :.1f}")
     
     @show_error_message_box
+    @with_motion_feedback(title="MLL OSA Move", success_msg="MLL OSA X moved OUT.")
     def mll_osa_OUT(self):
         #closing c shutter for safety
         caput("XF:03IDC-ES{Zeb:2}:SOFT_IN:B0", 0)
@@ -2329,16 +2332,63 @@ class Ui(QtWidgets.QMainWindow):
         else:
             raise ValueError(f"OSA_X position not close to zero osax = {mllosa.osax.position :.1f}")
 
-        
-    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     @show_error_message_box
+    @with_motion_feedback(title="MLL BS Move", success_msg="MLL beamstop moved OUT.")
+    def mll_bs_out_(self):
+        RE(mll_bs_out())
+        self.statusbar.showMessage('MLL beamstop moved OUT')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL BS Move", success_msg="MLL beamstop moved IN.")
+    def mll_bs_in_(self):
+        RE(mll_bs_in())
+        self.statusbar.showMessage('MLL beamstop moved IN')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Lens Move", success_msg="MLL lenses moved OUT.")
+    def mll_lens_out_(self):
+        RE(mll_lens_out())
+        self.statusbar.showMessage('MLL lenses moved OUT')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Lens Move", success_msg="MLL lenses moved IN.")
+    def mll_lens_in_(self):
+        RE(mll_lens_in())
+        self.statusbar.showMessage('MLL lenses moved IN')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Move", success_msg="MLLs moved upstream.")
+    def mll_to_upstream_(self):
+        RE(mll_to_upstream())
+        self.statusbar.showMessage('MLLs moved upstream')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Move", success_msg="MLLs moved downstream.")
+    def mll_to_downstream_(self):
+        RE(mll_to_downstream())
+        self.statusbar.showMessage('MLLs moved downstream')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Sample Move", success_msg="MLL sample moved IN.")
+    def mll_sample_in_(self):
+        RE(mll_sample_in())
+        self.statusbar.showMessage('MLL sample moved IN')
+
+    @show_error_message_box
+    @with_motion_feedback(title="MLL Sample Move", success_msg="MLL sample moved OUT.")
+    def mll_sample_out_(self):
+        RE(mll_sample_out())
+        self.statusbar.showMessage('MLL sample moved OUT')
+
+    @show_error_message_box
+    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     def ZP_BS_OUT(self):
 
         RE(zp_bs_out())
         self.statusbar.showMessage('BS Y moved OUT')
 
-    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     @show_error_message_box
+    @with_motion_feedback(title="ZP BSY Move", success_msg="ZP BSY motion completed.")
     def ZP_BS_IN(self):
         RE(zp_bs_in())
         self.statusbar.showMessage('BS Y moved in')
