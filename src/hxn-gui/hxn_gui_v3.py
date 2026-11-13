@@ -2372,11 +2372,13 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_move_dsz_pos.clicked.connect(lambda:self.move_dsz())
         self.pb_move_dth_pos.clicked.connect(lambda:self.move_dsth())
         self.pb_move_sbz_pos.clicked.connect(lambda:self.move_sbz())
+        self.pb_move_sbx_pos.clicked.connect(lambda:self.move_sbx())
         self.pb_move_dsx_neg.clicked.connect(lambda: self.move_dsx(neg_=True))
         self.pb_move_dsy_neg.clicked.connect(lambda: self.move_dsy(neg_=True))
         self.pb_move_dsz_neg.clicked.connect(lambda: self.move_dsz(neg_=True))
         self.pb_move_dth_pos_neg.clicked.connect(lambda: self.move_dsth(neg_=True))
         self.pb_move_sbz_neg.clicked.connect(lambda: self.move_sbz(neg_=True))
+        self.pb_move_sbx_neg.clicked.connect(lambda: self.move_sbx(neg_=True))
         self.pb_mll_stop_all_sample.clicked.connect(lambda:stop_all_mll_motion())
         #self.pb_osa_out.clicked.connect(lambda: self.runTask(lambda:self.ZP_OSA_OUT()))
         self.pb_mll_osa_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL OSA out.", self.mll_osa_OUT))
@@ -2415,6 +2417,8 @@ class Ui(QtWidgets.QMainWindow):
 
     def move_sbz(self, neg_=False):
         self.moveAMotor(self.db_move_sbz, sbz, neg=neg_)
+    def move_sbx(self, neg_=False):
+        self.moveAMotor(self.db_move_sbx, sbx, neg=neg_)
 
 
     #Energy change ui
