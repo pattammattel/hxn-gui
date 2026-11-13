@@ -543,7 +543,7 @@ QRadioButton::indicator:unchecked {
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>5</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -9823,7 +9823,7 @@ Move Gap to Set Value
                 </widget>
                </item>
                <item row="2" column="3" colspan="2">
-                <widget class="QPushButton" name="pb_center_ssa2">
+                <widget class="QPushButton" name="pb_center_ssa2_auto">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>

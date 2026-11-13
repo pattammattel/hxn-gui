@@ -3161,6 +3161,7 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_SSA2_VClose.clicked.connect(lambda:self.SSA2_Pos(2.1, 0.1))
         self.pb_move_ssa2.clicked.connect(lambda:self.SSA2_Pos(self.db_ssa2_x_set.value()
                                                               ,self.db_ssa2_y_set.value()))
+        self.pb_center_ssa2_auto.clicked.connect(lambda:(RE(self.center_ssa2())))
 
         #s5 slits
         self.pb_S5_Open.clicked.connect(lambda:self.S5_Pos(4,4))
