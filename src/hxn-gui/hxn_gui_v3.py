@@ -1121,8 +1121,8 @@ class Ui(QtWidgets.QMainWindow):
                 self.db_fs_det:"XF:03IDC-ES{Det:Vort-Ax:X}Mtr.RBV",
                 self.db_diffx:"XF:03IDC-ES{Diff-Ax:X}Mtr.RBV",
                 self.db_cam06x:"XF:03IDC-OP{Stg:CAM6-Ax:X}Mtr.RBV",
-                self.db_s5_x:"XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.RBV",
-                self.db_s5_y:"XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.RBV",
+                self.db_s5_x:"XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.RBV",
+                self.db_s5_y:"XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.RBV",
                 self.db_dexela:"XF:03IDC-ES{Stg:FPDet-Ax:Y}Mtr.RBV",
                 self.db_flytube_p:"XF:03IDC-VA{ES:1-TCG:1}P-I"
 
@@ -3092,8 +3092,8 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def S5_Pos(self, x, y):
-        s5.hgap.user_setpoint.put(x)
-        s5.vgap.user_setpoint.put(y)
+        s5.vgap.user_setpoint.put(x) # H/V flipped at EPICS level
+        s5.hgap.user_setpoint.put(y)
         QtTest.QTest.qWait(1500)
 
     @show_error_message_box
@@ -3182,10 +3182,11 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_S5_VClose.clicked.connect(lambda:self.S5_Pos(0.3,0.1))
         self.pb_move_s5.clicked.connect(lambda:self.S5_Pos(self.db_s5_x_set.value()
                                                               ,self.db_s5_y_set.value()))
-        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen, neg=True))
-        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen))
-        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen, neg=True))
-        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen))
+        # S5 H/V flipped at EPICS level
+        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.vcen, neg=True))
+        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.vcen))
+        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.hcen, neg=True))
+        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.hcen))
 
         #front end
         self.pb_FS_IN.clicked.connect(lambda:self.FS_IN())
