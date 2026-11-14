@@ -1,0 +1,106 @@
+{
+      "scan_label": "tomo_test",
+      "flying_panda": true,
+      "fly_motors": [
+            "dssx",
+            "dssy",
+            "dssz"
+      ],
+      "th_motor": "dsth",
+      "axis_switch_angle": 45,
+      "scale_scan_range": true,
+      "angle_info": {
+            "start": -90,
+            "end": 90,
+            "angle_step": 2,
+            "split_tomo": 1
+      },
+      "fly2d_scan": {
+            "det": "dets_fast",
+            "x_start": -1.5,
+            "x_end": 1.5,
+            "x_num": 150,
+            "y_start": -5,
+            "y_end": 0,
+            "y_num": 250,
+            "exposure": 0.005
+      },
+      "xalign": {
+            "do_align": true,
+            "start": -10,
+            "end": 10,
+            "num": 200,
+            "exposure": 0.03,
+            "elem": "Fe",
+            "center_with": "line_center",
+            "threshold": 0.5,
+            "move_coarse": false,
+            "neg_flag": false,
+            "offset": 0,
+            "zero_before_scan": true,
+            "initial_position": 0,
+            "align_movement_limit": 3
+      },
+      "yalign": {
+            "do_align": true,
+            "start": -10,
+            "end": 0,
+            "num": 200,
+            "exposure": 0.03,
+            "elem": "Fe",
+            "center_with": "edge",
+            "threshold": 0.5,
+            "move_coarse": false,
+            "neg_flag": false,
+            "offset": 4,
+            "zero_before_scan": false,
+            "initial_position": -4,
+            "align_movement_limit": 5
+      },
+      "align_2d_com": {
+            "do_align": false,
+            "x_start": -5,
+            "x_end": 5,
+            "x_num": 50,
+            "y_start": -2,
+            "y_end": 2,
+            "y_num": 20,
+            "exposure": 0.02,
+            "elem": "Zn",
+            "threshold": 0.5,
+            "move_x": true,
+            "move_y": true,
+            "x_offset": 0,
+            "y_offset": 0,
+            "zero_before_scan": false
+      },
+      "align_using_previous": {
+            "enable": false,
+            "elem": "Si",
+            "threshold": 0.1,
+            "apply_to": [
+                  "dsx",
+                  "dsy"
+            ],
+            "move_x": false,
+            "move_y": true
+      },
+      "stop_iter": false,
+      "save_log_to": "/data/users/current_user",
+      "add_angles": [],
+      "remove_angles": [
+            0.1
+      ],
+      "stop_pdf": true,
+      "pdf_elems": [
+            "Fe",
+            "Cr"
+      ],
+      "pause_scan": false,
+      "test": false,
+      "do_y_offset": false,
+      "ic_threshold": 0.8,
+      "th_init": -90.00000000000004,
+      "y_init": 0.0035,
+      "Notes": "tomo_test"
+}
