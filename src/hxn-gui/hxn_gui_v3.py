@@ -3086,15 +3086,22 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def SSA2_Pos(self, x, y):
-        caput('XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.VAL', x)
-        caput('XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.VAL', y)
-        QtTest.QTest.qWait(15000)
+        ssa2.hgap.user_setpoint.put(x)
+        ssa2.vgap.user_setpoint.put(y)
+        QtTest.QTest.qWait(1500)
 
     @show_error_message_box
     def S5_Pos(self, x, y):
-        caput('XF:03IDC-ES{Slt:5-Ax:Vgap}Mtr.VAL', x) #PV names seems flipped
-        caput('XF:03IDC-ES{Slt:5-Ax:Hgap}Mtr.VAL', y)
-        QtTest.QTest.qWait(15000)
+        s5.vgap.user_setpoint.put(x) #PV names seems flipped
+        s5.hgap.user_setpoint.put(y)
+        QtTest.QTest.qWait(1500)
+
+    @show_error_message_box
+    def move_slit_center(self, val_box, slit_axis, neg=False):
+        move_by = -val_box.value() if neg else val_box.value()
+        target = slit_axis.user_readback.value + move_by
+        slit_axis.user_setpoint.put(target)
+        self.statusbar.showMessage(f'{slit_axis.name} moved by {move_by} mm to {target:.4f}')
 
 
     # plotting controls
@@ -3161,7 +3168,22 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_SSA2_VClose.clicked.connect(lambda:self.SSA2_Pos(2.1, 0.1))
         self.pb_move_ssa2.clicked.connect(lambda:self.SSA2_Pos(self.db_ssa2_x_set.value()
                                                               ,self.db_ssa2_y_set.value()))
+
+        self.pb_ssa2_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen, neg=True))
+        self.pb_ssa2_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen))
+        self.pb_ssa2_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_vcen_move, ssa2.vcen, neg=True))
+        self.pb_ssa2_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_vcen_move, ssa2.vcen))
+
+        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen, neg=True))
+        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen))
+        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen, neg=True))
+        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen))
+
         self.pb_center_ssa2_auto.clicked.connect(lambda:(RE(self.center_ssa2())))
+        self.pb_ssa2_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen, neg=True))
+        self.pb_ssa2_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen))
+        self.pb_ssa2_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_vcen_move, ssa2.vcen, neg=True))
+        self.pb_ssa2_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_vcen_move, ssa2.vcen))
 
         #s5 slits
         self.pb_S5_Open.clicked.connect(lambda:self.S5_Pos(4,4))
@@ -3170,6 +3192,10 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_S5_VClose.clicked.connect(lambda:self.S5_Pos(0.3,0.1))
         self.pb_move_s5.clicked.connect(lambda:self.S5_Pos(self.db_s5_x_set.value()
                                                               ,self.db_s5_y_set.value()))
+        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen, neg=True))
+        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen))
+        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen, neg=True))
+        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen))
 
         #front end
         self.pb_FS_IN.clicked.connect(lambda:self.FS_IN())
