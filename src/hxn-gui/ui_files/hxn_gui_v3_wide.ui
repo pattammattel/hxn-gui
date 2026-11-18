@@ -168,7 +168,7 @@ QRadioButton::indicator:unchecked {
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>6</number>
+       <number>4</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -310,11 +310,6 @@ QRadioButton::indicator:unchecked {
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>Please note that this list is only for creating plots during data aquistion. Complete XRF spectrum is saved for all data collected. 
-
-If you make any changes to the list click &quot;Apply Element Selection &quot;. The program will restart to load those changes.</string>
                </property>
                <property name="whatsThis">
                 <string/>
@@ -2087,9 +2082,6 @@ indicator {
            </item>
            <item row="2" column="1">
             <widget class="QCheckBox" name="cb_change_energy_only">
-             <property name="toolTip">
-              <string>does not mover mirrors or pitch, ugap and bragg only</string>
-             </property>
              <property name="text">
               <string>Change energy only</string>
              </property>
@@ -4151,9 +4143,6 @@ Start
                         </item>
                         <item>
                          <widget class="QCheckBox" name="cb_zp_rot_neg_flag">
-                          <property name="toolTip">
-                           <string>Use the negative edge for the rotation-alignment fit (neg_flag=1)</string>
-                          </property>
                           <property name="text">
                            <string>Neg</string>
                           </property>
@@ -4168,9 +4157,6 @@ Start
                         </item>
                         <item>
                          <widget class="QDoubleSpinBox" name="dsb_zp_rot_threshold">
-                          <property name="toolTip">
-                           <string>Line-center fit threshold passed to the rotation-alignment plan</string>
-                          </property>
                           <property name="decimals">
                            <number>2</number>
                           </property>
@@ -4272,9 +4258,6 @@ OSA OUT (+X)
                </item>
                <item row="0" column="4">
                 <widget class="QPushButton" name="pb_mll_sample_out">
-                 <property name="toolTip">
-                  <string>moves sbz, sbx, vmll_vz and vmll_hz</string>
-                 </property>
                  <property name="text">
                   <string>
 MLL Sample OUT
@@ -4345,9 +4328,6 @@ MLL to Nanobeam
                </item>
                <item row="1" column="4">
                 <widget class="QPushButton" name="pb_mll_sample_in">
-                 <property name="toolTip">
-                  <string>moves sbx, vmll_vz and vmll_hz</string>
-                 </property>
                  <property name="text">
                   <string>
 MLL Sample IN
@@ -5668,9 +5648,6 @@ Apply All Corrections
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="toolTip">
-                <string>first motor to scan in 2D and Line scan motor</string>
-               </property>
               </widget>
              </item>
              <item row="1" column="2">
@@ -5680,9 +5657,6 @@ Apply All Corrections
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>scan range entry</string>
                </property>
                <property name="prefix">
                 <string notr="true"/>
@@ -5715,9 +5689,6 @@ Apply All Corrections
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="toolTip">
-                <string>scan range entry</string>
-               </property>
                <property name="suffix">
                 <string notr="true">um</string>
                </property>
@@ -5746,9 +5717,6 @@ Apply All Corrections
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="toolTip">
-                <string>first motor steps</string>
-               </property>
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -5770,9 +5738,6 @@ Apply All Corrections
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>exposure time per point</string>
                </property>
                <property name="prefix">
                 <string/>
@@ -5805,9 +5770,6 @@ Apply All Corrections
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="toolTip">
-                <string>second motor in 2D</string>
-               </property>
               </widget>
              </item>
              <item row="2" column="2">
@@ -5820,9 +5782,6 @@ Apply All Corrections
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>scan range entry</string>
                </property>
                <property name="prefix">
                 <string notr="true"/>
@@ -5855,9 +5814,6 @@ Apply All Corrections
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="toolTip">
-                <string>scan range entry</string>
-               </property>
                <property name="suffix">
                 <string notr="true">um</string>
                </property>
@@ -5885,9 +5841,6 @@ Apply All Corrections
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
-               </property>
-               <property name="toolTip">
-                <string>second motor steps</string>
                </property>
                <property name="minimum">
                 <number>1</number>
@@ -5931,9 +5884,6 @@ Apply All Corrections
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>yield from will be added to the front</string>
-                 </property>
                  <property name="text">
                   <string> 
    Copy For Batch  
@@ -5948,9 +5898,6 @@ Apply All Corrections
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>paste the scan to a terminal for scan</string>
                  </property>
                  <property name="text">
                   <string>   
@@ -5996,9 +5943,6 @@ Copy Plan
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="toolTip">
-                 <string>select for line scan</string>
-                </property>
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
@@ -6017,9 +5961,6 @@ Copy Plan
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
-                </property>
-                <property name="toolTip">
-                 <string>select for 2D scan</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true"/>
@@ -6053,9 +5994,6 @@ Copy Plan
                <italic>false</italic>
                <bold>false</bold>
               </font>
-             </property>
-             <property name="toolTip">
-              <string>excetute the scan plan</string>
              </property>
              <property name="autoFillBackground">
               <bool>false</bool>
@@ -6189,9 +6127,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
                  <property name="prefix">
                   <string notr="true"/>
                  </property>
@@ -6230,9 +6165,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
                  <property name="prefix">
                   <string notr="true"/>
                  </property>
@@ -6263,9 +6195,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
                  </property>
                  <property name="prefix">
                   <string notr="true"/>
@@ -6326,9 +6255,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
                  <property name="prefix">
                   <string notr="true"/>
                  </property>
@@ -6360,9 +6286,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
                  <property name="prefix">
                   <string notr="true"/>
                  </property>
@@ -6393,9 +6316,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
                  </property>
                  <property name="prefix">
                   <string notr="true"/>
@@ -6442,9 +6362,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
                  <property name="prefix">
                   <string notr="true"/>
                  </property>
@@ -6476,9 +6393,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>scan range entry</string>
-                 </property>
                  <property name="prefix">
                   <string notr="true"/>
                  </property>
@@ -6509,9 +6423,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>select for 2D scan</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
@@ -7928,9 +7839,6 @@ Show Scan Pos
                   <layout class="QGridLayout" name="gridLayout_128">
                    <item row="2" column="0">
                     <widget class="QPushButton" name="pb_copy_curr_pos_mll">
-                     <property name="toolTip">
-                      <string>motor values to clipboard</string>
-                     </property>
                      <property name="text">
                       <string>Copy Curr. Pos. to Clipboard</string>
                      </property>
@@ -8774,9 +8682,6 @@ Stop All Sample Motion
                 <layout class="QGridLayout" name="gridLayout_122">
                  <item row="2" column="0">
                   <widget class="QPushButton" name="pb_copy_curr_pos_zp">
-                   <property name="toolTip">
-                    <string>motor values to clipboard</string>
-                   </property>
                    <property name="text">
                     <string>Copy Curr. Pos. to Clipboard</string>
                    </property>
@@ -10661,9 +10566,6 @@ Plot
           <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="toolTip">
-           <string>Edits take effect from the next angle.</string>
-          </property>
           <property name="text">
            <string>Apply Changes to Running Scan</string>
           </property>
@@ -11403,9 +11305,6 @@ Plot
               </item>
               <item row="6" column="1">
                <widget class="QLineEdit" name="tomo__add_angles">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -11420,9 +11319,6 @@ Plot
               </item>
               <item row="7" column="1">
                <widget class="QLineEdit" name="tomo__remove_angles">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
                  <string>0.1</string>
                 </property>
@@ -11451,9 +11347,6 @@ Plot
               </item>
               <item row="9" column="1">
                <widget class="QLineEdit" name="tomo__pdf_elems">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
                  <string>Fe, Cr</string>
                 </property>
@@ -12246,9 +12139,6 @@ Plot
               </item>
               <item row="3" column="1">
                <widget class="QLineEdit" name="tomo__align_using_previous__apply_to">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
                  <string>dsx, dsy</string>
                 </property>
@@ -12327,9 +12217,6 @@ Plot
         </item>
         <item row="0" column="3">
          <widget class="QPushButton" name="pb_tomo_preview">
-          <property name="toolTip">
-           <string>Show the JSON that will be sent to run_tomo_json.</string>
-          </property>
           <property name="text">
            <string>Preview JSON</string>
           </property>
@@ -12360,9 +12247,6 @@ Plot
          <widget class="QPushButton" name="pb_apply_diff">
           <property name="enabled">
            <bool>false</bool>
-          </property>
-          <property name="toolTip">
-           <string>Edits take effect from the next angle.</string>
           </property>
           <property name="text">
            <string>Apply Changes to Running Scan</string>
@@ -12713,9 +12597,6 @@ Plot
               </item>
               <item row="14" column="1">
                <widget class="QComboBox" name="diff__xalign__line_center_mode">
-                <property name="toolTip">
-                 <string>Used by align_scan when centering with line_center.</string>
-                </property>
                 <item>
                  <property name="text">
                   <string>binary</string>
@@ -12918,7 +12799,7 @@ Plot
                  </sizepolicy>
                 </property>
                 <property name="title">
-                 <string />
+                 <string/>
                 </property>
                 <layout class="QFormLayout" name="formLayout_diff_angle_info">
                  <item row="0" column="0">
@@ -12940,7 +12821,7 @@ Plot
                     <double>1000000.000000000000000</double>
                    </property>
                    <property name="value">
-                    <double>-90.000000000000000</double>
+                    <double>30.000000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -12963,7 +12844,7 @@ Plot
                     <double>1000000.000000000000000</double>
                    </property>
                    <property name="value">
-                    <double>90.000000000000000</double>
+                    <double>32.000000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -12986,7 +12867,7 @@ Plot
                     <double>1000000.000000000000000</double>
                    </property>
                    <property name="value">
-                    <double>2.000000000000000</double>
+                    <double>0.050000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -12999,9 +12880,6 @@ Plot
                  </item>
                  <item row="3" column="1">
                   <widget class="QLineEdit" name="diff__custom_angle_list">
-                   <property name="toolTip">
-                    <string>Comma-separated angles. When set, these are scanned instead of start/end/step.</string>
-                   </property>
                    <property name="placeholderText">
                     <string>e.g. 68.4, 69.0, 70.2</string>
                    </property>
@@ -13090,11 +12968,8 @@ Plot
               </item>
               <item row="4" column="1">
                <widget class="QLineEdit" name="diff__add_angles">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
-                 <string />
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -13107,9 +12982,6 @@ Plot
               </item>
               <item row="5" column="1">
                <widget class="QLineEdit" name="diff__remove_angles">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
                  <string>0.1</string>
                 </property>
@@ -13138,9 +13010,6 @@ Plot
               </item>
               <item row="7" column="1">
                <widget class="QLineEdit" name="diff__pdf_elems">
-                <property name="toolTip">
-                 <string>Comma-separated values</string>
-                </property>
                 <property name="text">
                  <string>Fe, Cr</string>
                 </property>
@@ -13807,9 +13676,6 @@ Plot
               </item>
               <item row="14" column="1">
                <widget class="QComboBox" name="diff__yalign__line_center_mode">
-                <property name="toolTip">
-                 <string>Used by align_scan when centering with line_center.</string>
-                </property>
                 <item>
                  <property name="text">
                   <string>binary</string>
@@ -13867,9 +13733,6 @@ Plot
         </item>
         <item row="0" column="3">
          <widget class="QPushButton" name="pb_diff_preview">
-          <property name="toolTip">
-           <string>Show the JSON that will be sent to run_diff_json.</string>
-          </property>
           <property name="text">
            <string>Preview JSON</string>
           </property>

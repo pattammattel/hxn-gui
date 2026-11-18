@@ -12,6 +12,7 @@ import webbrowser
 import pyqtgraph as pg
 import xraydb
 import json
+import html
 import re
 import sys
 import glob
@@ -50,6 +51,7 @@ ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 profiles_path = os.path.join(ui_path, 'microscope_profiles.json')
+tooltips_path = os.path.join(ui_path, 'tooltips.json')
 MICROSCOPE_MODES = ("ZP", "MLL")
 
 # JSON scan tabs (Tomography, Diffraction): widgets live in the .ui and are named
@@ -66,12 +68,14 @@ JSON_SCAN_OVERHEAD_PER_ANGLE_S = 30
 # so Apply Changes never overwrites them mid-scan.
 JSON_SCAN_TABS = {
     "tomo": {"title": "Tomo", "defaults": tomo_defaults_path, "sender": "send_tomo_json_to_queue",
-             "n_fly_motors": 3,
+             "plan": "run_tomo_json", "n_fly_motors": 3,
              "runtime_keys": ("th_init", "y_init", "stop_iter", "pause_scan", "angle_info")},
     "diff": {"title": "Diff", "defaults": diff_defaults_path, "sender": "send_diff_json_to_queue",
-             "n_fly_motors": 2,
+             "plan": "run_diff_json", "n_fly_motors": 2,
              "runtime_keys": ("stop_iter", "pause_scan", "angle_info", "custom_angle_list")},
 }
+
+# Tooltip text for any widget lives in tooltips.json (see its _about entry), not in code.
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
@@ -242,6 +246,7 @@ class Ui(QtWidgets.QMainWindow):
         self.connect_alignment_tools()
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
+        self.load_tooltips()
         self.build_json_scan_tabs()
         QApplication.processEvents()
         
@@ -846,6 +851,7 @@ class Ui(QtWidgets.QMainWindow):
         tab = {"defaults": defaults, "params": copy.deepcopy(defaults),
                "widgets": widgets, "running_json": None}
         self.json_tabs[kind] = tab
+        self._apply_json_scan_tooltips(kind)
 
         # Catch widgets renamed in Designer at startup rather than on Run.
         problems = []
@@ -891,6 +897,56 @@ class Ui(QtWidgets.QMainWindow):
             lambda paused: self.toggle_json_scan_pause(kind, paused))
         self._jw(kind, "pb_stop_{}").clicked.connect(lambda: self.stop_json_scan(kind))
         self._jw(kind, "pb_apply_{}").clicked.connect(lambda: self.apply_json_scan_changes(kind))
+
+    def _set_help(self, widget, text):
+        # Rich text so Qt word-wraps long tooltips; the accessible description serves screen readers.
+        widget.setToolTip(f"<p>{html.escape(text)}</p>")
+        widget.setAccessibleDescription(text)
+
+    def load_tooltips(self):
+        # Tooltips are help text only, so a missing or broken file must not stop the GUI.
+        try:
+            with open(tooltips_path, "r", encoding="utf-8") as f:
+                self.tooltips = json.load(f)
+        except (OSError, ValueError) as exc:
+            print(f"  Tooltips not loaded from {tooltips_path}: {exc}")
+            self.tooltips = {}
+        unknown = []
+        for name, text in self.tooltips.get("widgets", {}).items():
+            widget = self.findChild(QtWidgets.QWidget, name)
+            if widget is None:
+                unknown.append(name)
+            else:
+                self._set_help(widget, text)
+        if unknown:
+            print(f"  Tooltips for widgets not in the .ui (renamed?): {unknown}")
+
+    def _apply_json_scan_tooltips(self, kind):
+        tips = self.tooltips.get("json_scan", {})
+        shared, overrides = tips.get("shared", {}), tips.get(kind, {})
+        fill = {"kind": kind, "plan": JSON_SCAN_TABS[kind]["plan"],
+                "overhead": JSON_SCAN_OVERHEAD_PER_ANGLE_S}
+        for path, widget in self.json_tabs[kind]["widgets"].items():
+            key = "__".join(path)
+            text = overrides.get(key)
+            if text is None:
+                axis = path[0][0] if path[0] in ("xalign", "yalign") else None
+                generic = "__".join(("{axis}align",) + path[1:]) if axis else key
+                text = shared.get(generic, "").format(axis=axis)
+            if not text:
+                continue
+            self._set_help(widget, text)
+            label = self.findChild(QtWidgets.QLabel, f"label_{kind}__{key}")
+            if label is not None:
+                self._set_help(label, text)
+        for suffix, text in tips.get("groups", {}).items():
+            group = self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_{suffix}")
+            if group is not None:
+                self._set_help(group, text.format(**fill))
+        for template, text in tips.get("buttons", {}).items():
+            button = self.findChild(QtWidgets.QWidget, template.format(**fill))
+            if button is not None:
+                self._set_help(button, text.format(**fill))
 
     def _prefill_tomo_align(self, axis):
         start = getattr(self, f"tomo__fly2d_scan__{axis}_start").value()
