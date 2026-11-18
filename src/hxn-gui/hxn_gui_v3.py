@@ -13,7 +13,9 @@ import pyqtgraph as pg
 import xraydb
 import json
 import html
+import inspect
 import re
+import textwrap
 import sys
 import glob
 import copy
@@ -52,6 +54,7 @@ ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 profiles_path = os.path.join(ui_path, 'microscope_profiles.json')
 tooltips_path = os.path.join(ui_path, 'tooltips.json')
+button_plans_path = os.path.join(ui_path, 'button_plans.json')
 MICROSCOPE_MODES = ("ZP", "MLL")
 
 # JSON scan tabs (Tomography, Diffraction): widgets live in the .ui and are named
@@ -247,6 +250,7 @@ class Ui(QtWidgets.QMainWindow):
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
         self.load_tooltips()
+        self.load_button_plans()
         self.build_json_scan_tabs()
         QApplication.processEvents()
         
@@ -921,6 +925,47 @@ class Ui(QtWidgets.QMainWindow):
         if unknown:
             print(f"  Tooltips for widgets not in the .ui (renamed?): {unknown}")
 
+    def load_button_plans(self):
+        # Right-click "Show plan" for buttons listed in button_plans.json; help only, so never fatal.
+        try:
+            with open(button_plans_path, "r", encoding="utf-8") as f:
+                plans = json.load(f).get("buttons", {})
+        except (OSError, ValueError) as exc:
+            print(f"  Button plans not loaded from {button_plans_path}: {exc}")
+            return
+        for name, funcs in plans.items():
+            button = self.findChild(QtWidgets.QWidget, name)
+            if button is None:
+                print(f"  button_plans.json: no widget named {name}")
+                continue
+            button.setContextMenuPolicy(Qt.CustomContextMenu)
+            button.customContextMenuRequested.connect(
+                lambda pos, b=button, f=funcs: self._button_plan_menu(b, f, pos))
+
+    def _button_plan_menu(self, button, funcs, pos):
+        menu = QtWidgets.QMenu(button)
+        menu.addAction("Show plan", lambda: self.show_button_plan(button, funcs))
+        menu.exec_(button.mapToGlobal(pos))
+
+    def show_button_plan(self, button, funcs):
+        label = button.text().replace("\n", " ").strip() or button.objectName()
+        parts = [f"# '{label}' runs, in order: {', '.join(funcs)}",
+                 "# 'self.' functions are in the GUI; the others are beamline startup plans.", ""]
+        for name in funcs:
+            obj = getattr(self, name[5:], None) if name.startswith("self.") else globals().get(name)
+            if obj is None:
+                parts += [f"# {name}: not defined in this session", ""]
+                continue
+            obj = inspect.unwrap(obj)
+            try:
+                lines, start = inspect.getsourcelines(obj)
+                where = f"{inspect.getsourcefile(obj)}:{start}"
+                body = textwrap.dedent("".join(lines))
+            except (OSError, TypeError):
+                where, body = "source not available", ""
+            parts += [f"# ===== {name}  ({where})", body]
+        self._show_text_dialog(f"Plan: {label}", "\n".join(parts), (900, 800))
+
     def _apply_json_scan_tooltips(self, kind):
         tips = self.tooltips.get("json_scan", {})
         shared, overrides = tips.get("shared", {}), tips.get(kind, {})
@@ -1045,12 +1090,16 @@ class Ui(QtWidgets.QMainWindow):
     @show_error_message_box
     def preview_json_scan(self, kind):
         text = json.dumps(self.collect_json_scan_params(kind), indent=6)
+        self._show_text_dialog(f"{JSON_SCAN_TABS[kind]['title']} JSON Preview", text, (600, 750))
+
+    def _show_text_dialog(self, title, text, size):
         dialog = QtWidgets.QDialog(self)
-        dialog.setWindowTitle(f"{JSON_SCAN_TABS[kind]['title']} JSON Preview")
-        dialog.resize(600, 750)
+        dialog.setWindowTitle(title)
+        dialog.resize(*size)
         layout = QtWidgets.QVBoxLayout(dialog)
         view = QtWidgets.QPlainTextEdit(text)
         view.setReadOnly(True)
+        view.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
         view.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
         layout.addWidget(view)
         buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Close)
