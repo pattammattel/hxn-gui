@@ -48,6 +48,7 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
+from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
@@ -249,6 +250,7 @@ class Ui(QtWidgets.QMainWindow):
         self.connect_alignment_tools()
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
+        self.build_json_live_views()
         self.load_tooltips()
         self.load_button_plans()
         self.build_json_scan_tabs()
@@ -907,6 +909,26 @@ class Ui(QtWidgets.QMainWindow):
         widget.setToolTip(f"<p>{html.escape(text)}</p>")
         widget.setAccessibleDescription(text)
 
+    def build_json_live_views(self):
+        # Live XRF stack per JSON scan tab; a tab gets one if the .ui has a gb_<kind>_live placeholder.
+        self.json_live_views = {}
+        for kind in JSON_SCAN_TABS:
+            group = self.findChild(QtWidgets.QGroupBox, f"gb_{kind}_live")
+            if group is None:
+                continue
+            viewer = XrfStackViewer(kind, fetch=self._fetch_xrf_stack,
+                                    default_elems=self._live_plot_elems, parent=group)
+            group.layout().addWidget(viewer)
+            self.json_live_views[kind] = viewer
+
+    @staticmethod
+    def _fetch_xrf_stack(sid):
+        # Runs in the loader thread; db comes from the bsui session.
+        broker = globals().get("db")
+        if broker is None:
+            raise NameError("db (databroker) is not defined in this session")
+        return get_all_xrf_roi_data(broker[sid])
+
     def load_tooltips(self):
         # Tooltips are help text only, so a missing or broken file must not stop the GUI.
         try:
@@ -1248,6 +1270,12 @@ class Ui(QtWidgets.QMainWindow):
         send(json_path, execute=execute)
         if execute:
             self._set_json_scan_running(kind, json_path)
+            if kind in self.json_live_views:
+                # The plan writes save_log_to/<scan_label>_startID<first_sid>.csv after each angle;
+                # first_sid is only known once it starts, so follow the newest match from now on.
+                pattern = os.path.join(params["save_log_to"],
+                                       f"{glob.escape(params['scan_label'])}_startID*.csv")
+                self.json_live_views[kind].follow_log(pattern, newer_than=time.time())
             self.statusbar.showMessage(f"{title} scan sent to QServer for execution: {json_path}")
         else:
             self.statusbar.showMessage(f"{title} scan added to QServer queue: {json_path}")
@@ -4131,6 +4159,8 @@ class Ui(QtWidgets.QMainWindow):
                      "points_update_thread", "pump_worker_thread", "vent_thread",
                      "he_backfill_worker_thread", "thread"):
             self._stop_thread(getattr(self, name, None))
+        for viewer in getattr(self, "json_live_views", {}).values():
+            viewer.stop()
 
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")

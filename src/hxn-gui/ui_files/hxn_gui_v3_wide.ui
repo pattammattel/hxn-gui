@@ -13192,6 +13192,14 @@ Plot
           </layout>
          </widget>
         </item>
+        <item row="2" column="0" colspan="9">
+         <widget class="QGroupBox" name="gb_tomo_live">
+          <property name="title">
+           <string>Live XRF Stack</string>
+          </property>
+          <layout class="QVBoxLayout" name="gb_tomo_live_vbox"/>
+         </widget>
+        </item>
         <item row="0" column="8">
          <widget class="QPushButton" name="pb_run_tomo_json">
           <property name="styleSheet">
