@@ -2653,6 +2653,7 @@ class Ui(QtWidgets.QMainWindow):
     def move_mll_osa_bs(self, axis, neg_=False):
         motor = getattr(mllosa if axis.startswith("osa") else mllbs, axis)
         self.move_motor_with_pv(getattr(self, f"db_move_mll_{axis}"), motor, 1, neg=neg_)
+    
     @show_error_message_box
     def _confirm_and_run(self, description, action):
         choice = QMessageBox.question(
