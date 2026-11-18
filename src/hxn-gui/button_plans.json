@@ -1,0 +1,211 @@
+{
+  "_about": "Right-click 'Show plan' sources. Keys are button objectNames; values list the functions the button runs, in call order. 'self.<name>' is a GUI method; other names are looked up in the bsui namespace (profile startup plans).",
+  "buttons": {
+    "pb_MoveZPZ1AbsPos": [
+      "self.zpMoveAbs",
+      "mov_zpz1",
+      "movr_zpz1"
+    ],
+    "pb_S5_Close": [
+      "self.S5_Pos"
+    ],
+    "pb_S5_HClose": [
+      "self.S5_Pos"
+    ],
+    "pb_S5_Open": [
+      "self.S5_Pos"
+    ],
+    "pb_S5_VClose": [
+      "self.S5_Pos"
+    ],
+    "pb_SSA2_Close": [
+      "self.SSA2_Pos"
+    ],
+    "pb_SSA2_HClose": [
+      "self.SSA2_Pos"
+    ],
+    "pb_SSA2_Open": [
+      "self.SSA2_Pos"
+    ],
+    "pb_SSA2_VClose": [
+      "self.SSA2_Pos"
+    ],
+    "pb_ZPZFocusScanStart": [
+      "self.zpFocusScan",
+      "zp_z_alignment",
+      "erf_fit",
+      "self._best_zp_focus_position",
+      "mov_zpz1"
+    ],
+    "pb_apply_zp_rot_align_corr": [
+      "self.apply_zp_rot_algn_corr_",
+      "apply_zp_rot_algn_corr"
+    ],
+    "pb_center_ssa2_auto": [
+      "center_ssa2"
+    ],
+    "pb_mll_bs_in": [
+      "self.mll_bs_in_",
+      "mll_bs_in"
+    ],
+    "pb_mll_bs_out": [
+      "self.mll_bs_out_",
+      "mll_bs_out"
+    ],
+    "pb_mll_bsx_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_bsx_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_bsy_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_bsy_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_cam11_view": [
+      "self.mll_to_cam11_view_",
+      "mll_to_cam11_view",
+      "do_motor_position_checks",
+      "go_det"
+    ],
+    "pb_mll_lens_in": [
+      "self.mll_lens_in_",
+      "mll_lens_in"
+    ],
+    "pb_mll_lens_out": [
+      "self.mll_lens_out_",
+      "mll_lens_out"
+    ],
+    "pb_mll_nanobeam": [
+      "self.mll_to_nanobeam_",
+      "mll_to_nanobeam",
+      "do_motor_position_checks"
+    ],
+    "pb_mll_osa_in": [
+      "self.mll_osa_IN"
+    ],
+    "pb_mll_osa_out": [
+      "self.mll_osa_OUT"
+    ],
+    "pb_mll_osax_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_osax_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_osay_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_osay_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_rot_align_start": [
+      "self.mll_rot_alignment_",
+      "mll_rot_alignment",
+      "return_line_center",
+      "self.apply_mll_rot_algn_corr"
+    ],
+    "pb_mll_sample_in": [
+      "self.mll_sample_in_",
+      "mll_sample_in"
+    ],
+    "pb_mll_sample_out": [
+      "self.mll_sample_out_",
+      "mll_sample_out"
+    ],
+    "pb_mll_z_focus_start": [
+      "self.mll_focus_scan",
+      "mll_z_alignment",
+      "erf_fit"
+    ],
+    "pb_mlls_to_downstream": [
+      "self.mll_to_downstream_",
+      "mll_to_downstream"
+    ],
+    "pb_mlls_to_upstream": [
+      "self.mll_to_upstream_",
+      "mll_to_upstream"
+    ],
+    "pb_move_s5": [
+      "self.S5_Pos"
+    ],
+    "pb_move_ssa2": [
+      "self.SSA2_Pos"
+    ],
+    "pb_osa_in": [
+      "self.ZP_OSA_IN",
+      "zp_osa_in"
+    ],
+    "pb_osa_out": [
+      "self.ZP_OSA_OUT",
+      "zp_osa_out"
+    ],
+    "pb_peakBeamXY": [
+      "peak_the_flux",
+      "peak_bpm_y",
+      "peak_bpm_x"
+    ],
+    "pb_recover_from_beamdump": [
+      "recover_from_beamdump",
+      "peak_the_flux"
+    ],
+    "pb_s5_hcen_move_neg": [
+      "self.move_slit_center"
+    ],
+    "pb_s5_hcen_move_positive": [
+      "self.move_slit_center"
+    ],
+    "pb_s5_vcen_move_neg": [
+      "self.move_slit_center"
+    ],
+    "pb_s5_vcen_move_positive": [
+      "self.move_slit_center"
+    ],
+    "pb_ssa2_hcen_move_neg": [
+      "self.move_slit_center"
+    ],
+    "pb_ssa2_hcen_move_positive": [
+      "self.move_slit_center"
+    ],
+    "pb_ssa2_vcen_move_neg": [
+      "self.move_slit_center"
+    ],
+    "pb_ssa2_vcen_move_positive": [
+      "self.move_slit_center"
+    ],
+    "pb_zp_cam11_view": [
+      "self.zp_to_cam11_view_",
+      "zp_to_cam11_view",
+      "go_det"
+    ],
+    "pb_zp_nanobeam": [
+      "self.zp_to_nanobeam_",
+      "zp_to_nanobeam"
+    ],
+    "pb_zp_rot_align_start": [
+      "self.zp_rot_alignment_",
+      "zp_rot_alignment",
+      "return_line_center",
+      "self.apply_zp_rot_algn_corr_",
+      "apply_zp_rot_algn_corr"
+    ],
+    "pb_zpbsy_in": [
+      "self.ZP_BS_IN",
+      "zp_bs_in"
+    ],
+    "pb_zpbsy_out": [
+      "self.ZP_BS_OUT",
+      "zp_bs_out"
+    ]
+  }
+}

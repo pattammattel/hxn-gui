@@ -1,0 +1,42 @@
+# HXN GUI TODO
+
+Bugs found while writing tooltips ([tooltips.json](tooltips.json)). When you fix an item, update the tooltips of the widgets involved so they no longer warn about it, then remove the item here.
+
+## Confirmation ignored
+
+- [ ] `copy_data_to_globus` (`pb_move_data_to_globus`) and `move_energy_with_sid_gui` (`pb_energy_change_w_sid`) use `if QMessageBox.Yes:`, which is always true, so they run even when the user clicks No. Use `if choice == QMessageBox.Yes:`.
+
+## Crashes and errors
+
+- [ ] `pb_laser_in` calls `self.cam06_laser_in`, which does not exist. Use `self.cam6LASER` (as the Energy tab does).
+- [ ] `pb_center_ssa2_auto` calls `RE(self.center_ssa2())`; `center_ssa2` is a startup plan, not a GUI method. Use `RE(center_ssa2())`.
+- [ ] `pb_merlin_filterIN/OUT` wrap `toggle_merlin_filter` in `RE(...)`, but it is a plain function, not a plan: the filter moves, then `RE` raises. Call it directly.
+
+## Unsafe
+
+- [ ] `pb_mll_z_focus_move` always moves `sbz` without confirmation, ignoring `cb_mll_z_motor_move`. Use the selected motor and confirm.
+
+## Wrong labels
+
+- [ ] ZP optics: `pb_osa_in` "OSA IN (Y+2700)" moves -2700 and `pb_osa_out` moves +2700; `pb_zpbsy_in/out` move -100/+100. Fix the signs in the button text.
+
+## Input and features
+
+- [ ] `le_plot_sd` only accepts integers (`only_int_le`), but `plot_me` supports a range like `100,110`. Relax the validator.
+- [ ] Queue manual ROI (`get_manual_roi` / `fill_current_pos`) only handles ZP; MLL scans always use the current position.
+
+## Buttons not connected
+
+- [ ] Alignment: `pushButton_9/10/11` (ZP move smarX/smarZ/rotate), `pb_rot_align_dsth/dsx/dsz/sbx_move`, `pb_rot_align_all_move`, `pb_stop_mll_motion`.
+- [ ] Detectors: `pb_telescope`, `pb_abort_diff`, `pushButton_12/16` (flat field for `cb_dets_for_ff_corr`), `pb_eiger_filter_a/b/c_in/out`, all `groupBox_20` attenuator buttons (`*_2`).
+- [ ] Other: `pb_roiList_clear_sel_mll/zp`, `pb_insert_user_image`, `pushButton_2` (Engage Mirror Feedbacks).
+
+## UI file
+
+- [ ] Two widgets are named `groupBox` (Data Acquisition "Plotting" and the detector tab groups); rename them in Designer so they can have tooltips.
+
+## Profile startup files (hxn-profile-collection)
+
+- [ ] `72-json-plans.py` `run_diff_json` passes `xalign/yalign["center_with"]` as `align_scan`'s `line_center_mode`; pass `["line_center_mode"]` so the Diffraction tab setting takes effect.
+- [ ] `run_diff_json` does not read `custom_angle_list`; the GUI summary assumes it replaces start/end/step.
+- [ ] `run_tomo_json` does not read `align_using_previous`; the Tomography group is only saved to the JSON.

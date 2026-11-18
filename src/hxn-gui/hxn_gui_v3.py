@@ -7,11 +7,15 @@
 import os
 import sys
 import subprocess
+import time
 import webbrowser
 import pyqtgraph as pg
 import xraydb
 import json
+import html
+import inspect
 import re
+import textwrap
 import sys
 import glob
 import copy
@@ -49,18 +53,32 @@ ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
 style_path = os.path.join(os.path.dirname(ui_path),'uswds_style.qss')
 profiles_path = os.path.join(ui_path, 'microscope_profiles.json')
+tooltips_path = os.path.join(ui_path, 'tooltips.json')
+button_plans_path = os.path.join(ui_path, 'button_plans.json')
 MICROSCOPE_MODES = ("ZP", "MLL")
 
-# Tomography tab: widgets live in the .ui and are named tomo__<group>__<key> after their JSON path.
+# JSON scan tabs (Tomography, Diffraction): widgets live in the .ui and are named
+# <kind>__<group>__<key> after their JSON path; buttons follow pb_<kind>_import, pb_run_<kind>_json, etc.
 tomo_defaults_path = os.path.join(ui_path, 'json_plans', 'tomo_default_params.json')
-TOMO_NUMBER_LIST_KEYS = {"add_angles", "remove_angles"}
-# Editing the 2D scan prefills the 1D align scans: wider range at the same step size, longer dwell.
+diff_defaults_path = os.path.join(ui_path, 'json_plans', 'diff_default_params.json')
+JSON_SCAN_NUMBER_LIST_KEYS = {"add_angles", "remove_angles", "custom_angle_list"}
+# Editing the tomo 2D scan prefills the 1D align scans: wider range at the same step size, longer dwell.
 TOMO_ALIGN_RANGE_SCALE = 1.5
 TOMO_ALIGN_DWELL_SCALE = 4
 # Rough per-angle overhead (theta move, shutter, plan sleeps, PDF); tune from real scans.
-TOMO_OVERHEAD_PER_ANGLE_S = 30
-# Owned by run_tomo_json once it starts (angles are fixed; th/y_init are measured), so never overwritten mid-scan.
-TOMO_RUNTIME_KEYS = ("th_init", "y_init", "stop_iter", "pause_scan", "angle_info")
+JSON_SCAN_OVERHEAD_PER_ANGLE_S = 30
+# runtime_keys are owned by the plan once it starts (angles are fixed; tomo th/y_init are measured),
+# so Apply Changes never overwrites them mid-scan.
+JSON_SCAN_TABS = {
+    "tomo": {"title": "Tomo", "defaults": tomo_defaults_path, "sender": "send_tomo_json_to_queue",
+             "plan": "run_tomo_json", "n_fly_motors": 3,
+             "runtime_keys": ("th_init", "y_init", "stop_iter", "pause_scan", "angle_info")},
+    "diff": {"title": "Diff", "defaults": diff_defaults_path, "sender": "send_diff_json_to_queue",
+             "plan": "run_diff_json", "n_fly_motors": 2,
+             "runtime_keys": ("stop_iter", "pause_scan", "angle_info", "custom_angle_list")},
+}
+
+# Tooltip text for any widget lives in tooltips.json (see its _about entry), not in code.
 det_and_camera_names_motion = ['cam11','merlin','eiger']
 det_and_camera_names_data = ['cam11','merlin1','merlin2','eiger1']
 
@@ -231,7 +249,9 @@ class Ui(QtWidgets.QMainWindow):
         self.connect_alignment_tools()
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
-        self.build_tomo_tab()
+        self.load_tooltips()
+        self.load_button_plans()
+        self.build_json_scan_tabs()
         QApplication.processEvents()
         
         self.set_input_validators()
@@ -342,7 +362,8 @@ class Ui(QtWidgets.QMainWindow):
         self.apply_microscope_mode(mode)
         self.cb_microscope_mode.setCurrentText(mode)
         self.microscope_profiles["active"] = mode
-        self.update_tomo_summary()
+        for kind in JSON_SCAN_TABS:
+            self.update_json_scan_summary(kind)
         with open(profiles_path, "w") as f:
             json.dump(self.microscope_profiles, f, indent=2)
 
@@ -525,6 +546,9 @@ class Ui(QtWidgets.QMainWindow):
             if choice != QMessageBox.Yes:
                 return
 
+        self._launch_qserver()
+
+    def _launch_qserver(self):
         # QServer (RE Manager) runs as a separate process started by the
         # run-queue-server shell script; launch it in its own terminal tab.
         subprocess.Popen(
@@ -607,6 +631,78 @@ class Ui(QtWidgets.QMainWindow):
         box.setText(f"{title} request sent.")
         box.setDetailedText(json.dumps(response, indent=2, default=str))
         box.exec_()
+
+    def _wait_with_progress(self, text, done, timeout_s):
+        # Poll done() until it returns True; False on timeout or user cancel.
+        progress = QProgressDialog(text, "Cancel", 0, 0, self)
+        progress.setWindowTitle("Please Wait")
+        progress.setWindowModality(Qt.ApplicationModal)
+        progress.show()
+        deadline = time.monotonic() + timeout_s
+        try:
+            while time.monotonic() < deadline:
+                QApplication.processEvents()
+                if progress.wasCanceled():
+                    return False
+                if done():
+                    return True
+                for _ in range(10):
+                    QApplication.processEvents()
+                    time.sleep(0.1)
+            return False
+        finally:
+            progress.close()
+
+    def _qserver_status_or_none(self):
+        try:
+            return RM.status()
+        except RM.RequestTimeoutError:
+            return None
+
+    def _qserver_env_ready(self):
+        status = self._qserver_status_or_none() or {}
+        return (status.get("worker_environment_exists", False)
+                and status.get("manager_state") == "idle")
+
+    def _ensure_qserver_ready(self):
+        """Make sure QServer is running with an open worker env, prompting the
+        user to start/open them. Returns True when ready for submissions."""
+        status = self._qserver_status_or_none()
+        if status is None:
+            choice = QMessageBox.question(
+                self, "QServer Not Running",
+                "QServer (RE Manager) is not reachable.\n\n"
+                "Start it now and open the BSUI environment?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            if choice != QMessageBox.Yes:
+                return False
+            self._launch_qserver()
+            ready = self._wait_with_progress(
+                "Starting QServer (RE Manager)...",
+                lambda: self._qserver_status_or_none() is not None, timeout_s=120)
+            if not ready:
+                QMessageBox.warning(self, "QServer",
+                                    "QServer did not respond. Check the QServer terminal.")
+                return False
+            status = RM.status()
+
+        if not status.get("worker_environment_exists", False):
+            if status.get("manager_state") != "creating_environment":
+                choice = QMessageBox.question(
+                    self, "BSUI Environment Closed",
+                    "The QServer BSUI environment is not open.\n\nOpen it now?",
+                    QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                if choice != QMessageBox.Yes:
+                    return False
+                RM.environment_open()
+            ready = self._wait_with_progress(
+                "Opening BSUI environment (running startup files)...",
+                self._qserver_env_ready, timeout_s=600)
+            if not ready:
+                QMessageBox.warning(self, "QServer",
+                                    "BSUI environment did not open. Check the QServer terminal.")
+                return False
+        return True
 
     @show_error_message_box
     def show_qserver_status(self):
@@ -725,35 +821,15 @@ class Ui(QtWidgets.QMainWindow):
         #self.mll_tomo_window = MLLTomoGUI()
         #self.mll_tomo_window.show()
 
-    #tomography
-    def build_tomo_tab(self):
-        with open(tomo_defaults_path, "r") as f:
-            self.tomo_defaults = json.load(f)
-        self.tomo_defaults["pdf_elems"] = self._live_plot_elems()
-        self.tomo_params = copy.deepcopy(self.tomo_defaults)
+    #tomography and diffraction JSON scan tabs
+    def _jw(self, kind, template):
+        # Per-tab widget lookup, e.g. _jw("diff", "pb_pause_{}") -> self.pb_pause_diff.
+        return getattr(self, template.format(kind))
 
-        self.tomo_widgets = {tuple(w.objectName().split("__")[1:]): w
-                             for w in self.findChildren(QtWidgets.QWidget)
-                             if w.objectName().startswith("tomo__")}
-        # Catch widgets renamed in Designer at startup rather than on Run.
-        problems = []
-        for path in self.tomo_widgets:
-            value = self.tomo_defaults
-            for key in path:
-                if not isinstance(value, dict) or key not in value:
-                    problems.append("tomo__" + "__".join(path))
-                    break
-                value = value[key]
-        if problems:
-            raise ValueError("Tomography widgets with no matching key in "
-                             f"{tomo_defaults_path}:\n" + "\n".join(problems))
-
-        self.tomo__fly2d_scan__det.addItems(list(self.fly_det_dict))
-        # Same choices as cb_plot_elem; items read "Fe: ...", the JSON stores "Fe".
-        for path, widget in self.tomo_widgets.items():
-            if path[-1] == "elem":
-                widget.addItems(self.roi_elements)
-        self.apply_tomo_params(self.tomo_defaults)
+    def build_json_scan_tabs(self):
+        self.json_tabs = {}
+        for kind in JSON_SCAN_TABS:
+            self._build_json_scan_tab(kind)
 
         for axis in ("x", "y"):
             for field in ("start", "end", "num"):
@@ -762,7 +838,46 @@ class Ui(QtWidgets.QMainWindow):
         self.tomo__fly2d_scan__exposure.valueChanged.connect(
             lambda _v: self._prefill_tomo_align_dwell())
 
-        for widget in self.tomo_widgets.values():
+        # Keeps the expected finish times current while the parameters sit unchanged.
+        self.json_scan_summary_timer = QTimer(self)
+        self.json_scan_summary_timer.timeout.connect(
+            lambda: [self.update_json_scan_summary(k) for k in JSON_SCAN_TABS])
+        self.json_scan_summary_timer.start(60000)
+
+    def _build_json_scan_tab(self, kind):
+        defaults_path = JSON_SCAN_TABS[kind]["defaults"]
+        with open(defaults_path, "r") as f:
+            defaults = json.load(f)
+        defaults["pdf_elems"] = self._live_plot_elems()
+        widgets = {tuple(w.objectName().split("__")[1:]): w
+                   for w in self.findChildren(QtWidgets.QWidget)
+                   if w.objectName().startswith(f"{kind}__")}
+        tab = {"defaults": defaults, "params": copy.deepcopy(defaults),
+               "widgets": widgets, "running_json": None}
+        self.json_tabs[kind] = tab
+        self._apply_json_scan_tooltips(kind)
+
+        # Catch widgets renamed in Designer at startup rather than on Run.
+        problems = []
+        for path in widgets:
+            value = defaults
+            for key in path:
+                if not isinstance(value, dict) or key not in value:
+                    problems.append(f"{kind}__" + "__".join(path))
+                    break
+                value = value[key]
+        if problems:
+            raise ValueError(f"{JSON_SCAN_TABS[kind]['title']} widgets with no matching key in "
+                             f"{defaults_path}:\n" + "\n".join(problems))
+
+        widgets[("fly2d_scan", "det")].addItems(list(self.fly_det_dict))
+        # Same choices as cb_plot_elem; items read "Fe: ...", the JSON stores "Fe".
+        for path, widget in widgets.items():
+            if path[-1] == "elem":
+                widget.addItems(self.roi_elements)
+        self.apply_json_scan_params(kind, defaults)
+
+        for widget in widgets.values():
             if isinstance(widget, QCheckBox):
                 signal = widget.toggled
             elif isinstance(widget, QtWidgets.QComboBox):
@@ -771,23 +886,112 @@ class Ui(QtWidgets.QMainWindow):
                 signal = widget.textChanged
             else:
                 signal = widget.valueChanged
-            signal.connect(lambda *_: self.update_tomo_summary())
-        # Keeps the expected finish time current while the parameters sit unchanged.
-        self.tomo_summary_timer = QTimer(self)
-        self.tomo_summary_timer.timeout.connect(self.update_tomo_summary)
-        self.tomo_summary_timer.start(60000)
-        self.update_tomo_summary()
+            signal.connect(lambda *_, k=kind: self.update_json_scan_summary(k))
 
-        self.pb_tomo_import.clicked.connect(lambda: self.import_tomo_json())
-        self.pb_tomo_export.clicked.connect(lambda: self.export_tomo_json())
-        self.pb_tomo_reset.clicked.connect(lambda: self.reset_tomo_params())
-        self.pb_tomo_preview.clicked.connect(lambda: self.preview_tomo_json())
-        self.pb_run_tomo_json.clicked.connect(lambda: self.run_tomo_from_gui())
-        # run_tomo_json re-reads its JSON before each angle; these update the running file.
-        self.tomo_running_json = None
-        self.pb_pause_tomo.toggled.connect(self.toggle_tomo_pause)
-        self.pb_stop_tomo.clicked.connect(lambda: self.stop_tomo_scan())
-        self.pb_apply_tomo.clicked.connect(lambda: self.apply_tomo_changes())
+        self._jw(kind, "pb_{}_import").clicked.connect(lambda: self.import_json_scan(kind))
+        self._jw(kind, "pb_{}_export").clicked.connect(lambda: self.export_json_scan(kind))
+        self._jw(kind, "pb_{}_reset").clicked.connect(lambda: self.reset_json_scan_params(kind))
+        self._jw(kind, "pb_{}_preview").clicked.connect(lambda: self.preview_json_scan(kind))
+        self._jw(kind, "pb_run_{}_json").clicked.connect(
+            lambda: self.submit_json_scan_to_qserver(kind, execute=True))
+        self._jw(kind, "pb_send_{}_to_queue").clicked.connect(
+            lambda: self.submit_json_scan_to_qserver(kind, execute=False))
+        # The plans re-read their JSON before each angle; these update the last file sent with Run.
+        self._jw(kind, "pb_pause_{}").toggled.connect(
+            lambda paused: self.toggle_json_scan_pause(kind, paused))
+        self._jw(kind, "pb_stop_{}").clicked.connect(lambda: self.stop_json_scan(kind))
+        self._jw(kind, "pb_apply_{}").clicked.connect(lambda: self.apply_json_scan_changes(kind))
+
+    def _set_help(self, widget, text):
+        # Rich text so Qt word-wraps long tooltips; the accessible description serves screen readers.
+        widget.setToolTip(f"<p>{html.escape(text)}</p>")
+        widget.setAccessibleDescription(text)
+
+    def load_tooltips(self):
+        # Tooltips are help text only, so a missing or broken file must not stop the GUI.
+        try:
+            with open(tooltips_path, "r", encoding="utf-8") as f:
+                self.tooltips = json.load(f)
+        except (OSError, ValueError) as exc:
+            print(f"  Tooltips not loaded from {tooltips_path}: {exc}")
+            self.tooltips = {}
+        unknown = []
+        for name, text in self.tooltips.get("widgets", {}).items():
+            widget = self.findChild(QtWidgets.QWidget, name)
+            if widget is None:
+                unknown.append(name)
+            else:
+                self._set_help(widget, text)
+        if unknown:
+            print(f"  Tooltips for widgets not in the .ui (renamed?): {unknown}")
+
+    def load_button_plans(self):
+        # Right-click "Show plan" for buttons listed in button_plans.json; help only, so never fatal.
+        try:
+            with open(button_plans_path, "r", encoding="utf-8") as f:
+                plans = json.load(f).get("buttons", {})
+        except (OSError, ValueError) as exc:
+            print(f"  Button plans not loaded from {button_plans_path}: {exc}")
+            return
+        for name, funcs in plans.items():
+            button = self.findChild(QtWidgets.QWidget, name)
+            if button is None:
+                print(f"  button_plans.json: no widget named {name}")
+                continue
+            button.setContextMenuPolicy(Qt.CustomContextMenu)
+            button.customContextMenuRequested.connect(
+                lambda pos, b=button, f=funcs: self._button_plan_menu(b, f, pos))
+
+    def _button_plan_menu(self, button, funcs, pos):
+        menu = QtWidgets.QMenu(button)
+        menu.addAction("Show plan", lambda: self.show_button_plan(button, funcs))
+        menu.exec_(button.mapToGlobal(pos))
+
+    def show_button_plan(self, button, funcs):
+        label = button.text().replace("\n", " ").strip() or button.objectName()
+        parts = [f"# '{label}' runs, in order: {', '.join(funcs)}",
+                 "# 'self.' functions are in the GUI; the others are beamline startup plans.", ""]
+        for name in funcs:
+            obj = getattr(self, name[5:], None) if name.startswith("self.") else globals().get(name)
+            if obj is None:
+                parts += [f"# {name}: not defined in this session", ""]
+                continue
+            obj = inspect.unwrap(obj)
+            try:
+                lines, start = inspect.getsourcelines(obj)
+                where = f"{inspect.getsourcefile(obj)}:{start}"
+                body = textwrap.dedent("".join(lines))
+            except (OSError, TypeError):
+                where, body = "source not available", ""
+            parts += [f"# ===== {name}  ({where})", body]
+        self._show_text_dialog(f"Plan: {label}", "\n".join(parts), (900, 800))
+
+    def _apply_json_scan_tooltips(self, kind):
+        tips = self.tooltips.get("json_scan", {})
+        shared, overrides = tips.get("shared", {}), tips.get(kind, {})
+        fill = {"kind": kind, "plan": JSON_SCAN_TABS[kind]["plan"],
+                "overhead": JSON_SCAN_OVERHEAD_PER_ANGLE_S}
+        for path, widget in self.json_tabs[kind]["widgets"].items():
+            key = "__".join(path)
+            text = overrides.get(key)
+            if text is None:
+                axis = path[0][0] if path[0] in ("xalign", "yalign") else None
+                generic = "__".join(("{axis}align",) + path[1:]) if axis else key
+                text = shared.get(generic, "").format(axis=axis)
+            if not text:
+                continue
+            self._set_help(widget, text)
+            label = self.findChild(QtWidgets.QLabel, f"label_{kind}__{key}")
+            if label is not None:
+                self._set_help(label, text)
+        for suffix, text in tips.get("groups", {}).items():
+            group = self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_{suffix}")
+            if group is not None:
+                self._set_help(group, text.format(**fill))
+        for template, text in tips.get("buttons", {}).items():
+            button = self.findChild(QtWidgets.QWidget, template.format(**fill))
+            if button is not None:
+                self._set_help(button, text.format(**fill))
 
     def _prefill_tomo_align(self, axis):
         start = getattr(self, f"tomo__fly2d_scan__{axis}_start").value()
@@ -804,69 +1008,98 @@ class Ui(QtWidgets.QMainWindow):
         self.tomo__xalign__exposure.setValue(dwell)
         self.tomo__yalign__exposure.setValue(dwell)
 
-    def update_tomo_summary(self):
-        # Runs on every keystroke, so half-typed lists are expected rather than errors.
-        try:
-            p = self.collect_tomo_params()
-        except ValueError as exc:
-            self.te_tomo_summary.setPlainText(f"Waiting for valid input:\n{exc}")
-            return
-        scan, info = p["fly2d_scan"], p["angle_info"]
-        if info["angle_step"] <= 0 or scan["x_num"] <= 0 or scan["y_num"] <= 0:
-            self.te_tomo_summary.setPlainText("Angle step and 2D scan points must be greater than 0.")
-            return
-        angles = np.linspace(info["start"], info["end"],
-                             int(1 + abs(info["end"] - info["start"]) / info["angle_step"]))
-        angles = [a for a in angles if a not in p["remove_angles"]]
-        if not angles:
-            self.te_tomo_summary.setPlainText("No angles left after 'remove angles'.")
-            return
+    @staticmethod
+    def _json_scan_angles(kind, params):
+        # Mirrors each plan's angle list: run_tomo_json uses linspace, run_diff_json arange.
+        # A non-empty diff custom_angle_list replaces start/end/step.
+        info = params["angle_info"]
+        if params.get("custom_angle_list"):
+            return np.array(params["custom_angle_list"], dtype=float)
+        if kind == "diff":
+            return np.arange(info["start"], info["end"] + info["angle_step"] / 2, info["angle_step"])
+        return np.linspace(info["start"], info["end"],
+                           int(1 + abs(info["end"] - info["start"]) / info["angle_step"]))
 
-        # Mirrors run_tomo_json: align scans, then the 2D scan whose x points shrink with angle unless scaled.
-        seconds = 0
-        for angle in angles:
+    def _json_scan_seconds(self, kind, p, angle):
+        # Mirrors the plans: align scans, then the 2D scan. In tomo the x points shrink with
+        # angle unless scaled and 2D COM only runs without x align; diff runs every enabled align.
+        scan = p["fly2d_scan"]
+        x_num = scan["x_num"]
+        if kind == "tomo" and not p["scale_scan_range"]:
             on_x = abs(angle) < p["axis_switch_angle"]
             factor = abs(np.cos(np.radians(angle))) if on_x else abs(np.sin(np.radians(angle)))
-            x_num = scan["x_num"] if p["scale_scan_range"] else round(scan["x_num"] * factor)
-            seconds += x_num * scan["y_num"] * scan["exposure"]
-            if p["xalign"]["do_align"]:
-                seconds += p["xalign"]["num"] * p["xalign"]["exposure"]
-            elif p["align_2d_com"]["do_align"]:
-                com = p["align_2d_com"]
-                seconds += com["x_num"] * com["y_num"] * com["exposure"]
-            if p["yalign"]["do_align"]:
-                seconds += p["yalign"]["num"] * p["yalign"]["exposure"]
-            seconds += TOMO_OVERHEAD_PER_ANGLE_S
+            x_num = round(x_num * factor)
+        seconds = x_num * scan["y_num"] * scan["exposure"] + JSON_SCAN_OVERHEAD_PER_ANGLE_S
+        com = p["align_2d_com"]
+        if p["xalign"]["do_align"]:
+            seconds += p["xalign"]["num"] * p["xalign"]["exposure"]
+        if com["do_align"] and (kind == "diff" or not p["xalign"]["do_align"]):
+            seconds += com["x_num"] * com["y_num"] * com["exposure"]
+        if p["yalign"]["do_align"]:
+            seconds += p["yalign"]["num"] * p["yalign"]["exposure"]
+        return seconds
 
+    @staticmethod
+    def _json_scan_angle_text(params):
+        custom = params.get("custom_angle_list")
+        if custom:
+            return "custom: " + ", ".join(f"{a:g}" for a in custom) + " deg"
+        info = params["angle_info"]
+        return f"{info['start']:g} to {info['end']:g}, step {info['angle_step']:g} deg"
+
+    def update_json_scan_summary(self, kind):
+        summary = self._jw(kind, "te_{}_summary")
+        # Runs on every keystroke, so half-typed lists are expected rather than errors.
+        try:
+            p = self.collect_json_scan_params(kind)
+        except ValueError as exc:
+            summary.setPlainText(f"Waiting for valid input:\n{exc}")
+            return
+        scan, info = p["fly2d_scan"], p["angle_info"]
+        custom = p.get("custom_angle_list")
+        if (not custom and info["angle_step"] <= 0) or scan["x_num"] <= 0 or scan["y_num"] <= 0:
+            summary.setPlainText("Angle step and 2D scan points must be greater than 0.")
+            return
+        angles = [a for a in self._json_scan_angles(kind, p) if a not in p["remove_angles"]]
+        if not angles:
+            summary.setPlainText("No angles left after 'remove angles'.")
+            return
+
+        seconds = sum(self._json_scan_seconds(kind, p, a) for a in angles)
         x_range = scan["x_end"] - scan["x_start"]
         y_range = scan["y_end"] - scan["y_start"]
         hours, rest = divmod(int(seconds), 3600)
         finish = datetime.now() + timedelta(seconds=seconds)
         motors = p["fly_motors"]
-        self.te_tomo_summary.setPlainText("\n".join([
+        motor_text = (f"{motors[0]}/{motors[2]}, {motors[1]}" if len(motors) > 2
+                      else ", ".join(motors))
+        summary.setPlainText("\n".join([
             f"Microscope : {self.microscope_profiles['active']} "
-            f"({motors[0]}/{motors[2]}, {motors[1]}; theta {p['th_motor']})",
+            f"({motor_text}; theta {p['th_motor']})",
             f"2D scan    : {abs(x_range):.2f} x {abs(y_range):.2f} um, "
             f"{scan['x_num']} x {scan['y_num']} pts, {scan['exposure'] * 1000:.1f} ms",
             f"Pixel size : x {abs(x_range) / scan['x_num'] * 1000:.1f} nm, "
             f"y {abs(y_range) / scan['y_num'] * 1000:.1f} nm",
-            f"Angles     : {info['start']:g} to {info['end']:g}, step {info['angle_step']:g} deg "
-            f"-> {len(angles)} scans",
+            f"Angles     : {self._json_scan_angle_text(p)} -> {len(angles)} scans",
             f"Per angle  : ~{seconds / len(angles) / 60:.1f} min "
-            f"(incl. ~{TOMO_OVERHEAD_PER_ANGLE_S} s overhead)",
+            f"(incl. ~{JSON_SCAN_OVERHEAD_PER_ANGLE_S} s overhead)",
             f"Total time : ~{hours} h {rest // 60:02d} min",
             f"Finish at  : {finish:%a %Y-%m-%d %H:%M} (if started now)",
         ]))
 
     @show_error_message_box
-    def preview_tomo_json(self):
-        text = json.dumps(self.collect_tomo_params(), indent=6)
+    def preview_json_scan(self, kind):
+        text = json.dumps(self.collect_json_scan_params(kind), indent=6)
+        self._show_text_dialog(f"{JSON_SCAN_TABS[kind]['title']} JSON Preview", text, (600, 750))
+
+    def _show_text_dialog(self, title, text, size):
         dialog = QtWidgets.QDialog(self)
-        dialog.setWindowTitle("Tomo JSON Preview")
-        dialog.resize(600, 750)
+        dialog.setWindowTitle(title)
+        dialog.resize(*size)
         layout = QtWidgets.QVBoxLayout(dialog)
         view = QtWidgets.QPlainTextEdit(text)
         view.setReadOnly(True)
+        view.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
         view.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
         layout.addWidget(view)
         buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.Close)
@@ -876,7 +1109,7 @@ class Ui(QtWidgets.QMainWindow):
         layout.addWidget(buttons)
         dialog.exec_()
 
-    def _tomo_set_value(self, widget, value):
+    def _json_scan_set_value(self, widget, value):
         if isinstance(widget, QCheckBox):
             widget.setChecked(bool(value))
         elif isinstance(widget, QtWidgets.QComboBox):
@@ -896,7 +1129,7 @@ class Ui(QtWidgets.QMainWindow):
         else:
             widget.setText(str(value))
 
-    def _tomo_get_value(self, key, widget, template):
+    def _json_scan_get_value(self, key, widget, template):
         if isinstance(widget, QCheckBox):
             return widget.isChecked()
         if isinstance(widget, QtWidgets.QComboBox):
@@ -907,94 +1140,103 @@ class Ui(QtWidgets.QMainWindow):
         if not isinstance(template, list):
             return text
         items = [v.strip() for v in text.split(",") if v.strip()]
-        if key in TOMO_NUMBER_LIST_KEYS:
+        if key in JSON_SCAN_NUMBER_LIST_KEYS:
             return [float(v) for v in items]
         return items
 
-    def collect_tomo_params(self):
-        params = copy.deepcopy(self.tomo_params)
-        for path, widget in self.tomo_widgets.items():
+    def collect_json_scan_params(self, kind):
+        tab = self.json_tabs[kind]
+        params = copy.deepcopy(tab["params"])
+        for path, widget in tab["widgets"].items():
             target = params
             for key in path[:-1]:
                 target = target[key]
-            target[path[-1]] = self._tomo_get_value(path[-1], widget, target[path[-1]])
+            target[path[-1]] = self._json_scan_get_value(path[-1], widget, target[path[-1]])
         profile = self.microscope_profiles[self.microscope_profiles["active"]]
-        params["fly_motors"] = list(profile["fly_motors"])
+        params["fly_motors"] = list(profile["fly_motors"][:JSON_SCAN_TABS[kind]["n_fly_motors"]])
         params["th_motor"] = profile["th_motor"]
         return params
 
-    def apply_tomo_params(self, params):
+    def apply_json_scan_params(self, kind, params):
+        tab = self.json_tabs[kind]
         # Fill gaps from the defaults so older JSONs missing newer keys still load.
-        merged = copy.deepcopy(self.tomo_defaults)
+        merged = copy.deepcopy(tab["defaults"])
         for key, value in params.items():
             if isinstance(value, dict) and isinstance(merged.get(key), dict):
                 merged[key].update(value)
             else:
                 merged[key] = value
-        for path, widget in self.tomo_widgets.items():
+        for path, widget in tab["widgets"].items():
             value = merged
             for key in path:
                 value = value[key]
             # Loading must not trigger the align prefill and overwrite the file's align values.
             with QtCore.QSignalBlocker(widget):
-                self._tomo_set_value(widget, value)
-        self.tomo_params = merged
-        self.update_tomo_summary()
+                self._json_scan_set_value(widget, value)
+        tab["params"] = merged
+        self.update_json_scan_summary(kind)
 
     @show_error_message_box
-    def import_tomo_json(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Import Tomo JSON", self.active_folder,
+    def import_json_scan(self, kind):
+        title = JSON_SCAN_TABS[kind]["title"]
+        path, _ = QFileDialog.getOpenFileName(self, f"Import {title} JSON", self.active_folder,
                                               "JSON Files (*.json)")
         if not path:
             return
         with open(path, "r") as f:
-            self.apply_tomo_params(json.load(f))
-        self.statusbar.showMessage(f"Tomo parameters loaded from {path}")
+            self.apply_json_scan_params(kind, json.load(f))
+        self.statusbar.showMessage(f"{title} parameters loaded from {path}")
 
     @show_error_message_box
-    def export_tomo_json(self):
-        params = self.collect_tomo_params()
+    def export_json_scan(self, kind):
+        title = JSON_SCAN_TABS[kind]["title"]
+        params = self.collect_json_scan_params(kind)
         path, _ = QFileDialog.getSaveFileName(
-            self, "Export Tomo JSON",
+            self, f"Export {title} JSON",
             os.path.join(self.active_folder, f"{params['scan_label']}.json"),
             "JSON Files (*.json)")
         if not path:
             return
         with open(path, "w") as f:
             json.dump(params, f, indent=6)
-        self.statusbar.showMessage(f"Tomo parameters saved to {path}")
+        self.statusbar.showMessage(f"{title} parameters saved to {path}")
 
     @show_error_message_box
-    def reset_tomo_params(self):
-        self.tomo_defaults["pdf_elems"] = self._live_plot_elems()
-        self.apply_tomo_params(self.tomo_defaults)
+    def reset_json_scan_params(self, kind):
+        defaults = self.json_tabs[kind]["defaults"]
+        defaults["pdf_elems"] = self._live_plot_elems()
+        self.apply_json_scan_params(kind, defaults)
 
     def _live_plot_elems(self):
         n_live = self.sb_live_elem_num.value()
         return [cb.currentText().split(":")[0] for cb in self.xrf_combo_boxes[:n_live]]
 
     @show_error_message_box
-    def run_tomo_from_gui(self):
-        params = self.collect_tomo_params()
+    def submit_json_scan_to_qserver(self, kind, execute):
+        title = JSON_SCAN_TABS[kind]["title"]
+        sender = JSON_SCAN_TABS[kind]["sender"]
+        send = globals().get(sender)
+        if send is None:
+            raise NameError(f"{sender} is not defined in this session.")
+        params = self.collect_json_scan_params(kind)
         names = params["fly_motors"] + [params["th_motor"], params["fly2d_scan"]["det"]]
         missing = [n for n in names if n not in globals()]
         if missing:
             raise ValueError(f"Not defined in this session: {missing}")
-        if not self._re_is_idle():
-            QMessageBox.critical(self, "Tomo Scan", "Cannot start while a scan is in progress.")
+        if not self._ensure_qserver_ready():
             return
 
-        info = params["angle_info"]
-        n_angles = int(1 + abs(info["end"] - info["start"]) / info["angle_step"])
-        # run_tomo_json re-reads and rewrites this file, so each run gets its own copy.
+        n_angles = len(self._json_scan_angles(kind, params))
+        # The plan re-reads and rewrites this file, so each submission gets its own copy.
         label = re.sub(r"[^\w.-]", "_", params["scan_label"])
-        save_dir = os.path.join(params["save_log_to"], "tomo_json")
+        save_dir = os.path.join(params["save_log_to"], f"{kind}_json")
         json_path = os.path.join(save_dir, f"{label}_{datetime.now():%Y%m%d_%H%M%S}.json")
 
+        action = "Run now on QServer" if execute else "Add to the QServer queue"
         choice = QMessageBox.question(
-            self, "Run Tomo Scan",
-            f"Run '{params['scan_label']}' with {n_angles} angles "
-            f"({info['start']} to {info['end']}, step {info['angle_step']})?\n\n"
+            self, f"{'Run' if execute else 'Queue'} {title} Scan",
+            f"{action}: '{params['scan_label']}' with {n_angles} angles "
+            f"({self._json_scan_angle_text(params)})?\n\n"
             f"Parameters will be saved to:\n{json_path}",
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if choice != QMessageBox.Yes:
@@ -1003,46 +1245,49 @@ class Ui(QtWidgets.QMainWindow):
         os.makedirs(save_dir, exist_ok=True)
         with open(json_path, "w") as f:
             json.dump(params, f, indent=6)
-        self.statusbar.showMessage(f"Tomo scan running from {json_path}")
-        self._set_tomo_running(json_path)
-        try:
-            RE(run_tomo_json(json_path))
-        finally:
-            self._set_tomo_running(None)
+        send(json_path, execute=execute)
+        if execute:
+            self._set_json_scan_running(kind, json_path)
+            self.statusbar.showMessage(f"{title} scan sent to QServer for execution: {json_path}")
+        else:
+            self.statusbar.showMessage(f"{title} scan added to QServer queue: {json_path}")
 
-    def _set_tomo_running(self, json_path):
-        self.tomo_running_json = json_path
+    def _set_json_scan_running(self, kind, json_path):
+        # QServer reports no completion here, so controls stay on the last executed JSON.
+        self.json_tabs[kind]["running_json"] = json_path
         running = json_path is not None
-        self.pb_run_tomo_json.setEnabled(not running)
-        self.pb_pause_tomo.setEnabled(running)
-        self.pb_stop_tomo.setEnabled(running)
-        self.pb_apply_tomo.setEnabled(running)
-        self.pb_pause_tomo.blockSignals(True)
-        self.pb_pause_tomo.setChecked(False)
-        self.pb_pause_tomo.setText("Pause")
-        self.pb_pause_tomo.blockSignals(False)
+        pause = self._jw(kind, "pb_pause_{}")
+        pause.setEnabled(running)
+        self._jw(kind, "pb_stop_{}").setEnabled(running)
+        self._jw(kind, "pb_apply_{}").setEnabled(running)
+        with QtCore.QSignalBlocker(pause):
+            pause.setChecked(False)
+            pause.setText("Pause")
 
-    def _set_tomo_flag(self, key, value):
-        with open(self.tomo_running_json, "r") as f:
+    def _set_json_scan_flag(self, kind, key, value):
+        path = self.json_tabs[kind]["running_json"]
+        with open(path, "r") as f:
             params = json.load(f)
         params[key] = value
-        with open(self.tomo_running_json, "w") as f:
+        with open(path, "w") as f:
             json.dump(params, f, indent=6)
 
     @show_error_message_box
-    def toggle_tomo_pause(self, paused):
-        self._set_tomo_flag("pause_scan", paused)
-        self.pb_pause_tomo.setText("Resume" if paused else "Pause")
+    def toggle_json_scan_pause(self, kind, paused):
+        title = JSON_SCAN_TABS[kind]["title"]
+        self._set_json_scan_flag(kind, "pause_scan", paused)
+        self._jw(kind, "pb_pause_{}").setText("Resume" if paused else "Pause")
         self.statusbar.showMessage(
-            "Tomo scan will pause before the next angle." if paused else "Tomo scan resumed.")
+            f"{title} scan will pause before the next angle." if paused else f"{title} scan resumed.")
 
     @show_error_message_box
-    def apply_tomo_changes(self):
-        with open(self.tomo_running_json, "r") as f:
+    def apply_json_scan_changes(self, kind):
+        path = self.json_tabs[kind]["running_json"]
+        with open(path, "r") as f:
             running = json.load(f)
-        new = self.collect_tomo_params()
-        angles_edited = new["angle_info"] != running["angle_info"]
-        for key in TOMO_RUNTIME_KEYS:
+        new = self.collect_json_scan_params(kind)
+        angles_edited = any(new.get(k) != running.get(k) for k in ("angle_info", "custom_angle_list"))
+        for key in JSON_SCAN_TABS[kind]["runtime_keys"]:
             new[key] = running[key]
 
         changes = []
@@ -1065,24 +1310,26 @@ class Ui(QtWidgets.QMainWindow):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if choice != QMessageBox.Yes:
             return
-        with open(self.tomo_running_json, "w") as f:
+        with open(path, "w") as f:
             json.dump(new, f, indent=6)
-        self.statusbar.showMessage(f"{len(changes)} tomo parameter change(s) applied from the next angle.")
+        self.statusbar.showMessage(
+            f"{len(changes)} {JSON_SCAN_TABS[kind]['title'].lower()} parameter change(s) "
+            "applied from the next angle.")
 
     @show_error_message_box
-    def stop_tomo_scan(self):
+    def stop_json_scan(self, kind):
+        title = JSON_SCAN_TABS[kind]["title"]
         choice = QMessageBox.question(
-            self, "Stop Tomo Scan",
-            "Stop the tomo scan after the current angle finishes?",
+            self, f"Stop {title} Scan",
+            f"Stop the {title.lower()} scan after the current angle finishes?",
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if choice != QMessageBox.Yes:
             return
         # A paused scan only re-checks stop_iter after it is resumed.
-        self._set_tomo_flag("pause_scan", False)
-        self._set_tomo_flag("stop_iter", True)
-        self.pb_stop_tomo.setEnabled(False)
-        self.statusbar.showMessage("Tomo scan will stop after the current angle.")
-
+        self._set_json_scan_flag(kind, "pause_scan", False)
+        self._set_json_scan_flag(kind, "stop_iter", True)
+        self._jw(kind, "pb_stop_{}").setEnabled(False)
+        self.statusbar.showMessage(f"{title} scan will stop after the current angle.")
 
     #shutters
     def connect_shutters(self):
@@ -1113,6 +1360,10 @@ class Ui(QtWidgets.QMainWindow):
                 self.db_dsy:"XF:03IDC-ES{MCS:1-Ax:mlldiffy}Mtr.RBV",
                 self.db_dsz:"XF:03IDC-ES{ANC350:6-Ax:3}Mtr.RBV",
                 self.db_dsth:"XF:03IDC-ES{MCS:3-Ax:diffsth}Mtr.RBV",
+                self.db_mll_osax:"XF:03IDC-ES{ANC350:4-Ax:2}Mtr.RBV",
+                self.db_mll_osay:"XF:03IDC-ES{ANC350:4-Ax:3}Mtr.RBV",
+                self.db_mll_bsx:"XF:03IDC-ES{ANC350:6-Ax:0}Mtr.RBV",
+                self.db_mll_bsy:"XF:03IDC-ES{ANC350:6-Ax:1}Mtr.RBV",
                 self.db_sbz:"XF:03IDC-ES{ANC350:3-Ax:2}Mtr.RBV",
                 self.db_ssa2_x:"XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.RBV",
                 self.db_ssa2_y:"XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.RBV",
@@ -2393,7 +2644,15 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_mlls_to_downstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs downstream.", self.mll_to_downstream_))
         self.pb_mll_sample_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample in.", self.mll_sample_in_))
         self.pb_mll_sample_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample out.", self.mll_sample_out_))
+        #mll osa / beam stop jog
+        for axis in ("osax", "osay", "bsx", "bsy"):
+            getattr(self, f"pb_mll_{axis}_pos").clicked.connect(lambda _=False, a=axis: self.move_mll_osa_bs(a))
+            getattr(self, f"pb_mll_{axis}_neg").clicked.connect(lambda _=False, a=axis: self.move_mll_osa_bs(a, neg_=True))
 
+    @show_error_message_box
+    def move_mll_osa_bs(self, axis, neg_=False):
+        motor = getattr(mllosa if axis.startswith("osa") else mllbs, axis)
+        self.move_motor_with_pv(getattr(self, f"db_move_mll_{axis}"), motor, 1, neg=neg_)
     @show_error_message_box
     def _confirm_and_run(self, description, action):
         choice = QMessageBox.question(
@@ -3092,7 +3351,7 @@ class Ui(QtWidgets.QMainWindow):
 
     @show_error_message_box
     def S5_Pos(self, x, y):
-        s5.vgap.user_setpoint.put(x) #PV names seems flipped
+        s5.vgap.user_setpoint.put(x) # H/V flipped at EPICS level
         s5.hgap.user_setpoint.put(y)
         QtTest.QTest.qWait(1500)
 
@@ -3169,16 +3428,6 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_move_ssa2.clicked.connect(lambda:self.SSA2_Pos(self.db_ssa2_x_set.value()
                                                               ,self.db_ssa2_y_set.value()))
 
-        self.pb_ssa2_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen, neg=True))
-        self.pb_ssa2_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen))
-        self.pb_ssa2_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_vcen_move, ssa2.vcen, neg=True))
-        self.pb_ssa2_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_vcen_move, ssa2.vcen))
-
-        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen, neg=True))
-        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen))
-        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen, neg=True))
-        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen))
-
         self.pb_center_ssa2_auto.clicked.connect(lambda:(RE(self.center_ssa2())))
         self.pb_ssa2_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen, neg=True))
         self.pb_ssa2_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_ssa2_hcen_move, ssa2.hcen))
@@ -3192,10 +3441,11 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_S5_VClose.clicked.connect(lambda:self.S5_Pos(0.3,0.1))
         self.pb_move_s5.clicked.connect(lambda:self.S5_Pos(self.db_s5_x_set.value()
                                                               ,self.db_s5_y_set.value()))
-        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen, neg=True))
-        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.hcen))
-        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen, neg=True))
-        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.vcen))
+        # S5 H/V flipped at EPICS level
+        self.pb_s5_hcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.vcen, neg=True))
+        self.pb_s5_hcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_hcen_move, s5.vcen))
+        self.pb_s5_vcen_move_neg.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.hcen, neg=True))
+        self.pb_s5_vcen_move_positive.clicked.connect(lambda:self.move_slit_center(self.db_s5_vcen_move, s5.hcen))
 
         #front end
         self.pb_FS_IN.clicked.connect(lambda:self.FS_IN())

@@ -1,0 +1,93 @@
+{
+      "flying_panda": true,
+      "fly_motors": [
+            "zpssx",
+            "zpssy"
+      ],
+      "th_motor": "zpsth",
+      "angle_info": {
+            "start": 68.4,
+            "end": 70.6,
+            "angle_step": 0.05
+      },
+      "custom_angle_list": [],
+      "fly2d_scan": {
+            "det": "dets_fast_merlin",
+            "x_start": -4.5,
+            "x_end": 4.5,
+            "x_num": 90,
+            "y_start": -11,
+            "y_end": 3,
+            "y_num": 120,
+            "exposure": 0.03
+      },
+      "xalign": {
+            "do_align": true,
+            "start": -10,
+            "end": 10,
+            "num": 200,
+            "exposure": 0.05,
+            "elem": "Te_L",
+            "center_with": "line_center",
+            "threshold": 0.2,
+            "move_coarse": true,
+            "neg_flag": false,
+            "offset": -0.5,
+            "zero_before_scan": false,
+            "initial_position": 0,
+            "align_movement_limit": 10.5,
+            "line_center_mode": "binary"
+      },
+      "yalign": {
+            "do_align": true,
+            "start": -5,
+            "end": 5,
+            "num": 150,
+            "exposure": 0.05,
+            "elem": "Cr",
+            "center_with": "line_center",
+            "threshold": 0.5,
+            "move_coarse": true,
+            "neg_flag": true,
+            "offset": 0,
+            "zero_before_scan": false,
+            "initial_position": 0,
+            "align_movement_limit": 10,
+            "line_center_mode": "binary"
+      },
+      "align_2d_com": {
+            "do_align": false,
+            "x_start": -5,
+            "x_end": 5,
+            "x_num": 50,
+            "y_start": -2,
+            "y_end": 2,
+            "y_num": 20,
+            "exposure": 0.005,
+            "elem": "Au_L",
+            "threshold": 0.5,
+            "move_x": true,
+            "move_y": true,
+            "x_offset": -0.95,
+            "y_offset": -0.2,
+            "zero_before_scan": false
+      },
+      "stop_iter": false,
+      "save_log_to": "/data/users/current_user",
+      "add_angles": [],
+      "remove_angles": [
+            -90,
+            -91
+      ],
+      "stop_pdf": false,
+      "pdf_elems": [
+            "Te_L",
+            "Mo_L",
+            "Cr"
+      ],
+      "pause_scan": false,
+      "test": false,
+      "ic_threshold": 0.9,
+      "scan_label": "MoTe2_44.4_2theta",
+      "Notes": "MoTe2_44.4_2theta"
+}
