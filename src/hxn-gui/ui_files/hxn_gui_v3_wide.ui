@@ -62,9 +62,9 @@ QGroupBox {
 
 </string>
    </property>
-   <layout class="QGridLayout" name="gridLayout_86">
+   <layout class="QGridLayout" name="centralwidget_grid">
     <item row="0" column="0" colspan="3">
-     <layout class="QGridLayout" name="gridLayout_50">
+     <layout class="QGridLayout" name="centralwidget_grid_2">
       <property name="topMargin">
        <number>1</number>
       </property>
@@ -72,7 +72,7 @@ QGroupBox {
        <number>5</number>
       </property>
       <item row="0" column="3">
-       <layout class="QGridLayout" name="gridLayout_9">
+       <layout class="QGridLayout" name="centralwidget_grid_3">
         <property name="horizontalSpacing">
          <number>12</number>
         </property>
@@ -117,7 +117,7 @@ Close B Shutter
        </layout>
       </item>
       <item row="0" column="4">
-       <layout class="QGridLayout" name="gridLayout_49">
+       <layout class="QGridLayout" name="centralwidget_grid_4">
         <property name="horizontalSpacing">
          <number>12</number>
         </property>
@@ -183,7 +183,7 @@ Close Fast Shutter (C)
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_14">
+       <widget class="QLabel" name="label_main_hxn_3_id">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -205,7 +205,7 @@ border-radius: 10px</string>
      </layout>
     </item>
     <item row="1" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_32">
+     <layout class="QVBoxLayout" name="centralwidget_vbox">
       <item>
        <widget class="QProgressBar" name="pbar_flyscan">
         <property name="enabled">
@@ -231,14 +231,14 @@ border-radius: 10px</string>
      </layout>
     </item>
     <item row="1" column="1">
-     <widget class="QFrame" name="frame_2">
+     <widget class="QFrame" name="frame_qserver_status">
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="frame_qserver_status_grid">
        <item row="0" column="0">
         <widget class="QLabel" name="label_qserver_light">
          <property name="styleSheet">
@@ -309,14 +309,14 @@ border-radius: 10px</string>
      </widget>
     </item>
     <item row="1" column="2">
-     <layout class="QGridLayout" name="gridLayout_45">
+     <layout class="QGridLayout" name="centralwidget_grid_5">
       <property name="horizontalSpacing">
        <number>0</number>
       </property>
       <item row="0" column="0">
-       <layout class="QGridLayout" name="gridLayout_97">
+       <layout class="QGridLayout" name="centralwidget_grid_6">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_138">
+         <widget class="QLabel" name="label_main_flytube_pressure">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -365,9 +365,9 @@ border-radius: 10px</string>
        </layout>
       </item>
       <item row="0" column="2">
-       <layout class="QGridLayout" name="gridLayout_44">
+       <layout class="QGridLayout" name="centralwidget_grid_7">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_122">
+         <widget class="QLabel" name="label_main_ic3">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -413,7 +413,7 @@ border-radius: 10px</string>
        </layout>
       </item>
       <item row="0" column="3">
-       <layout class="QGridLayout" name="gridLayout_93">
+       <layout class="QGridLayout" name="centralwidget_grid_8">
         <item row="0" column="1">
          <widget class="QDoubleSpinBox" name="lcd_monoE">
           <property name="sizePolicy">
@@ -446,7 +446,7 @@ border-radius: 10px</string>
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QLabel" name="label_123">
+         <widget class="QLabel" name="label_main_energy">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -464,9 +464,9 @@ border-radius: 10px</string>
        </layout>
       </item>
       <item row="0" column="1">
-       <layout class="QGridLayout" name="gridLayout_21">
+       <layout class="QGridLayout" name="centralwidget_grid_9">
         <item row="0" column="0">
-         <widget class="QLabel" name="label_79">
+         <widget class="QLabel" name="label_main_scan_id">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -635,13 +635,13 @@ QRadioButton::indicator:unchecked {
       <property name="tabBarAutoHide">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="tab_4">
+      <widget class="QWidget" name="tab_user_setup">
        <attribute name="title">
         <string>User Setup</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_142">
+       <layout class="QGridLayout" name="tab_user_setup_grid">
         <item row="2" column="0">
-         <widget class="QGroupBox" name="groupBox_7">
+         <widget class="QGroupBox" name="gb_xrf_elements">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -654,7 +654,7 @@ QRadioButton::indicator:unchecked {
           <property name="flat">
            <bool>false</bool>
           </property>
-          <layout class="QGridLayout" name="gridLayout_40">
+          <layout class="QGridLayout" name="gb_xrf_elements_grid">
            <property name="bottomMargin">
             <number>2</number>
            </property>
@@ -662,9 +662,9 @@ QRadioButton::indicator:unchecked {
             <number>-1</number>
            </property>
            <item row="2" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <layout class="QHBoxLayout" name="gb_xrf_elements_hbox">
              <item>
-              <layout class="QGridLayout" name="gridLayout_37">
+              <layout class="QGridLayout" name="gb_xrf_elements_grid_2">
                <item row="0" column="1">
                 <widget class="QLineEdit" name="le_line_elem">
                  <property name="placeholderText">
@@ -673,7 +673,7 @@ QRadioButton::indicator:unchecked {
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QLabel" name="label_20">
+                <widget class="QLabel" name="label_xrf_elements_line_plot_element_limit_1">
                  <property name="text">
                   <string>Line Plot Element (limit =1)         </string>
                  </property>
@@ -682,9 +682,9 @@ QRadioButton::indicator:unchecked {
               </layout>
              </item>
              <item>
-              <layout class="QGridLayout" name="gridLayout_36">
+              <layout class="QGridLayout" name="gb_xrf_elements_grid_3">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_19">
+                <widget class="QLabel" name="label_xrf_elements_live_image_elements_first">
                  <property name="text">
                   <string>Live Image Elements (first</string>
                  </property>
@@ -720,7 +720,7 @@ QRadioButton::indicator:unchecked {
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QLabel" name="label_25">
+                <widget class="QLabel" name="label_xrf_elements_blank">
                  <property name="text">
                   <string>)</string>
                  </property>
@@ -729,7 +729,7 @@ QRadioButton::indicator:unchecked {
               </layout>
              </item>
              <item>
-              <layout class="QGridLayout" name="gridLayout_35">
+              <layout class="QGridLayout" name="gb_xrf_elements_grid_4">
                <item row="0" column="1">
                 <widget class="QLineEdit" name="le_roi_elems">
                  <property name="placeholderText">
@@ -738,7 +738,7 @@ QRadioButton::indicator:unchecked {
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QLabel" name="label_16">
+                <widget class="QLabel" name="label_xrf_elements_elements_of_interest_limit_1">
                  <property name="text">
                   <string>Elements of Interest (limit =16)   </string>
                  </property>
@@ -749,7 +749,7 @@ QRadioButton::indicator:unchecked {
             </layout>
            </item>
            <item row="3" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QHBoxLayout" name="gb_xrf_elements_hbox_2">
              <property name="spacing">
               <number>25</number>
              </property>
@@ -804,14 +804,14 @@ Export List
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <layout class="QGridLayout" name="gridLayout_41">
+             <layout class="QGridLayout" name="xrf_elem_cb_widget_grid">
               <property name="verticalSpacing">
                <number>15</number>
               </property>
               <item row="0" column="6">
-               <layout class="QVBoxLayout" name="verticalLayout_12">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox">
                 <item>
-                 <widget class="QLabel" name="label_36">
+                 <widget class="QLabel" name="label_elem_7">
                   <property name="text">
                    <string>7</string>
                   </property>
@@ -823,9 +823,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="5">
-               <layout class="QVBoxLayout" name="verticalLayout_19">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_2">
                 <item>
-                 <widget class="QLabel" name="label_39">
+                 <widget class="QLabel" name="label_elem_14">
                   <property name="text">
                    <string>14</string>
                   </property>
@@ -837,9 +837,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="0">
-               <layout class="QVBoxLayout" name="verticalLayout_22">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_3">
                 <item>
-                 <widget class="QLabel" name="label_23">
+                 <widget class="QLabel" name="label_elem_1">
                   <property name="text">
                    <string>1</string>
                   </property>
@@ -851,9 +851,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="1">
-               <layout class="QVBoxLayout" name="verticalLayout_23">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_4">
                 <item>
-                 <widget class="QLabel" name="label_24">
+                 <widget class="QLabel" name="label_elem_2">
                   <property name="text">
                    <string>2</string>
                   </property>
@@ -865,9 +865,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="7">
-               <layout class="QVBoxLayout" name="verticalLayout_13">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_5">
                 <item>
-                 <widget class="QLabel" name="label_31">
+                 <widget class="QLabel" name="label_elem_8">
                   <property name="text">
                    <string>8</string>
                   </property>
@@ -879,9 +879,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="4">
-               <layout class="QVBoxLayout" name="verticalLayout_4">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_6">
                 <item>
-                 <widget class="QLabel" name="label_35">
+                 <widget class="QLabel" name="label_elem_5">
                   <property name="text">
                    <string>5</string>
                   </property>
@@ -893,9 +893,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="5">
-               <layout class="QVBoxLayout" name="verticalLayout_10">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_7">
                 <item>
-                 <widget class="QLabel" name="label_30">
+                 <widget class="QLabel" name="label_elem_6">
                   <property name="text">
                    <string>6</string>
                   </property>
@@ -907,9 +907,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="6">
-               <layout class="QVBoxLayout" name="verticalLayout_20">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_8">
                 <item>
-                 <widget class="QLabel" name="label_40">
+                 <widget class="QLabel" name="label_elem_15">
                   <property name="text">
                    <string>15</string>
                   </property>
@@ -921,9 +921,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="2">
-               <layout class="QVBoxLayout" name="verticalLayout_16">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_9">
                 <item>
-                 <widget class="QLabel" name="label_29">
+                 <widget class="QLabel" name="label_elem_11">
                   <property name="text">
                    <string>11</string>
                   </property>
@@ -935,9 +935,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="2">
-               <layout class="QVBoxLayout" name="verticalLayout">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_10">
                 <item>
-                 <widget class="QLabel" name="label_38">
+                 <widget class="QLabel" name="label_elem_3">
                   <property name="text">
                    <string>3</string>
                   </property>
@@ -949,9 +949,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="0">
-               <layout class="QVBoxLayout" name="verticalLayout_14">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_11">
                 <item>
-                 <widget class="QLabel" name="label_37">
+                 <widget class="QLabel" name="label_elem_9">
                   <property name="text">
                    <string>9</string>
                   </property>
@@ -963,9 +963,9 @@ Export List
                </layout>
               </item>
               <item row="0" column="3">
-               <layout class="QVBoxLayout" name="verticalLayout_3">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_12">
                 <item>
-                 <widget class="QLabel" name="label_33">
+                 <widget class="QLabel" name="label_elem_4">
                   <property name="text">
                    <string>4</string>
                   </property>
@@ -977,9 +977,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="3">
-               <layout class="QVBoxLayout" name="verticalLayout_18">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_13">
                 <item>
-                 <widget class="QLabel" name="label_28">
+                 <widget class="QLabel" name="label_elem_12">
                   <property name="text">
                    <string>12</string>
                   </property>
@@ -991,9 +991,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="7">
-               <layout class="QVBoxLayout" name="verticalLayout_21">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_14">
                 <item>
-                 <widget class="QLabel" name="label_41">
+                 <widget class="QLabel" name="label_elem_16">
                   <property name="text">
                    <string>16</string>
                   </property>
@@ -1005,9 +1005,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="4">
-               <layout class="QVBoxLayout" name="verticalLayout_17">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_15">
                 <item>
-                 <widget class="QLabel" name="label_26">
+                 <widget class="QLabel" name="label_elem_13">
                   <property name="text">
                    <string>13</string>
                   </property>
@@ -1019,9 +1019,9 @@ Export List
                </layout>
               </item>
               <item row="1" column="1">
-               <layout class="QVBoxLayout" name="verticalLayout_15">
+               <layout class="QVBoxLayout" name="xrf_elem_cb_widget_vbox_16">
                 <item>
-                 <widget class="QLabel" name="label_34">
+                 <widget class="QLabel" name="label_elem_10">
                   <property name="text">
                    <string>10</string>
                   </property>
@@ -1042,7 +1042,7 @@ Export List
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_5">
+         <widget class="QGroupBox" name="gb_create_user">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1052,11 +1052,11 @@ Export List
           <property name="title">
            <string>Create Directory</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_38">
+          <layout class="QGridLayout" name="gb_create_user_grid">
            <item row="1" column="0" colspan="2">
-            <layout class="QGridLayout" name="gridLayout_34">
+            <layout class="QGridLayout" name="gb_create_user_grid_2">
              <item row="0" column="0">
-              <widget class="QLabel" name="label_66">
+              <widget class="QLabel" name="label_create_user_proposal_number">
                <property name="text">
                 <string>Proposal Number </string>
                </property>
@@ -1068,12 +1068,12 @@ Export List
             </layout>
            </item>
            <item row="2" column="0" colspan="2">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QHBoxLayout" name="gb_create_user_hbox">
              <property name="rightMargin">
               <number>15</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_11">
+              <widget class="QLabel" name="label_create_user_pi_name">
                <property name="text">
                 <string>PI Name             </string>
                </property>
@@ -1092,12 +1092,12 @@ Export List
             </layout>
            </item>
            <item row="2" column="2">
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QHBoxLayout" name="gb_create_user_hbox_2">
              <property name="rightMargin">
               <number>15</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_13">
+              <widget class="QLabel" name="label_create_user_title">
                <property name="text">
                 <string>Title</string>
                </property>
@@ -1113,12 +1113,12 @@ Export List
             </layout>
            </item>
            <item row="2" column="3">
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <layout class="QHBoxLayout" name="gb_create_user_hbox_3">
              <property name="leftMargin">
               <number>20</number>
              </property>
              <item>
-              <widget class="QLabel" name="label_12">
+              <widget class="QLabel" name="label_create_user_experimenters">
                <property name="text">
                 <string>Experimenters     </string>
                </property>
@@ -1134,9 +1134,9 @@ Export List
             </layout>
            </item>
            <item row="3" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_16">
+            <layout class="QHBoxLayout" name="gb_create_user_hbox_4">
              <item>
-              <widget class="QLabel" name="label_69">
+              <widget class="QLabel" name="label_create_user_pdf_filename">
                <property name="text">
                 <string>PDF Filename</string>
                </property>
@@ -1152,7 +1152,7 @@ Export List
             </layout>
            </item>
            <item row="3" column="1" colspan="2">
-            <layout class="QGridLayout" name="gridLayout_33">
+            <layout class="QGridLayout" name="gb_create_user_grid_3">
              <property name="leftMargin">
               <number>15</number>
              </property>
@@ -1184,14 +1184,14 @@ Get Proposal Info
             </widget>
            </item>
            <item row="0" column="3" rowspan="2">
-            <widget class="QGroupBox" name="groupBox_16">
+            <widget class="QGroupBox" name="gb_techniques">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="title">
               <string>Techniques</string>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <layout class="QHBoxLayout" name="gb_techniques_hbox">
               <item>
                <widget class="QCheckBox" name="cb_technique_ptycho">
                 <property name="text">
@@ -1260,9 +1260,9 @@ Create PDF and User Directory
        <attribute name="title">
         <string>Sample Exchange</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_13">
+       <layout class="QGridLayout" name="sample_exchange_tab_grid">
         <item row="2" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_82">
+         <layout class="QGridLayout" name="sample_exchange_tab_grid_2">
           <item row="1" column="0">
            <widget class="QPushButton" name="pb_start_pressure_live_plot">
             <property name="sizePolicy">
@@ -1302,7 +1302,7 @@ Create PDF and User Directory
          </layout>
         </item>
         <item row="1" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_95">
+         <layout class="QGridLayout" name="sample_exchange_tab_grid_3">
           <property name="topMargin">
            <number>25</number>
           </property>
@@ -1310,7 +1310,7 @@ Create PDF and User Directory
            <number>25</number>
           </property>
           <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_72">
+           <layout class="QGridLayout" name="sample_exchange_tab_grid_4">
             <property name="leftMargin">
              <number>12</number>
             </property>
@@ -1338,9 +1338,9 @@ color:rgb(51, 184, 141)</string>
              </widget>
             </item>
             <item row="0" column="1">
-             <layout class="QGridLayout" name="gridLayout_47">
+             <layout class="QGridLayout" name="sample_exchange_tab_grid_5">
               <item row="0" column="0">
-               <widget class="QLabel" name="label_119">
+               <widget class="QLabel" name="label_sample_exchange_tab_current_pressure">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                   <horstretch>0</horstretch>
@@ -1422,17 +1422,17 @@ color:rgb(51, 184, 141)</string>
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="QWidget" name="tab_6">
+          <widget class="QWidget" name="tab_sample_ex_auto">
            <attribute name="title">
             <string>Auto</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_105">
+           <layout class="QGridLayout" name="tab_sample_ex_auto_grid">
             <item row="0" column="2" rowspan="2">
-             <widget class="QGroupBox" name="groupBox_29">
+             <widget class="QGroupBox" name="gb_sample_ex_vent">
               <property name="title">
                <string/>
               </property>
-              <layout class="QGridLayout" name="gridLayout_103">
+              <layout class="QGridLayout" name="gb_sample_ex_vent_grid">
                <item row="1" column="0">
                 <widget class="QCheckBox" name="cb_sample_ex_det_out">
                  <property name="sizePolicy">
@@ -1477,15 +1477,15 @@ color:rgb(51, 184, 141)</string>
              </widget>
             </item>
             <item row="0" column="0" rowspan="2" colspan="2">
-             <widget class="QGroupBox" name="groupBox_22">
+             <widget class="QGroupBox" name="gb_sample_ex_pump">
               <property name="title">
                <string/>
               </property>
-              <layout class="QGridLayout" name="gridLayout_88">
+              <layout class="QGridLayout" name="gb_sample_ex_pump_grid">
                <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_68">
+                <layout class="QGridLayout" name="gb_sample_ex_pump_grid_2">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_71">
+                  <widget class="QLabel" name="label_sample_ex_pump_target_p">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1570,11 +1570,11 @@ EVAC
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_7">
+          <widget class="QWidget" name="tab_sample_ex_manual">
            <attribute name="title">
             <string>Manual Controls</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_39">
+           <layout class="QGridLayout" name="tab_sample_ex_manual_grid">
             <item row="1" column="0">
              <widget class="QPushButton" name="pb_open_fast_pumps">
               <property name="sizePolicy">
@@ -1664,7 +1664,7 @@ Stop Venting
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QTextEdit" name="textEdit">
+         <widget class="QTextEdit" name="te_sample_ex_notes">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1702,7 +1702,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_27">
+         <widget class="QGroupBox" name="gb_sample_ex_status">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -1715,7 +1715,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <property name="title">
            <string>Status</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_101">
+          <layout class="QGridLayout" name="gb_sample_ex_status_grid">
            <property name="leftMargin">
             <number>25</number>
            </property>
@@ -1723,13 +1723,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
             <number>25</number>
            </property>
            <item row="2" column="2">
-            <widget class="QGroupBox" name="groupBox_30">
+            <widget class="QGroupBox" name="gb_sample_ex_pumps">
              <property name="title">
               <string>Pumps</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_102">
+             <layout class="QGridLayout" name="gb_sample_ex_pumps_grid">
               <item row="1" column="0">
-               <widget class="QLabel" name="label_147">
+               <widget class="QLabel" name="label_sample_ex_pumps_blank">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -1797,14 +1797,14 @@ font: 18pt &quot;Cantarell&quot;;</string>
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QGroupBox" name="groupBox_28">
+            <widget class="QGroupBox" name="gb_sample_ex_vents">
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
              <property name="title">
               <string>Vents</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_89">
+             <layout class="QGridLayout" name="gb_sample_ex_vents_grid">
               <item row="3" column="0">
                <widget class="QRadioButton" name="rb_he_backfill_fail">
                 <property name="enabled">
@@ -1867,7 +1867,7 @@ indicator {
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QLabel" name="label_145">
+               <widget class="QLabel" name="label_sample_ex_vents_blank">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -1883,7 +1883,7 @@ indicator {
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_144">
+            <widget class="QLabel" name="label_sample_ex_status_blank">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -1904,9 +1904,9 @@ indicator {
        <attribute name="title">
         <string>Energy Change</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_52">
+       <layout class="QGridLayout" name="energy_grid">
         <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_33">
+         <widget class="QGroupBox" name="gb_feedbacks">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -1916,7 +1916,7 @@ indicator {
           <property name="title">
            <string>Feedbacks</string>
           </property>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="pb_engage_mirror_feedbacks">
            <property name="geometry">
             <rect>
              <x>8</x>
@@ -1931,7 +1931,7 @@ indicator {
 </string>
            </property>
           </widget>
-          <widget class="QLabel" name="label_153">
+          <widget class="QLabel" name="label_feedbacks_blank">
            <property name="geometry">
             <rect>
              <x>8</x>
@@ -1947,7 +1947,7 @@ indicator {
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_23">
+         <widget class="QGroupBox" name="gb_upstream_cameras">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -1966,9 +1966,9 @@ indicator {
           <property name="checkable">
            <bool>false</bool>
           </property>
-          <layout class="QGridLayout" name="gridLayout_71">
+          <layout class="QGridLayout" name="gb_upstream_cameras_grid">
            <item row="0" column="0">
-            <widget class="QLabel" name="label_133">
+            <widget class="QLabel" name="label_upstream_cameras_blank">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -1981,7 +1981,7 @@ indicator {
             </widget>
            </item>
            <item row="2" column="3">
-            <layout class="QVBoxLayout" name="verticalLayout_5">
+            <layout class="QVBoxLayout" name="gb_upstream_cameras_vbox">
              <item>
               <widget class="QDoubleSpinBox" name="db_fs">
                <property name="sizePolicy">
@@ -2047,25 +2047,25 @@ indicator {
             </layout>
            </item>
            <item row="2" column="0" colspan="2">
-            <layout class="QGridLayout" name="gridLayout_80">
+            <layout class="QGridLayout" name="gb_upstream_cameras_grid_2">
              <item row="1" column="0">
-              <layout class="QGridLayout" name="gridLayout_76">
+              <layout class="QGridLayout" name="gb_upstream_cameras_grid_3">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_72">
+                <widget class="QLabel" name="label_upstream_cameras_front_end_fluor_screen">
                  <property name="text">
                   <string>     Front End Fluor. Screen     </string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLabel" name="label_75">
+                <widget class="QLabel" name="label_upstream_cameras_cam_06">
                  <property name="text">
                   <string>    CAM 06    </string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="1" rowspan="2">
-                <layout class="QGridLayout" name="gridLayout_74">
+                <layout class="QGridLayout" name="gb_upstream_cameras_grid_4">
                  <item row="2" column="1">
                   <widget class="QPushButton" name="pb_CAM6_OUT">
                    <property name="sizePolicy">
@@ -2136,7 +2136,7 @@ indicator {
             </layout>
            </item>
            <item row="3" column="0">
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="label_upstream_cameras_blank_2">
              <property name="text">
               <string/>
              </property>
@@ -2146,7 +2146,7 @@ indicator {
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox_32">
+         <widget class="QGroupBox" name="gb_set_energy">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -2156,9 +2156,9 @@ indicator {
           <property name="title">
            <string>Set Energy</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_99">
+          <layout class="QGridLayout" name="gb_set_energy_grid">
            <item row="1" column="0">
-            <widget class="QLabel" name="label_148">
+            <widget class="QLabel" name="label_set_energy_harmonic">
              <property name="text">
               <string>      Harmonic: </string>
              </property>
@@ -2190,13 +2190,13 @@ indicator {
             </widget>
            </item>
            <item row="4" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBox_9">
+            <widget class="QGroupBox" name="gb_energy_optimize">
              <property name="title">
               <string>Optmize</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_116">
+             <layout class="QGridLayout" name="gb_energy_optimize_grid">
               <item row="1" column="0">
-               <widget class="QLabel" name="label_151">
+               <widget class="QLabel" name="label_energy_optimize_max_iter">
                 <property name="text">
                  <string>Max. Iter.</string>
                 </property>
@@ -2223,17 +2223,17 @@ indicator {
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_81">
+            <widget class="QLabel" name="label_set_energy_target_energy">
              <property name="text">
               <string>  Target Energy: </string>
              </property>
             </widget>
            </item>
            <item row="5" column="0" colspan="2">
-            <widget class="QGroupBox" name="groupBox">
-             <layout class="QGridLayout" name="gridLayout_96">
+            <widget class="QGroupBox" name="gb_energy_from_sid">
+             <layout class="QGridLayout" name="gb_energy_from_sid_grid">
               <item row="1" column="0">
-               <widget class="QLabel" name="label_70">
+               <widget class="QLabel" name="label_energy_from_sid_move_energy_with_sid">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -2287,9 +2287,9 @@ indicator {
             </widget>
            </item>
            <item row="5" column="2">
-            <layout class="QGridLayout" name="gridLayout_106">
+            <layout class="QGridLayout" name="gb_set_energy_grid_2">
              <item row="1" column="1">
-              <widget class="QLabel" name="label_178">
+              <widget class="QLabel" name="label_set_energy_zone_plate_focus">
                <property name="text">
                 <string>Zone Plate Focus </string>
                </property>
@@ -2348,15 +2348,15 @@ indicator {
             </widget>
            </item>
            <item row="0" column="2" rowspan="5">
-            <widget class="QGroupBox" name="groupBox_31">
+            <widget class="QGroupBox" name="gb_energy_estimates">
              <property name="title">
               <string>Estimated Positions</string>
              </property>
-             <layout class="QGridLayout" name="gridLayout_114">
+             <layout class="QGridLayout" name="gb_energy_estimates_grid">
               <item row="1" column="0">
-               <layout class="QGridLayout" name="gridLayout_109">
+               <layout class="QGridLayout" name="gb_energy_estimates_grid_2">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="label_132">
+                 <widget class="QLabel" name="label_energy_estimates_dcm_pitch">
                   <property name="text">
                    <string>DCM  Pitch  </string>
                   </property>
@@ -2387,9 +2387,9 @@ indicator {
                </layout>
               </item>
               <item row="0" column="0">
-               <layout class="QGridLayout" name="gridLayout_112">
+               <layout class="QGridLayout" name="gb_energy_estimates_grid_3">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="label_149">
+                 <widget class="QLabel" name="label_energy_estimates_gap">
                   <property name="text">
                    <string>Gap</string>
                   </property>
@@ -2420,9 +2420,9 @@ indicator {
                </layout>
               </item>
               <item row="2" column="0">
-               <layout class="QGridLayout" name="gridLayout_113">
+               <layout class="QGridLayout" name="gb_energy_estimates_grid_4">
                 <item row="3" column="0">
-                 <widget class="QLabel" name="label_150">
+                 <widget class="QLabel" name="label_energy_estimates_harmonic">
                   <property name="text">
                    <string>Harmonic</string>
                   </property>
@@ -2488,21 +2488,21 @@ indicator {
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="label_146">
+                 <widget class="QLabel" name="label_energy_estimates_mirror_coating">
                   <property name="text">
                    <string>Mirror Coating</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="0">
-                 <widget class="QLabel" name="label_154">
+                 <widget class="QLabel" name="label_energy_estimates_dcm_roll">
                   <property name="text">
                    <string>DCM Roll</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QLabel" name="label_155">
+                 <widget class="QLabel" name="label_energy_estimates_hfm_pitch">
                   <property name="text">
                    <string>HFM Pitch</string>
                   </property>
@@ -2570,9 +2570,9 @@ indicator {
        <attribute name="title">
         <string>Alignment</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_81">
+       <layout class="QGridLayout" name="alignment_tab_grid">
         <item row="0" column="0">
-         <widget class="QTabWidget" name="tabWidget_2">
+         <widget class="QTabWidget" name="tabs_alignment_slits">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -2582,13 +2582,13 @@ indicator {
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="QWidget" name="tab_11">
+          <widget class="QWidget" name="tab_align_slits">
            <attribute name="title">
             <string>Slits</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_75">
+           <layout class="QGridLayout" name="tab_align_slits_grid">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_19">
+             <widget class="QGroupBox" name="gb_ssa2">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -2598,11 +2598,11 @@ indicator {
               <property name="title">
                <string>SSA2 (mm)</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_31">
+              <layout class="QGridLayout" name="gb_ssa2_grid">
                <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_14">
+                <layout class="QGridLayout" name="gb_ssa2_grid_2">
                  <item row="2" column="0">
-                  <widget class="QLabel" name="label_183">
+                  <widget class="QLabel" name="label_ssa2_set">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2615,7 +2615,7 @@ indicator {
                   </widget>
                  </item>
                  <item row="3" column="0">
-                  <widget class="QLabel" name="label_125">
+                  <widget class="QLabel" name="label_ssa2_rbv">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2628,7 +2628,7 @@ indicator {
                   </widget>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_10">
+                  <widget class="QLabel" name="label_ssa2_blank">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2643,9 +2643,9 @@ indicator {
                 </layout>
                </item>
                <item row="1" column="1">
-                <layout class="QGridLayout" name="gridLayout_29">
+                <layout class="QGridLayout" name="gb_ssa2_grid_3">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_180">
+                  <widget class="QLabel" name="label_ssa2_hgap">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2704,7 +2704,7 @@ indicator {
                 </layout>
                </item>
                <item row="1" column="2">
-                <layout class="QGridLayout" name="gridLayout_30">
+                <layout class="QGridLayout" name="gb_ssa2_grid_4">
                  <item row="1" column="0">
                   <widget class="QDoubleSpinBox" name="db_ssa2_y_set">
                    <property name="suffix">
@@ -2719,7 +2719,7 @@ indicator {
                   </widget>
                  </item>
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_181">
+                  <widget class="QLabel" name="label_ssa2_vgap">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2765,9 +2765,9 @@ indicator {
                 </layout>
                </item>
                <item row="1" column="3">
-                <layout class="QVBoxLayout" name="verticalLayout_2">
+                <layout class="QVBoxLayout" name="gb_ssa2_vbox">
                  <item>
-                  <widget class="QLabel" name="label_128">
+                  <widget class="QLabel" name="label_ssa2_hcen">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2783,7 +2783,7 @@ indicator {
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_25">
+                  <layout class="QHBoxLayout" name="gb_ssa2_hbox">
                    <item>
                     <widget class="QPushButton" name="pb_ssa2_hcen_move_neg">
                      <property name="sizePolicy">
@@ -2859,9 +2859,9 @@ indicator {
                 </layout>
                </item>
                <item row="1" column="4">
-                <layout class="QVBoxLayout" name="verticalLayout_27">
+                <layout class="QVBoxLayout" name="gb_ssa2_vbox_2">
                  <item>
-                  <widget class="QLabel" name="label_130">
+                  <widget class="QLabel" name="label_ssa2_vcen">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -2877,7 +2877,7 @@ indicator {
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_26">
+                  <layout class="QHBoxLayout" name="gb_ssa2_hbox_2">
                    <item>
                     <widget class="QPushButton" name="pb_ssa2_vcen_move_neg">
                      <property name="sizePolicy">
@@ -2981,9 +2981,9 @@ Move Gap to Set Value
                 </widget>
                </item>
                <item row="0" column="0" colspan="5">
-                <layout class="QHBoxLayout" name="horizontalLayout_37">
+                <layout class="QHBoxLayout" name="gb_ssa2_hbox_3">
                  <item>
-                  <widget class="QLabel" name="label_134">
+                  <widget class="QLabel" name="label_ssa2_preset_positions">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2997,7 +2997,7 @@ Preset Positions</string>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_36">
+                  <layout class="QHBoxLayout" name="gb_ssa2_hbox_4">
                    <item>
                     <widget class="QPushButton" name="pb_SSA2_Open">
                      <property name="sizePolicy">
@@ -3058,7 +3058,7 @@ Preset Positions</string>
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_26">
+             <widget class="QGroupBox" name="gb_s5">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -3068,11 +3068,11 @@ Preset Positions</string>
               <property name="title">
                <string>S5 (mm)</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_27">
+              <layout class="QGridLayout" name="gb_s5_grid">
                <item row="0" column="0" colspan="6">
-                <layout class="QHBoxLayout" name="horizontalLayout_24">
+                <layout class="QHBoxLayout" name="gb_s5_hbox">
                  <item>
-                  <widget class="QLabel" name="label_7">
+                  <widget class="QLabel" name="label_s5_preset_positions">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3085,7 +3085,7 @@ Preset Positions</string>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_18">
+                  <layout class="QHBoxLayout" name="gb_s5_hbox_2">
                    <item>
                     <widget class="QPushButton" name="pb_S5_Open">
                      <property name="sizePolicy">
@@ -3151,9 +3151,9 @@ Preset Positions</string>
                 </layout>
                </item>
                <item row="1" column="0" colspan="2">
-                <layout class="QGridLayout" name="gridLayout_22">
+                <layout class="QGridLayout" name="gb_s5_grid_2">
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_184">
+                  <widget class="QLabel" name="label_s5_set">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3166,7 +3166,7 @@ Preset Positions</string>
                   </widget>
                  </item>
                  <item row="2" column="0">
-                  <widget class="QLabel" name="label_126">
+                  <widget class="QLabel" name="label_s5_rbv">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3179,7 +3179,7 @@ Preset Positions</string>
                   </widget>
                  </item>
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_8">
+                  <widget class="QLabel" name="label_s5_blank">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3194,9 +3194,9 @@ Preset Positions</string>
                 </layout>
                </item>
                <item row="1" column="2">
-                <layout class="QGridLayout" name="gridLayout_23">
+                <layout class="QGridLayout" name="gb_s5_grid_3">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_182">
+                  <widget class="QLabel" name="label_s5_hgap">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3255,9 +3255,9 @@ Preset Positions</string>
                 </layout>
                </item>
                <item row="1" column="3">
-                <layout class="QGridLayout" name="gridLayout_26">
+                <layout class="QGridLayout" name="gb_s5_grid_4">
                  <item row="0" column="0">
-                  <widget class="QLabel" name="label_185">
+                  <widget class="QLabel" name="label_s5_vgap">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3316,9 +3316,9 @@ Preset Positions</string>
                 </layout>
                </item>
                <item row="1" column="4">
-                <layout class="QVBoxLayout" name="verticalLayout_28">
+                <layout class="QVBoxLayout" name="gb_s5_vbox">
                  <item>
-                  <widget class="QLabel" name="label_199">
+                  <widget class="QLabel" name="label_s5_hcen">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3334,7 +3334,7 @@ Preset Positions</string>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_29">
+                  <layout class="QHBoxLayout" name="gb_s5_hbox_3">
                    <item>
                     <widget class="QPushButton" name="pb_s5_hcen_move_neg">
                      <property name="sizePolicy">
@@ -3410,9 +3410,9 @@ Preset Positions</string>
                 </layout>
                </item>
                <item row="1" column="5">
-                <layout class="QVBoxLayout" name="verticalLayout_29">
+                <layout class="QVBoxLayout" name="gb_s5_vbox_2">
                  <item>
-                  <widget class="QLabel" name="label_195">
+                  <widget class="QLabel" name="label_s5_vcen">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -3428,7 +3428,7 @@ Preset Positions</string>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_30">
+                  <layout class="QHBoxLayout" name="gb_s5_hbox_4">
                    <item>
                     <widget class="QPushButton" name="pb_s5_vcen_move_neg">
                      <property name="sizePolicy">
@@ -3471,7 +3471,7 @@ Preset Positions</string>
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_28">
+                  <layout class="QHBoxLayout" name="gb_s5_hbox_5">
                    <item>
                     <widget class="QDoubleSpinBox" name="db_s5_vcen_rbv">
                      <property name="sizePolicy">
@@ -3523,7 +3523,7 @@ Move Gap to Set Value
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLabel" name="label_60">
+                <widget class="QLabel" name="label_s5_blank_2">
                  <property name="text">
                   <string/>
                  </property>
@@ -3533,7 +3533,7 @@ Move Gap to Set Value
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QGroupBox" name="groupBox_12">
+             <widget class="QGroupBox" name="gb_troubleshooting">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -3543,11 +3543,11 @@ Move Gap to Set Value
               <property name="title">
                <string>Troubleshooting</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_70">
+              <layout class="QGridLayout" name="gb_troubleshooting_grid">
                <item row="0" column="0">
-                <layout class="QVBoxLayout" name="verticalLayout_25">
+                <layout class="QVBoxLayout" name="gb_troubleshooting_vbox">
                  <item>
-                  <widget class="QLabel" name="label_58">
+                  <widget class="QLabel" name="label_troubleshooting_blank">
                    <property name="text">
                     <string/>
                    </property>
@@ -3596,7 +3596,7 @@ Move Gap to Set Value
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QTabWidget" name="tabWidget_3">
+         <widget class="QTabWidget" name="tabs_alignment_optics">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -3612,13 +3612,13 @@ Move Gap to Set Value
           <property name="documentMode">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="tab_5">
+          <widget class="QWidget" name="tab_align_zp">
            <attribute name="title">
             <string>Zone Plate </string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_7">
+           <layout class="QVBoxLayout" name="tab_align_zp_vbox">
             <item>
-             <widget class="QGroupBox" name="groupBox_21">
+             <widget class="QGroupBox" name="gb_zp_optics">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -3628,7 +3628,7 @@ Move Gap to Set Value
               <property name="title">
                <string/>
               </property>
-              <layout class="QGridLayout" name="gridLayout_83">
+              <layout class="QGridLayout" name="gb_zp_optics_grid">
                <item row="0" column="1">
                 <widget class="QPushButton" name="pb_zpbsy_in">
                  <property name="sizePolicy">
@@ -3715,7 +3715,7 @@ OSA OUT (Y-2700)
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_24">
+             <widget class="QGroupBox" name="gb_zp_focus">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -3725,9 +3725,9 @@ OSA OUT (Y-2700)
               <property name="title">
                <string>Zone Plate Z Focus</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_46">
+              <layout class="QGridLayout" name="gb_zp_focus_grid">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_135">
+                <widget class="QLabel" name="label_zp_focus_blank">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -3740,23 +3740,23 @@ OSA OUT (Y-2700)
                 </widget>
                </item>
                <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_24">
+                <layout class="QGridLayout" name="gb_zp_focus_grid_2">
                  <item row="0" column="0">
-                  <widget class="QWidget" name="widget_4" native="true">
-                   <layout class="QGridLayout" name="gridLayout_25">
+                  <widget class="QWidget" name="w_zp_focus_params" native="true">
+                   <layout class="QGridLayout" name="w_zp_focus_params_grid">
                     <item row="0" column="0">
-                     <layout class="QVBoxLayout" name="verticalLayout_31">
+                     <layout class="QVBoxLayout" name="w_zp_focus_params_vbox">
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_63">
+                       <layout class="QHBoxLayout" name="w_zp_focus_params_hbox">
                         <item>
-                         <widget class="QLabel" name="label_76">
+                         <widget class="QLabel" name="label_zp_focus_params_zone_plate_z">
                           <property name="text">
                            <string>Zone Plate Z</string>
                           </property>
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="label_100">
+                         <widget class="QLabel" name="label_zp_focus_params_zpz_start">
                           <property name="toolTip">
                            <string>relative start pos</string>
                           </property>
@@ -3791,9 +3791,9 @@ OSA OUT (Y-2700)
                          </widget>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_65">
+                         <layout class="QHBoxLayout" name="w_zp_focus_params_hbox_2">
                           <item>
-                           <widget class="QLabel" name="label_102">
+                           <widget class="QLabel" name="label_zp_focus_params_zpz_end">
                             <property name="toolTip">
                              <string>relative end pos</string>
                             </property>
@@ -3832,9 +3832,9 @@ OSA OUT (Y-2700)
                        </layout>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_69">
+                       <layout class="QHBoxLayout" name="w_zp_focus_params_hbox_3">
                         <item>
-                         <widget class="QLabel" name="label_106">
+                         <widget class="QLabel" name="label_zp_focus_params_no_of_steps">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                             <horstretch>0</horstretch>
@@ -3876,9 +3876,9 @@ OSA OUT (Y-2700)
                      </layout>
                     </item>
                     <item row="0" column="1" rowspan="2">
-                     <layout class="QVBoxLayout" name="verticalLayout_39">
+                     <layout class="QVBoxLayout" name="w_zp_focus_params_vbox_2">
                       <item>
-                       <widget class="QLabel" name="label_77">
+                       <widget class="QLabel" name="label_zp_focus_params_flyscan_param">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -3910,9 +3910,9 @@ OSA OUT (Y-2700)
                        </widget>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_62">
+                       <layout class="QHBoxLayout" name="w_zp_focus_params_hbox_4">
                         <item>
-                         <widget class="QLabel" name="label_99">
+                         <widget class="QLabel" name="label_zp_focus_params_start">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                             <horstretch>0</horstretch>
@@ -3944,9 +3944,9 @@ OSA OUT (Y-2700)
                          </widget>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_64">
+                         <layout class="QHBoxLayout" name="w_zp_focus_params_hbox_5">
                           <item>
-                           <widget class="QLabel" name="label_101">
+                           <widget class="QLabel" name="label_zp_focus_params_end">
                             <property name="sizePolicy">
                              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                               <horstretch>0</horstretch>
@@ -3982,9 +3982,9 @@ OSA OUT (Y-2700)
                        </layout>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_68">
+                       <layout class="QHBoxLayout" name="w_zp_focus_params_hbox_6">
                         <item>
-                         <widget class="QLabel" name="label_105">
+                         <widget class="QLabel" name="label_zp_focus_params_no_of_steps_2">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                             <horstretch>0</horstretch>
@@ -4022,9 +4022,9 @@ OSA OUT (Y-2700)
                          </widget>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_11">
+                         <layout class="QHBoxLayout" name="w_zp_focus_params_hbox_7">
                           <item>
-                           <widget class="QLabel" name="label_118">
+                           <widget class="QLabel" name="label_zp_focus_params_dwell_time">
                             <property name="sizePolicy">
                              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                               <horstretch>0</horstretch>
@@ -4068,9 +4068,9 @@ OSA OUT (Y-2700)
                      </layout>
                     </item>
                     <item row="1" column="0">
-                     <layout class="QGridLayout" name="gridLayout_67">
+                     <layout class="QGridLayout" name="w_zp_focus_params_grid_2">
                       <item row="0" column="0">
-                       <widget class="QLabel" name="label_97">
+                       <widget class="QLabel" name="label_zp_focus_params_elem">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -4083,7 +4083,7 @@ OSA OUT (Y-2700)
                        </widget>
                       </item>
                       <item row="0" column="1">
-                       <layout class="QGridLayout" name="gridLayout_60">
+                       <layout class="QGridLayout" name="w_zp_focus_params_grid_3">
                         <item row="0" column="0">
                          <widget class="QComboBox" name="cb_zp_focus_elem"/>
                         </item>
@@ -4102,7 +4102,7 @@ OSA OUT (Y-2700)
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <layout class="QVBoxLayout" name="gb_zp_focus_vbox">
                    <item>
                     <widget class="QPushButton" name="pb_ZPZFocusScanStart">
                      <property name="sizePolicy">
@@ -4119,9 +4119,9 @@ Start Focus Series
                     </widget>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_33">
+                    <layout class="QHBoxLayout" name="gb_zp_focus_hbox">
                      <item>
-                      <widget class="QLabel" name="label_56">
+                      <widget class="QLabel" name="label_zp_focus_new_focus_position">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                          <horstretch>0</horstretch>
@@ -4183,7 +4183,7 @@ Move to New Focus
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_34">
+             <widget class="QGroupBox" name="gb_zp_rot_center">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -4193,14 +4193,14 @@ Move to New Focus
               <property name="title">
                <string>ZP_Rot.Center</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_66">
+              <layout class="QGridLayout" name="gb_zp_rot_center_grid">
                <item row="0" column="1">
-                <widget class="QWidget" name="widget_8" native="true">
-                 <layout class="QGridLayout" name="gridLayout_62">
+                <widget class="QWidget" name="w_zp_rot_correction" native="true">
+                 <layout class="QGridLayout" name="w_zp_rot_correction_grid">
                   <item row="2" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_78">
+                   <layout class="QHBoxLayout" name="w_zp_rot_correction_hbox">
                     <item>
-                     <widget class="QPushButton" name="pushButton_10">
+                     <widget class="QPushButton" name="pb_zp_rot_move_smarz">
                       <property name="text">
                        <string>
 Move smarZ by
@@ -4230,9 +4230,9 @@ Move smarZ by
                    </layout>
                   </item>
                   <item row="1" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_77">
+                   <layout class="QHBoxLayout" name="w_zp_rot_correction_hbox_2">
                     <item>
-                     <widget class="QPushButton" name="pushButton_9">
+                     <widget class="QPushButton" name="pb_zp_rot_move_smarx">
                       <property name="text">
                        <string>  
 Move smarX by  
@@ -4262,9 +4262,9 @@ Move smarX by
                    </layout>
                   </item>
                   <item row="0" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_79">
+                   <layout class="QHBoxLayout" name="w_zp_rot_correction_hbox_3">
                     <item>
-                     <widget class="QPushButton" name="pushButton_11">
+                     <widget class="QPushButton" name="pb_zp_rot_rotate_to">
                       <property name="text">
                        <string>
 Rotate to
@@ -4309,16 +4309,16 @@ Rotate to
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QWidget" name="widget_7" native="true">
-                 <layout class="QGridLayout" name="gridLayout_63">
+                <widget class="QWidget" name="w_zp_rot_scan_params" native="true">
+                 <layout class="QGridLayout" name="w_zp_rot_scan_params_grid">
                   <item row="0" column="0">
-                   <layout class="QGridLayout" name="gridLayout_64">
+                   <layout class="QGridLayout" name="w_zp_rot_scan_params_grid_2">
                     <item row="0" column="1">
-                     <layout class="QVBoxLayout" name="verticalLayout_43">
+                     <layout class="QVBoxLayout" name="w_zp_rot_scan_params_vbox">
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_72">
+                       <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox">
                         <item>
-                         <widget class="QLabel" name="label_108">
+                         <widget class="QLabel" name="label_zp_rot_scan_params_start">
                           <property name="text">
                            <string>Start</string>
                           </property>
@@ -4352,9 +4352,9 @@ Rotate to
                        </layout>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_73">
+                       <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox_2">
                         <item>
-                         <widget class="QLabel" name="label_109">
+                         <widget class="QLabel" name="label_zp_rot_scan_params_end">
                           <property name="text">
                            <string>End</string>
                           </property>
@@ -4388,9 +4388,9 @@ Rotate to
                        </layout>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_74">
+                       <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox_3">
                         <item>
-                         <widget class="QLabel" name="label_110">
+                         <widget class="QLabel" name="label_zp_rot_scan_params_no_of_steps">
                           <property name="text">
                            <string>No. of Steps</string>
                           </property>
@@ -4421,9 +4421,9 @@ Rotate to
                        </layout>
                       </item>
                       <item>
-                       <layout class="QGridLayout" name="gridLayout_65">
+                       <layout class="QGridLayout" name="w_zp_rot_scan_params_grid_3">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_157">
+                         <widget class="QLabel" name="label_zp_rot_scan_params_dwell_time">
                           <property name="text">
                            <string>Dwell Time</string>
                           </property>
@@ -4474,13 +4474,13 @@ Start
                      </widget>
                     </item>
                     <item row="0" column="0">
-                     <layout class="QVBoxLayout" name="verticalLayout_41">
+                     <layout class="QVBoxLayout" name="w_zp_rot_scan_params_vbox_2">
                       <item>
-                       <layout class="QVBoxLayout" name="verticalLayout_42">
+                       <layout class="QVBoxLayout" name="w_zp_rot_scan_params_vbox_3">
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_66">
+                         <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox_4">
                           <item>
-                           <widget class="QLabel" name="label_103">
+                           <widget class="QLabel" name="label_zp_rot_scan_params_theta_start">
                             <property name="text">
                              <string>Theta Start</string>
                             </property>
@@ -4517,9 +4517,9 @@ Start
                          </layout>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_67">
+                         <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox_5">
                           <item>
-                           <widget class="QLabel" name="label_104">
+                           <widget class="QLabel" name="label_zp_rot_scan_params_theta_end">
                             <property name="text">
                              <string>Theta End</string>
                             </property>
@@ -4553,9 +4553,9 @@ Start
                          </layout>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_70">
+                         <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox_6">
                           <item>
-                           <widget class="QLabel" name="label_107">
+                           <widget class="QLabel" name="label_zp_rot_scan_params_no_of_steps_2">
                             <property name="text">
                              <string>No. of Steps</string>
                             </property>
@@ -4588,9 +4588,9 @@ Start
                        </layout>
                       </item>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_71">
+                       <layout class="QHBoxLayout" name="w_zp_rot_scan_params_hbox_7">
                         <item>
-                         <widget class="QLabel" name="label_98">
+                         <widget class="QLabel" name="label_zp_rot_scan_params_elem">
                           <property name="text">
                            <string>Elem:</string>
                           </property>
@@ -4652,13 +4652,13 @@ Start
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_9">
+          <widget class="QWidget" name="tab_align_mll">
            <attribute name="title">
             <string>MLL</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_32">
+           <layout class="QGridLayout" name="tab_align_mll_grid">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_35">
+             <widget class="QGroupBox" name="gb_mll_optics">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -4674,7 +4674,7 @@ Start
               <property name="title">
                <string/>
               </property>
-              <layout class="QGridLayout" name="gridLayout_28">
+              <layout class="QGridLayout" name="gb_mll_optics_grid">
                <item row="0" column="0">
                 <widget class="QPushButton" name="pb_mll_osa_in">
                  <property name="sizePolicy">
@@ -4822,7 +4822,7 @@ MLL to Nanobeam
                  <property name="title">
                   <string>OSA / BS Controls</string>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_17">
+                 <layout class="QGridLayout" name="gb_mll_osa_bs_grid">
                   <item row="0" column="2">
                    <widget class="QLabel" name="label_mll_osa_bs_move_by">
                     <property name="sizePolicy">
@@ -5268,7 +5268,7 @@ MLL to Nanobeam
              </widget>
             </item>
             <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_40">
+             <widget class="QGroupBox" name="gb_mll_focus">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -5281,14 +5281,14 @@ MLL to Nanobeam
               <property name="title">
                <string>MLL Focusing </string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_56">
+              <layout class="QGridLayout" name="gb_mll_focus_grid">
                <item row="0" column="0">
-                <layout class="QGridLayout" name="gridLayout_131">
+                <layout class="QGridLayout" name="gb_mll_focus_grid_2">
                  <item row="2" column="0">
-                  <layout class="QGridLayout" name="gridLayout_48">
+                  <layout class="QGridLayout" name="gb_mll_focus_grid_3">
                    <item row="0" column="0">
-                    <widget class="QWidget" name="widget_9" native="true">
-                     <layout class="QGridLayout" name="gridLayout_15">
+                    <widget class="QWidget" name="w_mll_focus_params" native="true">
+                     <layout class="QGridLayout" name="w_mll_focus_params_grid">
                       <property name="leftMargin">
                        <number>1</number>
                       </property>
@@ -5305,9 +5305,9 @@ MLL to Nanobeam
                        <number>0</number>
                       </property>
                       <item row="4" column="0" colspan="2">
-                       <layout class="QHBoxLayout" name="horizontalLayout_88">
+                       <layout class="QHBoxLayout" name="w_mll_focus_params_hbox">
                         <item>
-                         <widget class="QLabel" name="label_121">
+                         <widget class="QLabel" name="label_mll_focus_params_elem">
                           <property name="text">
                            <string>Elem:</string>
                           </property>
@@ -5326,7 +5326,7 @@ MLL to Nanobeam
                        </layout>
                       </item>
                       <item row="7" column="1" colspan="2">
-                       <layout class="QHBoxLayout" name="horizontalLayout_82">
+                       <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_2">
                         <property name="leftMargin">
                          <number>20</number>
                         </property>
@@ -5350,7 +5350,7 @@ MLL to Nanobeam
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="label_4">
+                         <widget class="QLabel" name="label_mll_focus_params_to">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -5387,12 +5387,12 @@ MLL to Nanobeam
                        </layout>
                       </item>
                       <item row="0" column="2" rowspan="5">
-                       <layout class="QVBoxLayout" name="verticalLayout_45">
+                       <layout class="QVBoxLayout" name="w_mll_focus_params_vbox">
                         <property name="spacing">
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QLabel" name="label_83">
+                         <widget class="QLabel" name="label_mll_focus_params_flyscan_param">
                           <property name="text">
                            <string>FlyScan Param.</string>
                           </property>
@@ -5421,9 +5421,9 @@ MLL to Nanobeam
                          </widget>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_75">
+                         <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_3">
                           <item>
-                           <widget class="QLabel" name="label_111">
+                           <widget class="QLabel" name="label_mll_focus_params_start">
                             <property name="text">
                              <string>Start</string>
                             </property>
@@ -5452,9 +5452,9 @@ MLL to Nanobeam
                            </widget>
                           </item>
                           <item>
-                           <layout class="QHBoxLayout" name="horizontalLayout_83">
+                           <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_4">
                             <item>
-                             <widget class="QLabel" name="label_113">
+                             <widget class="QLabel" name="label_mll_focus_params_end">
                               <property name="text">
                                <string>End</string>
                               </property>
@@ -5487,9 +5487,9 @@ MLL to Nanobeam
                          </layout>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_84">
+                         <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_5">
                           <item>
-                           <widget class="QLabel" name="label_114">
+                           <widget class="QLabel" name="label_mll_focus_params_no_of_steps">
                             <property name="text">
                              <string>No. of Steps</string>
                             </property>
@@ -5521,9 +5521,9 @@ MLL to Nanobeam
                            </widget>
                           </item>
                           <item>
-                           <layout class="QHBoxLayout" name="horizontalLayout_12">
+                           <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_6">
                             <item>
-                             <widget class="QLabel" name="label_120">
+                             <widget class="QLabel" name="label_mll_focus_params_dwell_time">
                               <property name="text">
                                <string>Dwell Time</string>
                               </property>
@@ -5561,9 +5561,9 @@ MLL to Nanobeam
                        </layout>
                       </item>
                       <item row="0" column="0" colspan="2">
-                       <layout class="QGridLayout" name="gridLayout_12">
+                       <layout class="QGridLayout" name="w_mll_focus_params_grid_2">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_84">
+                         <widget class="QLabel" name="label_mll_focus_params_focus_series_with">
                           <property name="text">
                            <string>Focus Series with:</string>
                           </property>
@@ -5606,9 +5606,9 @@ Start Focus Series
                        </widget>
                       </item>
                       <item row="1" column="0" colspan="2">
-                       <layout class="QHBoxLayout" name="horizontalLayout_85">
+                       <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_7">
                         <item>
-                         <widget class="QLabel" name="label_115">
+                         <widget class="QLabel" name="label_mll_focus_params_z_start">
                           <property name="toolTip">
                            <string>relative start pos</string>
                           </property>
@@ -5643,9 +5643,9 @@ Start Focus Series
                          </widget>
                         </item>
                         <item>
-                         <layout class="QHBoxLayout" name="horizontalLayout_86">
+                         <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_8">
                           <item>
-                           <widget class="QLabel" name="label_116">
+                           <widget class="QLabel" name="label_mll_focus_params_z_end">
                             <property name="toolTip">
                              <string>relative end pos</string>
                             </property>
@@ -5680,9 +5680,9 @@ Start Focus Series
                            </widget>
                           </item>
                           <item>
-                           <layout class="QHBoxLayout" name="horizontalLayout_87">
+                           <layout class="QHBoxLayout" name="w_mll_focus_params_hbox_9">
                             <item>
-                             <widget class="QLabel" name="label_117">
+                             <widget class="QLabel" name="label_mll_focus_params_no_of_steps_2">
                               <property name="text">
                                <string>No. of Steps</string>
                               </property>
@@ -5733,7 +5733,7 @@ Start Focus Series
                        </widget>
                       </item>
                       <item row="6" column="0">
-                       <widget class="QLabel" name="label_61">
+                       <widget class="QLabel" name="label_mll_focus_params_blank">
                         <property name="text">
                          <string/>
                         </property>
@@ -5750,7 +5750,7 @@ Start Focus Series
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QGroupBox" name="groupBox_41">
+             <widget class="QGroupBox" name="gb_mll_rot_center">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -5763,7 +5763,7 @@ Start Focus Series
               <property name="title">
                <string>MLL_Rot.Center Alignment</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_53">
+              <layout class="QGridLayout" name="gb_mll_rot_center_grid">
                <property name="verticalSpacing">
                 <number>0</number>
                </property>
@@ -5783,18 +5783,18 @@ Start
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QFrame" name="frame">
+                <widget class="QFrame" name="frame_mll_rot_scan_params">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_11">
+                 <layout class="QGridLayout" name="frame_mll_rot_scan_params_grid">
                   <item row="1" column="1">
-                   <layout class="QHBoxLayout" name="horizontalLayout_76">
+                   <layout class="QHBoxLayout" name="frame_mll_rot_scan_params_hbox">
                     <item>
-                     <widget class="QLabel" name="label_112">
+                     <widget class="QLabel" name="label_mll_rot_scan_params_start">
                       <property name="text">
                        <string>Start</string>
                       </property>
@@ -5825,9 +5825,9 @@ Start
                    </layout>
                   </item>
                   <item row="2" column="1">
-                   <layout class="QHBoxLayout" name="horizontalLayout_22">
+                   <layout class="QHBoxLayout" name="frame_mll_rot_scan_params_hbox_2">
                     <item>
-                     <widget class="QLabel" name="label_142">
+                     <widget class="QLabel" name="label_mll_rot_scan_params_dwell_time">
                       <property name="text">
                        <string>Dwell Time</string>
                       </property>
@@ -5861,9 +5861,9 @@ Start
                    </layout>
                   </item>
                   <item row="1" column="3">
-                   <layout class="QHBoxLayout" name="horizontalLayout_99">
+                   <layout class="QHBoxLayout" name="frame_mll_rot_scan_params_hbox_3">
                     <item>
-                     <widget class="QLabel" name="label_140">
+                     <widget class="QLabel" name="label_mll_rot_scan_params_no_of_steps">
                       <property name="text">
                        <string>No. of Steps</string>
                       </property>
@@ -5897,9 +5897,9 @@ Start
                    </layout>
                   </item>
                   <item row="1" column="2">
-                   <layout class="QHBoxLayout" name="horizontalLayout_94">
+                   <layout class="QHBoxLayout" name="frame_mll_rot_scan_params_hbox_4">
                     <item>
-                     <widget class="QLabel" name="label_139">
+                     <widget class="QLabel" name="label_mll_rot_scan_params_end">
                       <property name="text">
                        <string>End</string>
                       </property>
@@ -5930,7 +5930,7 @@ Start
                    </layout>
                   </item>
                   <item row="1" column="0" rowspan="2">
-                   <widget class="QLabel" name="label_85">
+                   <widget class="QLabel" name="label_mll_rot_scan_params_flyscan_param">
                     <property name="text">
                      <string>FlyScan Param.</string>
                     </property>
@@ -5943,16 +5943,16 @@ Start
                 </widget>
                </item>
                <item row="0" column="1" rowspan="3">
-                <widget class="QWidget" name="widget_11" native="true">
+                <widget class="QWidget" name="w_mll_rot_correction" native="true">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_20">
+                 <layout class="QGridLayout" name="w_mll_rot_correction_grid">
                   <item row="0" column="0">
-                   <widget class="QLabel" name="label_86">
+                   <widget class="QLabel" name="label_mll_rot_correction_correction">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                       <horstretch>0</horstretch>
@@ -5965,9 +5965,9 @@ Start
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_96">
+                   <layout class="QHBoxLayout" name="w_mll_rot_correction_hbox">
                     <item>
-                     <widget class="QLabel" name="label_88">
+                     <widget class="QLabel" name="label_mll_rot_correction_dsth">
                       <property name="text">
                        <string>dsth</string>
                       </property>
@@ -6007,9 +6007,9 @@ Move
                    </layout>
                   </item>
                   <item row="2" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_97">
+                   <layout class="QHBoxLayout" name="w_mll_rot_correction_hbox_2">
                     <item>
-                     <widget class="QLabel" name="label_89">
+                     <widget class="QLabel" name="label_mll_rot_correction_dsx">
                       <property name="text">
                        <string>dsx</string>
                       </property>
@@ -6046,9 +6046,9 @@ Move
                    </layout>
                   </item>
                   <item row="3" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_98">
+                   <layout class="QHBoxLayout" name="w_mll_rot_correction_hbox_3">
                     <item>
-                     <widget class="QLabel" name="label_90">
+                     <widget class="QLabel" name="label_mll_rot_correction_dsz">
                       <property name="text">
                        <string>dsz</string>
                       </property>
@@ -6085,9 +6085,9 @@ Move
                    </layout>
                   </item>
                   <item row="4" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_101">
+                   <layout class="QHBoxLayout" name="w_mll_rot_correction_hbox_4">
                     <item>
-                     <widget class="QLabel" name="label_91">
+                     <widget class="QLabel" name="label_mll_rot_correction_sbx">
                       <property name="text">
                        <string>sbx</string>
                       </property>
@@ -6136,18 +6136,18 @@ Apply All Corrections
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QWidget" name="widget_10" native="true">
+                <widget class="QWidget" name="w_mll_rot_angle_params" native="true">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_19">
+                 <layout class="QGridLayout" name="w_mll_rot_angle_params_grid">
                   <item row="2" column="3" colspan="2">
-                   <layout class="QHBoxLayout" name="horizontalLayout_93">
+                   <layout class="QHBoxLayout" name="w_mll_rot_angle_params_hbox">
                     <item>
-                     <widget class="QLabel" name="label_176">
+                     <widget class="QLabel" name="label_mll_rot_angle_params_threshold">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -6187,7 +6187,7 @@ Apply All Corrections
                    </layout>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QLabel" name="label_124">
+                   <widget class="QLabel" name="label_mll_rot_angle_params_theta_start">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -6200,9 +6200,9 @@ Apply All Corrections
                    </widget>
                   </item>
                   <item row="2" column="1" colspan="2">
-                   <layout class="QHBoxLayout" name="horizontalLayout_92">
+                   <layout class="QHBoxLayout" name="w_mll_rot_angle_params_hbox_2">
                     <item>
-                     <widget class="QLabel" name="label_175">
+                     <widget class="QLabel" name="label_mll_rot_angle_params_elem">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -6242,7 +6242,7 @@ Apply All Corrections
                    </widget>
                   </item>
                   <item row="1" column="3">
-                   <widget class="QLabel" name="label_173">
+                   <widget class="QLabel" name="label_mll_rot_angle_params_theta_end">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -6308,7 +6308,7 @@ Apply All Corrections
                    </widget>
                   </item>
                   <item row="1" column="5">
-                   <widget class="QLabel" name="label_174">
+                   <widget class="QLabel" name="label_mll_rot_angle_params_no_of_steps">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -6321,7 +6321,7 @@ Apply All Corrections
                    </widget>
                   </item>
                   <item row="0" column="0" rowspan="3">
-                   <widget class="QLabel" name="label_87">
+                   <widget class="QLabel" name="label_mll_rot_angle_params_angle_range">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -6355,9 +6355,9 @@ Apply All Corrections
        <attribute name="title">
         <string>Data Aquisition</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_79">
+       <layout class="QGridLayout" name="scan_tab_grid">
         <item row="0" column="0">
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="gb_flyscan">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -6370,9 +6370,9 @@ Apply All Corrections
           <property name="title">
            <string>FlyScans</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_6">
+          <layout class="QGridLayout" name="gb_flyscan_grid">
            <item row="0" column="2">
-            <layout class="QVBoxLayout" name="verticalLayout_33">
+            <layout class="QVBoxLayout" name="gb_flyscan_vbox">
              <item>
               <widget class="QPushButton" name="pb_2020">
                <property name="sizePolicy">
@@ -6428,9 +6428,9 @@ Apply All Corrections
             </layout>
            </item>
            <item row="0" column="1">
-            <layout class="QGridLayout" name="gridLayout_43">
+            <layout class="QGridLayout" name="gb_flyscan_grid_2">
              <item row="0" column="0">
-              <widget class="QLabel" name="label_17">
+              <widget class="QLabel" name="label_flyscan_detectors">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -6451,7 +6451,7 @@ Apply All Corrections
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="label_flyscan_motors">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -6472,21 +6472,21 @@ Apply All Corrections
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QLabel" name="label_32">
+              <widget class="QLabel" name="label_flyscan_start">
                <property name="text">
                 <string>Start</string>
                </property>
               </widget>
              </item>
              <item row="0" column="3">
-              <widget class="QLabel" name="label_18">
+              <widget class="QLabel" name="label_flyscan_end">
                <property name="text">
                 <string>End</string>
                </property>
               </widget>
              </item>
              <item row="0" column="4">
-              <widget class="QLabel" name="label_5">
+              <widget class="QLabel" name="label_flyscan_steps">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -6513,7 +6513,7 @@ Apply All Corrections
               </widget>
              </item>
              <item row="0" column="5">
-              <widget class="QLabel" name="label_9">
+              <widget class="QLabel" name="label_flyscan_dwell_time">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -6798,9 +6798,9 @@ Apply All Corrections
             </layout>
            </item>
            <item row="2" column="0" colspan="2">
-            <layout class="QVBoxLayout" name="verticalLayout_34">
+            <layout class="QVBoxLayout" name="gb_flyscan_vbox_2">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_27">
+              <layout class="QHBoxLayout" name="gb_flyscan_hbox">
                <item>
                 <widget class="QLineEdit" name="text_scan_plan">
                  <property name="sizePolicy">
@@ -6814,7 +6814,7 @@ Apply All Corrections
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_40">
+              <layout class="QHBoxLayout" name="gb_flyscan_hbox_2">
                <item>
                 <widget class="QPushButton" name="pb_batchscan_copy">
                  <property name="sizePolicy">
@@ -6869,7 +6869,7 @@ Copy Plan
             </layout>
            </item>
            <item row="0" column="0">
-            <widget class="QWidget" name="widget_2" native="true">
+            <widget class="QWidget" name="w_flyscan_dim" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -6879,7 +6879,7 @@ Copy Plan
              <property name="styleSheet">
               <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_9">
+             <layout class="QVBoxLayout" name="w_flyscan_dim_vbox">
               <item>
                <widget class="QRadioButton" name="rb_1d">
                 <property name="sizePolicy">
@@ -7014,7 +7014,7 @@ font: 15pt &quot;Modern No. 20&quot;;
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QTabWidget" name="tabWidget_10">
+         <widget class="QTabWidget" name="tabs_queue">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -7030,11 +7030,11 @@ font: 15pt &quot;Modern No. 20&quot;;
           <property name="elideMode">
            <enum>Qt::ElideRight</enum>
           </property>
-          <widget class="QWidget" name="tabWidget_10Page2">
+          <widget class="QWidget" name="tab_queue">
            <attribute name="title">
             <string>Queue</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_16">
+           <layout class="QGridLayout" name="tab_queue_grid">
             <item row="0" column="3" rowspan="5">
              <widget class="QGroupBox" name="gb_queue_server_plan">
               <property name="enabled">
@@ -7052,9 +7052,9 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Manual ROI</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_146">
+              <layout class="QGridLayout" name="gb_queue_server_plan_grid">
                <item row="4" column="1">
-                <widget class="QLabel" name="label_207">
+                <widget class="QLabel" name="label_queue_server_plan_smarx">
                  <property name="text">
                   <string>smarx</string>
                  </property>
@@ -7108,7 +7108,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="4" column="5">
-                <widget class="QLabel" name="label_209">
+                <widget class="QLabel" name="label_queue_server_plan_smarz">
                  <property name="text">
                   <string>smarz</string>
                  </property>
@@ -7183,28 +7183,28 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="5">
-                <widget class="QLabel" name="label_194">
+                <widget class="QLabel" name="label_queue_server_plan_zpssz">
                  <property name="text">
                   <string>zpssz</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLabel" name="label_196">
+                <widget class="QLabel" name="label_queue_server_plan_zpssx">
                  <property name="text">
                   <string>zpssx</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="1">
-                <widget class="QLabel" name="label_211">
+                <widget class="QLabel" name="label_queue_server_plan_zpz1">
                  <property name="text">
                   <string>zpz1</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="3">
-                <widget class="QLabel" name="label_193">
+                <widget class="QLabel" name="label_queue_server_plan_zpssy">
                  <property name="text">
                   <string>zpssy</string>
                  </property>
@@ -7313,14 +7313,14 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="4" column="3">
-                <widget class="QLabel" name="label_208">
+                <widget class="QLabel" name="label_queue_server_plan_smary">
                  <property name="text">
                   <string>smary</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="3">
-                <widget class="QLabel" name="label_210">
+                <widget class="QLabel" name="label_queue_server_plan_zpsth">
                  <property name="text">
                   <string>zpsth</string>
                  </property>
@@ -7473,9 +7473,9 @@ font: 15pt &quot;Modern No. 20&quot;;
              </widget>
             </item>
             <item row="5" column="3">
-             <layout class="QHBoxLayout" name="horizontalLayout_32">
+             <layout class="QHBoxLayout" name="tab_queue_hbox">
               <item>
-               <widget class="QLabel" name="label_52">
+               <widget class="QLabel" name="label_queue_label">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -7507,7 +7507,7 @@ font: 15pt &quot;Modern No. 20&quot;;
          </widget>
         </item>
         <item row="1" column="0" colspan="2">
-         <widget class="QTabWidget" name="tabWidget_18">
+         <widget class="QTabWidget" name="tabs_detectors">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -7529,13 +7529,13 @@ font: 15pt &quot;Modern No. 20&quot;;
           <property name="elideMode">
            <enum>Qt::ElideRight</enum>
           </property>
-          <widget class="QWidget" name="tabWidget_18Page1">
+          <widget class="QWidget" name="tab_det_motion">
            <attribute name="title">
             <string>Detector Motion</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout_31">
+           <layout class="QHBoxLayout" name="tab_det_motion_hbox">
             <item>
-             <widget class="QGroupBox" name="groupBox">
+             <widget class="QGroupBox" name="gb_det_in_out">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -7545,7 +7545,7 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>CAM/DET IN and OUT</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_7">
+              <layout class="QGridLayout" name="gb_det_in_out_grid">
                <item row="0" column="2">
                 <widget class="QPushButton" name="pb_cam6OUT">
                  <property name="enabled">
@@ -7563,7 +7563,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="1" column="3">
-                <widget class="QLabel" name="label_74">
+                <widget class="QLabel" name="label_det_in_out_in_pos">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -7874,7 +7874,7 @@ font: 15pt &quot;Modern No. 20&quot;;
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox">
+             <widget class="QGroupBox" name="gb_det_abort">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -7884,7 +7884,7 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Abort Motion</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_117">
+              <layout class="QGridLayout" name="gb_det_abort_grid">
                <item row="0" column="0">
                 <widget class="QPushButton" name="pb_stop_fluor">
                  <property name="sizePolicy">
@@ -7953,7 +7953,7 @@ font: 15pt &quot;Modern No. 20&quot;;
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_11">
+             <widget class="QGroupBox" name="gb_diff_stage">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -7963,11 +7963,11 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Diff Stage Motion</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_42">
+              <layout class="QGridLayout" name="gb_diff_stage_grid">
                <item row="2" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_23">
+                <layout class="QHBoxLayout" name="gb_diff_stage_hbox">
                  <item>
-                  <widget class="QLabel" name="label_73">
+                  <widget class="QLabel" name="label_diff_stage_diff_z">
                    <property name="text">
                     <string>diff_z</string>
                    </property>
@@ -8002,7 +8002,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="3" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_13">
+                <layout class="QHBoxLayout" name="gb_diff_stage_hbox_2">
                  <item>
                   <widget class="QPushButton" name="pb_abort_diff">
                    <property name="sizePolicy">
@@ -8042,7 +8042,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="1" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <layout class="QHBoxLayout" name="gb_diff_stage_hbox_3">
                  <item>
                   <widget class="QDoubleSpinBox" name="sp_diff_det_calc_2theta">
                    <property name="sizePolicy">
@@ -8103,7 +8103,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="0" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <layout class="QHBoxLayout" name="gb_diff_stage_hbox_4">
                  <item>
                   <widget class="QDoubleSpinBox" name="sp_diff_det_calc_x">
                    <property name="sizePolicy">
@@ -8154,11 +8154,11 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="0" column="0" rowspan="3">
-                <layout class="QGridLayout" name="gridLayout_137">
+                <layout class="QGridLayout" name="gb_diff_stage_grid_2">
                  <item row="0" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
+                  <layout class="QHBoxLayout" name="gb_diff_stage_hbox_5">
                    <item>
-                    <widget class="QLabel" name="label_65">
+                    <widget class="QLabel" name="label_diff_stage_enter_dexela_xy_pixels">
                      <property name="lineWidth">
                       <number>0</number>
                      </property>
@@ -8196,7 +8196,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                   </widget>
                  </item>
                  <item row="3" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_15">
+                  <layout class="QHBoxLayout" name="gb_diff_stage_hbox_6">
                    <item>
                     <widget class="QSpinBox" name="sp_dexela_xpixel">
                      <property name="sizePolicy">
@@ -8263,13 +8263,13 @@ font: 15pt &quot;Modern No. 20&quot;;
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_12">
+          <widget class="QWidget" name="tab_det_controls">
            <attribute name="title">
             <string>Detector Controls</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_118">
+           <layout class="QGridLayout" name="tab_det_controls_grid">
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_14">
+             <widget class="QGroupBox" name="gb_flatfield">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -8279,9 +8279,9 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Flatfield Corrections</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_138">
+              <layout class="QGridLayout" name="gb_flatfield_grid">
                <item row="2" column="0">
-                <widget class="QLabel" name="label_63">
+                <widget class="QLabel" name="label_flatfield_chosse_detector">
                  <property name="text">
                   <string>Chosse Detector</string>
                  </property>
@@ -8317,7 +8317,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 <widget class="QComboBox" name="cb_dets_for_ff_corr"/>
                </item>
                <item row="0" column="0">
-                <widget class="QLabel" name="label_62">
+                <widget class="QLabel" name="label_flatfield_blank">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -8330,7 +8330,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QPushButton" name="pushButton_12">
+                <widget class="QPushButton" name="pb_flatfield_save_enable">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -8343,7 +8343,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QPushButton" name="pushButton_16">
+                <widget class="QPushButton" name="pb_flatfield_disable">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -8359,7 +8359,7 @@ font: 15pt &quot;Modern No. 20&quot;;
              </widget>
             </item>
             <item row="0" column="2" rowspan="2">
-             <widget class="QGroupBox" name="groupBox_15">
+             <widget class="QGroupBox" name="gb_det_misc">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -8369,9 +8369,9 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Misc.</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_110">
+              <layout class="QGridLayout" name="gb_det_misc_grid">
                <item row="2" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_17">
+                <layout class="QHBoxLayout" name="gb_det_misc_hbox">
                  <item>
                   <widget class="QPushButton" name="pb_eiger_filter_a_in">
                    <property name="text">
@@ -8389,7 +8389,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="4" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_20">
+                <layout class="QHBoxLayout" name="gb_det_misc_hbox_2">
                  <item>
                   <widget class="QPushButton" name="pb_eiger_filter_c_in">
                    <property name="text">
@@ -8407,7 +8407,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_125">
+                <layout class="QGridLayout" name="gb_det_misc_grid_2">
                  <item row="1" column="0">
                   <widget class="QPushButton" name="pb_light_ON">
                    <property name="sizePolicy">
@@ -8463,7 +8463,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="3" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_19">
+                <layout class="QHBoxLayout" name="gb_det_misc_hbox_3">
                  <item>
                   <widget class="QPushButton" name="pb_eiger_filter_b_in">
                    <property name="text">
@@ -8481,7 +8481,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="0" column="0">
-                <widget class="QLabel" name="label_46">
+                <widget class="QLabel" name="label_det_misc_blank">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -8497,9 +8497,9 @@ font: 15pt &quot;Modern No. 20&quot;;
              </widget>
             </item>
             <item row="0" column="0">
-             <layout class="QVBoxLayout" name="verticalLayout_24">
+             <layout class="QVBoxLayout" name="tab_det_controls_vbox">
               <item>
-               <widget class="QLabel" name="label_27">
+               <widget class="QLabel" name="label_det_controls_update_detector_position">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -8538,13 +8538,13 @@ font: 15pt &quot;Modern No. 20&quot;;
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_10">
+          <widget class="QWidget" name="tab_det_filters">
            <attribute name="title">
             <string>Filters</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_57">
+           <layout class="QGridLayout" name="tab_det_filters_grid">
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_20">
+             <widget class="QGroupBox" name="gb_attenuators">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -8554,9 +8554,9 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Attenuators </string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_111">
+              <layout class="QGridLayout" name="gb_attenuators_grid">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_50">
+                <widget class="QLabel" name="label_attenuators_blank">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -8569,7 +8569,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="2" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_41">
+                <layout class="QHBoxLayout" name="gb_attenuators_hbox">
                  <item>
                   <widget class="QPushButton" name="pb_eiger_filter_a_in_2">
                    <property name="text">
@@ -8587,7 +8587,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="3" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout_43">
+                <layout class="QHBoxLayout" name="gb_attenuators_hbox_2">
                  <item>
                   <widget class="QPushButton" name="pb_eiger_filter_b_in_2">
                    <property name="text">
@@ -8605,7 +8605,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </layout>
                </item>
                <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_126">
+                <layout class="QGridLayout" name="gb_attenuators_grid_2">
                  <item row="1" column="0">
                   <widget class="QPushButton" name="pb_light_ON_2">
                    <property name="sizePolicy">
@@ -8668,7 +8668,7 @@ font: 15pt &quot;Modern No. 20&quot;;
          </widget>
         </item>
         <item row="2" column="0" rowspan="2">
-         <widget class="QTabWidget" name="tabWidget">
+         <widget class="QTabWidget" name="tabs_microscope_module">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -8684,13 +8684,13 @@ font: 15pt &quot;Modern No. 20&quot;;
           <property name="documentMode">
            <bool>true</bool>
           </property>
-          <widget class="QWidget" name="tab">
+          <widget class="QWidget" name="tab_mll_module">
            <attribute name="title">
             <string>MLL Module</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_61">
+           <layout class="QGridLayout" name="tab_mll_module_grid">
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_38">
+             <widget class="QGroupBox" name="gb_mll_positions">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -8703,7 +8703,7 @@ font: 15pt &quot;Modern No. 20&quot;;
               <property name="title">
                <string>Save Positions</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_84">
+              <layout class="QGridLayout" name="gb_mll_positions_grid">
                <item row="0" column="1">
                 <widget class="QListWidget" name="mll_sample_roi_list_widget">
                  <property name="sizePolicy">
@@ -8715,18 +8715,18 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QFrame" name="frame_13">
+                <widget class="QFrame" name="frame_mll_scan_pos">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_85">
+                 <layout class="QGridLayout" name="frame_mll_scan_pos_grid">
                   <item row="0" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_10">
+                   <layout class="QHBoxLayout" name="frame_mll_scan_pos_hbox">
                     <item>
-                     <widget class="QLabel" name="label_166">
+                     <widget class="QLabel" name="label_mll_scan_pos_scan_id">
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -8815,9 +8815,9 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="0" column="0">
-                <layout class="QGridLayout" name="gridLayout_127">
+                <layout class="QGridLayout" name="gb_mll_positions_grid_2">
                  <item row="0" column="0">
-                  <layout class="QGridLayout" name="gridLayout_128">
+                  <layout class="QGridLayout" name="gb_mll_positions_grid_3">
                    <item row="2" column="0">
                     <widget class="QPushButton" name="pb_copy_curr_pos_mll">
                      <property name="toolTip">
@@ -8829,7 +8829,7 @@ Show Scan Pos
                     </widget>
                    </item>
                    <item row="0" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_39">
+                    <layout class="QHBoxLayout" name="gb_mll_positions_hbox">
                      <item>
                       <widget class="QPushButton" name="pb_save_pos_mll">
                        <property name="sizePolicy">
@@ -8867,7 +8867,7 @@ Show Scan Pos
                   </layout>
                  </item>
                  <item row="2" column="0">
-                  <layout class="QGridLayout" name="gridLayout_129">
+                  <layout class="QGridLayout" name="gb_mll_positions_grid_4">
                    <item row="2" column="0">
                     <widget class="QPushButton" name="pb_roiList_clear_mll">
                      <property name="text">
@@ -8876,7 +8876,7 @@ Show Scan Pos
                     </widget>
                    </item>
                    <item row="0" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_81">
+                    <layout class="QHBoxLayout" name="gb_mll_positions_hbox_2">
                      <item>
                       <widget class="QPushButton" name="pb_roiList_export_mll">
                        <property name="sizePolicy">
@@ -8920,7 +8920,7 @@ Show Scan Pos
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_39">
+             <widget class="QGroupBox" name="gb_mll_navigation">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -8936,9 +8936,9 @@ Show Scan Pos
               <property name="title">
                <string>Navigation</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_73">
+              <layout class="QGridLayout" name="gb_mll_navigation_grid">
                <item row="3" column="0">
-                <widget class="QLabel" name="label_172">
+                <widget class="QLabel" name="label_mll_navigation_dsy">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9036,7 +9036,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="4" column="0">
-                <widget class="QLabel" name="label_43">
+                <widget class="QLabel" name="label_mll_navigation_dsz">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9049,7 +9049,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="QLabel" name="label_170">
+                <widget class="QLabel" name="label_mll_navigation_dsx">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9193,7 +9193,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="5" column="0">
-                <widget class="QLabel" name="label_169">
+                <widget class="QLabel" name="label_mll_navigation_sample_angle">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9298,7 +9298,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="1" column="4">
-                <widget class="QLabel" name="label_168">
+                <widget class="QLabel" name="label_mll_navigation_readback">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -9370,7 +9370,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="6" column="0">
-                <widget class="QLabel" name="label_82">
+                <widget class="QLabel" name="label_mll_navigation_sbz">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9497,7 +9497,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="1" column="2">
-                <widget class="QLabel" name="label_131">
+                <widget class="QLabel" name="label_mll_navigation_move_by">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -9526,7 +9526,7 @@ Show Scan Pos
                 </widget>
                </item>
                <item row="7" column="0">
-                <widget class="QLabel" name="label_127">
+                <widget class="QLabel" name="label_mll_navigation_sbx">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9574,13 +9574,13 @@ Stop All Sample Motion
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_8">
+          <widget class="QWidget" name="tab_zp_module">
            <attribute name="title">
             <string>Zone Plate Module</string>
            </attribute>
-           <layout class="QGridLayout" name="gridLayout_8">
+           <layout class="QGridLayout" name="tab_zp_module_grid">
             <item row="0" column="1">
-             <widget class="QGroupBox" name="groupBox_37">
+             <widget class="QGroupBox" name="gb_zp_positions">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -9590,11 +9590,11 @@ Stop All Sample Motion
               <property name="title">
                <string>Save Positions</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout">
+              <layout class="QGridLayout" name="gb_zp_positions_grid">
                <item row="1" column="0">
-                <layout class="QGridLayout" name="gridLayout_123">
+                <layout class="QGridLayout" name="gb_zp_positions_grid_2">
                  <item row="0" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_80">
+                  <layout class="QHBoxLayout" name="gb_zp_positions_hbox">
                    <item>
                     <widget class="QPushButton" name="pb_roiList_export_zp">
                      <property name="sizePolicy">
@@ -9650,7 +9650,7 @@ Stop All Sample Motion
                 </widget>
                </item>
                <item row="0" column="0">
-                <layout class="QGridLayout" name="gridLayout_122">
+                <layout class="QGridLayout" name="gb_zp_positions_grid_3">
                  <item row="2" column="0">
                   <widget class="QPushButton" name="pb_copy_curr_pos_zp">
                    <property name="toolTip">
@@ -9662,7 +9662,7 @@ Stop All Sample Motion
                   </widget>
                  </item>
                  <item row="0" column="0">
-                  <layout class="QHBoxLayout" name="horizontalLayout_38">
+                  <layout class="QHBoxLayout" name="gb_zp_positions_hbox_2">
                    <item>
                     <widget class="QPushButton" name="pb_save_pos_zp">
                      <property name="sizePolicy">
@@ -9700,18 +9700,18 @@ Stop All Sample Motion
                 </layout>
                </item>
                <item row="0" column="2" rowspan="2">
-                <layout class="QVBoxLayout" name="verticalLayout_8">
+                <layout class="QVBoxLayout" name="gb_zp_positions_vbox">
                  <item>
-                  <widget class="QLabel" name="label_163">
+                  <widget class="QLabel" name="label_zp_positions_recover_pos_using_scan_id">
                    <property name="text">
                     <string>Recover Pos. Using Scan ID</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_35">
+                  <layout class="QHBoxLayout" name="gb_zp_positions_hbox_3">
                    <item>
-                    <widget class="QLabel" name="label_164">
+                    <widget class="QLabel" name="label_zp_positions_scan_id">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -9799,7 +9799,7 @@ Show Meta Data
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QGroupBox" name="groupBox_36">
+             <widget class="QGroupBox" name="gb_zp_navigation">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -9815,7 +9815,7 @@ Show Meta Data
               <property name="title">
                <string>Navigation</string>
               </property>
-              <layout class="QGridLayout" name="gridLayout_69">
+              <layout class="QGridLayout" name="gb_zp_navigation_grid">
                <item row="4" column="3">
                 <widget class="QPushButton" name="pb_move_smarz_pos">
                  <property name="sizePolicy">
@@ -9855,7 +9855,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QLabel" name="label_162">
+                <widget class="QLabel" name="label_zp_navigation_smary">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -9896,7 +9896,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="4" column="0">
-                <widget class="QLabel" name="label_42">
+                <widget class="QLabel" name="label_zp_navigation_smarz">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -10056,7 +10056,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="6" column="0">
-                <widget class="QLabel" name="label_78">
+                <widget class="QLabel" name="label_zp_navigation_zone_plate_z">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -10069,7 +10069,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="5" column="0">
-                <widget class="QLabel" name="label_159">
+                <widget class="QLabel" name="label_zp_navigation_sample_angle">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -10123,7 +10123,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="1" column="2">
-                <widget class="QLabel" name="label_129">
+                <widget class="QLabel" name="label_zp_navigation_move_by">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -10196,7 +10196,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="1" column="4">
-                <widget class="QLabel" name="label_158">
+                <widget class="QLabel" name="label_zp_navigation_readback">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -10222,7 +10222,7 @@ Show Meta Data
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="QLabel" name="label_160">
+                <widget class="QLabel" name="label_zp_navigation_smarx">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -10358,7 +10358,7 @@ Stop All Sample Motion
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="gb_plotting">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -10368,7 +10368,7 @@ Stop All Sample Motion
           <property name="title">
            <string>Plotting</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_55">
+          <layout class="QGridLayout" name="gb_plotting_grid">
            <item row="3" column="0">
             <widget class="QPushButton" name="pb_close_all_plot">
              <property name="sizePolicy">
@@ -10388,12 +10388,12 @@ Stop All Sample Motion
             </widget>
            </item>
            <item row="2" column="0">
-            <layout class="QGridLayout" name="gridLayout_54">
+            <layout class="QGridLayout" name="gb_plotting_grid_2">
              <property name="rightMargin">
               <number>10</number>
              </property>
              <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_5">
+              <layout class="QGridLayout" name="gb_plotting_grid_3">
                <item row="0" column="0">
                 <widget class="QPushButton" name="pb_erf_fit">
                  <property name="sizePolicy">
@@ -10428,14 +10428,14 @@ ERF Fit
               </layout>
              </item>
              <item row="1" column="0">
-              <layout class="QGridLayout" name="gridLayout_18">
+              <layout class="QGridLayout" name="gb_plotting_grid_4">
                <item row="0" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_14">
+                <layout class="QHBoxLayout" name="gb_plotting_hbox">
                  <property name="rightMargin">
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QLabel" name="label_49">
+                  <widget class="QLabel" name="label_plotting_threshold">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -10488,14 +10488,14 @@ ERF Fit
             </layout>
            </item>
            <item row="0" column="0">
-            <layout class="QGridLayout" name="gridLayout_51">
+            <layout class="QGridLayout" name="gb_plotting_grid_5">
              <property name="rightMargin">
               <number>0</number>
              </property>
              <item row="1" column="0">
-              <layout class="QGridLayout" name="gridLayout_10">
+              <layout class="QGridLayout" name="gb_plotting_grid_6">
                <item row="0" column="0">
-                <widget class="QLabel" name="label_48">
+                <widget class="QLabel" name="label_plotting_elem">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -10520,7 +10520,7 @@ ERF Fit
               </layout>
              </item>
              <item row="0" column="0">
-              <layout class="QGridLayout" name="gridLayout_2">
+              <layout class="QGridLayout" name="gb_plotting_grid_7">
                <item row="0" column="2">
                 <widget class="QPushButton" name="pb_plot_last">
                  <property name="sizePolicy">
@@ -10554,7 +10554,7 @@ ERF Fit
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QLabel" name="label">
+                <widget class="QLabel" name="label_plotting_scan_id">
                  <property name="text">
                   <string>Scan ID</string>
                  </property>
@@ -10592,11 +10592,11 @@ Plot
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab_advanced_scans">
        <attribute name="title">
         <string>Advanced Scans/Queue</string>
        </attribute>
-       <widget class="QGroupBox" name="groupBox_18">
+       <widget class="QGroupBox" name="gb_mosaic">
         <property name="geometry">
          <rect>
           <x>12</x>
@@ -10614,9 +10614,9 @@ Plot
         <property name="title">
          <string>Mosaic Scan</string>
         </property>
-        <layout class="QGridLayout" name="gridLayout_144">
+        <layout class="QGridLayout" name="gb_mosaic_grid">
          <item row="0" column="0">
-          <widget class="QFrame" name="frame_19">
+          <widget class="QFrame" name="frame_mosaic_params">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -10626,7 +10626,7 @@ Plot
            <property name="styleSheet">
             <string notr="true"/>
            </property>
-           <layout class="QGridLayout" name="gridLayout_119">
+           <layout class="QGridLayout" name="frame_mosaic_params_grid">
             <item row="2" column="2">
              <widget class="QDoubleSpinBox" name="sb_xrange_mosaic">
               <property name="sizePolicy">
@@ -10753,14 +10753,14 @@ Plot
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="label_189">
+             <widget class="QLabel" name="label_mosaic_params_overlap">
               <property name="text">
                <string>Overlap </string>
               </property>
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="label_191">
+             <widget class="QLabel" name="label_mosaic_params_step_size">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -10787,7 +10787,7 @@ Plot
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="label_179">
+             <widget class="QLabel" name="label_mosaic_params_det_list">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -10808,7 +10808,7 @@ Plot
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="label_177">
+             <widget class="QLabel" name="label_mosaic_params_y_range">
               <property name="text">
                <string>Y Range</string>
               </property>
@@ -10859,18 +10859,18 @@ Plot
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="label_190">
+             <widget class="QLabel" name="label_mosaic_params_x_range">
               <property name="text">
                <string>X Range</string>
               </property>
              </widget>
             </item>
             <item row="1" column="0" rowspan="6">
-             <widget class="QWidget" name="widget_5" native="true">
+             <widget class="QWidget" name="w_mosaic_microscope" native="true">
               <property name="styleSheet">
                <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_26">
+              <layout class="QVBoxLayout" name="w_mosaic_microscope_vbox">
                <item>
                 <widget class="QRadioButton" name="rb_mosaic_mll">
                  <property name="sizePolicy">
@@ -10910,14 +10910,14 @@ Plot
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="label_192">
+             <widget class="QLabel" name="label_mosaic_params_plan_name">
               <property name="text">
                <string>Plan name</string>
               </property>
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="QLabel" name="label_188">
+             <widget class="QLabel" name="label_mosaic_params_dwell_time">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -10979,7 +10979,7 @@ Plot
          </item>
         </layout>
        </widget>
-       <widget class="QGroupBox" name="groupBox_17">
+       <widget class="QGroupBox" name="gb_step_scan">
         <property name="enabled">
          <bool>false</bool>
         </property>
@@ -11000,9 +11000,9 @@ Plot
         <property name="title">
          <string>Step scans</string>
         </property>
-        <layout class="QGridLayout" name="gridLayout_143">
+        <layout class="QGridLayout" name="gb_step_scan_grid">
          <item row="0" column="0">
-          <widget class="QFrame" name="frame_18">
+          <widget class="QFrame" name="frame_step_params">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -11012,7 +11012,7 @@ Plot
            <property name="styleSheet">
             <string notr="true"/>
            </property>
-           <layout class="QGridLayout" name="gridLayout_108">
+           <layout class="QGridLayout" name="frame_step_params_grid">
             <item row="3" column="2">
              <widget class="QDoubleSpinBox" name="x_step_end">
               <property name="sizePolicy">
@@ -11070,14 +11070,14 @@ Plot
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLabel" name="label_95">
+             <widget class="QLabel" name="label_step_params_end">
               <property name="text">
                <string>End</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLabel" name="label_92">
+             <widget class="QLabel" name="label_step_params_detectors">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -11132,7 +11132,7 @@ Plot
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLabel" name="label_165">
+             <widget class="QLabel" name="label_step_params_dwell_time">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -11159,11 +11159,11 @@ Plot
              </widget>
             </item>
             <item row="0" column="0" rowspan="6">
-             <widget class="QWidget" name="widget_3" native="true">
+             <widget class="QWidget" name="w_step_dim" native="true">
               <property name="styleSheet">
                <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_11">
+              <layout class="QVBoxLayout" name="w_step_dim_vbox">
                <item>
                 <widget class="QRadioButton" name="rb_step_1d">
                  <property name="sizePolicy">
@@ -11249,7 +11249,7 @@ Plot
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLabel" name="label_93">
+             <widget class="QLabel" name="label_step_params_motors">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -11358,14 +11358,14 @@ Plot
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="label_94">
+             <widget class="QLabel" name="label_step_params_start">
               <property name="text">
                <string>Start</string>
               </property>
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLabel" name="label_96">
+             <widget class="QLabel" name="label_step_params_steps">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -11442,7 +11442,7 @@ Plot
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="pb_run_step_scan">
            <property name="text">
             <string>
  RUN 
@@ -11470,7 +11470,7 @@ Plot
         <property name="title">
          <string>QServer Status</string>
         </property>
-        <layout class="QGridLayout" name="gridLayout_59">
+        <layout class="QGridLayout" name="gb_qserver_connection_grid">
          <item row="1" column="3">
           <widget class="QPushButton" name="pb_close_bsui_env">
            <property name="sizePolicy">
@@ -11534,7 +11534,7 @@ Plot
        <attribute name="title">
         <string>Tomography</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_78">
+       <layout class="QGridLayout" name="tab_tomo_grid">
         <item row="0" column="6">
          <widget class="QPushButton" name="pb_apply_tomo">
           <property name="enabled">
@@ -11601,7 +11601,7 @@ Plot
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
           </property>
-          <layout class="QGridLayout" name="gridLayout_4">
+          <layout class="QGridLayout" name="frame_tomo_grid">
            <item row="0" column="2" rowspan="4" alignment="Qt::AlignLeft|Qt::AlignTop">
             <widget class="QGroupBox" name="groupBox_tomo_xalign">
              <property name="sizePolicy">
@@ -14770,11 +14770,11 @@ Plot
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_3">
+      <widget class="QWidget" name="tab_log">
        <attribute name="title">
         <string>Log</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_58">
+       <layout class="QGridLayout" name="tab_log_grid">
         <item row="0" column="0">
          <widget class="QPlainTextEdit" name="pte_log">
           <property name="sizePolicy">
@@ -14791,7 +14791,7 @@ Plot
        <attribute name="title">
         <string>Beamline Contacts</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_77">
+       <layout class="QGridLayout" name="beamline_contacts_tab_grid">
         <item row="0" column="0">
          <widget class="QTableWidget" name="tw_hxn_contact">
           <property name="enabled">
@@ -15079,7 +15079,7 @@ Plot
   <tabstop>db_smary</tabstop>
   <tabstop>db_smarz</tabstop>
   <tabstop>db_zpz1</tabstop>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>tabs_microscope_module</tabstop>
   <tabstop>rb_2d</tabstop>
   <tabstop>le_experimenters</tabstop>
   <tabstop>db_zpsth</tabstop>
@@ -15112,7 +15112,7 @@ Plot
   <tabstop>cb_sid_move_base_mll</tabstop>
   <tabstop>pb_print_scan_meta_mll</tabstop>
   <tabstop>pb_show_scan_pos_mll</tabstop>
-  <tabstop>tabWidget_18</tabstop>
+  <tabstop>tabs_detectors</tabstop>
   <tabstop>cb_elem_2</tabstop>
   <tabstop>cb_elem_3</tabstop>
   <tabstop>cb_elem_4</tabstop>
@@ -15139,8 +15139,8 @@ Plot
   <tabstop>pb_cam11_disable_flatfield</tabstop>
   <tabstop>pb_cam11_flatfield</tabstop>
   <tabstop>cb_dets_for_ff_corr</tabstop>
-  <tabstop>pushButton_12</tabstop>
-  <tabstop>pushButton_16</tabstop>
+  <tabstop>pb_flatfield_save_enable</tabstop>
+  <tabstop>pb_flatfield_disable</tabstop>
   <tabstop>cb_det_names_for_pos</tabstop>
   <tabstop>pb_update_dets_pos</tabstop>
   <tabstop>pb_merlin_filterIN</tabstop>
@@ -15158,7 +15158,7 @@ Plot
   <tabstop>pb_start_pressure_live_plot</tabstop>
   <tabstop>pressure_plot_canvas</tabstop>
   <tabstop>pb_stop_pressure_live_plot</tabstop>
-  <tabstop>textEdit</tabstop>
+  <tabstop>te_sample_ex_notes</tabstop>
   <tabstop>sample_ex_tabs</tabstop>
   <tabstop>dsb_target_p</tabstop>
   <tabstop>cb_sample_ex_cam11_in</tabstop>
@@ -15177,7 +15177,7 @@ Plot
   <tabstop>rb_pumpB_slow</tabstop>
   <tabstop>rb_pumpA_slow</tabstop>
   <tabstop>lcdPressure</tabstop>
-  <tabstop>tabWidget_3</tabstop>
+  <tabstop>tabs_alignment_optics</tabstop>
   <tabstop>pb_osa_out</tabstop>
   <tabstop>sb_ZPZ1RelativeStart</tabstop>
   <tabstop>sb_ZPZ1RelativeEnd</tabstop>
@@ -15196,11 +15196,11 @@ Plot
   <tabstop>sb_zp_rot_scan_end</tabstop>
   <tabstop>sb_zp_rot_scan_num</tabstop>
   <tabstop>pb_zp_rot_align_start</tabstop>
-  <tabstop>pushButton_11</tabstop>
+  <tabstop>pb_zp_rot_rotate_to</tabstop>
   <tabstop>dsb_rot_align_zpsth</tabstop>
-  <tabstop>pushButton_9</tabstop>
+  <tabstop>pb_zp_rot_move_smarx</tabstop>
   <tabstop>dsb_rot_align_smarx</tabstop>
-  <tabstop>pushButton_10</tabstop>
+  <tabstop>pb_zp_rot_move_smarz</tabstop>
   <tabstop>dsb_rot_align_smarz</tabstop>
   <tabstop>sb_mll_rot_angle_start</tabstop>
   <tabstop>sb_mll_rot_angle_end</tabstop>
@@ -15222,7 +15222,7 @@ Plot
   <tabstop>sb_mll_z_start</tabstop>
   <tabstop>sb_mll_z_end</tabstop>
   <tabstop>sb_mll_z_steps</tabstop>
-  <tabstop>tabWidget_2</tabstop>
+  <tabstop>tabs_alignment_slits</tabstop>
   <tabstop>pb_SSA2_HClose</tabstop>
   <tabstop>pb_SSA2_Open</tabstop>
   <tabstop>pb_SSA2_Close</tabstop>
@@ -15248,7 +15248,7 @@ Plot
   <tabstop>pb_FS_OUT</tabstop>
   <tabstop>db_fs</tabstop>
   <tabstop>db_cam6</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>pb_engage_mirror_feedbacks</tabstop>
   <tabstop>dsb_target_ugap</tabstop>
   <tabstop>dsb_target_pitch</tabstop>
   <tabstop>cb_target_coating</tabstop>

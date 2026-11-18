@@ -27,13 +27,9 @@ Bugs found while writing tooltips ([tooltips.json](tooltips.json)). When you fix
 
 ## Buttons not connected
 
-- [ ] Alignment: `pushButton_9/10/11` (ZP move smarX/smarZ/rotate), `pb_rot_align_dsth/dsx/dsz/sbx_move`, `pb_rot_align_all_move`, `pb_stop_mll_motion`.
-- [ ] Detectors: `pb_telescope`, `pb_abort_diff`, `pushButton_12/16` (flat field for `cb_dets_for_ff_corr`), `pb_eiger_filter_a/b/c_in/out`, all `groupBox_20` attenuator buttons (`*_2`).
-- [ ] Other: `pb_roiList_clear_sel_mll/zp`, `pb_insert_user_image`, `pushButton_2` (Engage Mirror Feedbacks).
-
-## UI file
-
-- [ ] Two widgets are named `groupBox` (Data Acquisition "Plotting" and the detector tab groups); rename them in Designer so they can have tooltips.
+- [ ] Alignment: `pb_zp_rot_move_smarx`, `pb_zp_rot_move_smarz`, `pb_zp_rot_rotate_to`, `pb_rot_align_dsth/dsx/dsz/sbx_move`, `pb_rot_align_all_move`, `pb_stop_mll_motion`.
+- [ ] Detectors: `pb_telescope`, `pb_abort_diff`, `pb_flatfield_save_enable`, `pb_flatfield_disable` (flat field for `cb_dets_for_ff_corr`), `pb_eiger_filter_a/b/c_in/out`, all `gb_attenuators` buttons (`*_2`).
+- [ ] Other: `pb_roiList_clear_sel_mll/zp`, `pb_insert_user_image`, `pb_engage_mirror_feedbacks`.
 
 ## Profile startup files (hxn-profile-collection)
 
