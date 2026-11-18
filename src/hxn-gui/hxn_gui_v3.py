@@ -1360,6 +1360,10 @@ class Ui(QtWidgets.QMainWindow):
                 self.db_dsy:"XF:03IDC-ES{MCS:1-Ax:mlldiffy}Mtr.RBV",
                 self.db_dsz:"XF:03IDC-ES{ANC350:6-Ax:3}Mtr.RBV",
                 self.db_dsth:"XF:03IDC-ES{MCS:3-Ax:diffsth}Mtr.RBV",
+                self.db_mll_osax:"XF:03IDC-ES{ANC350:4-Ax:2}Mtr.RBV",
+                self.db_mll_osay:"XF:03IDC-ES{ANC350:4-Ax:3}Mtr.RBV",
+                self.db_mll_bsx:"XF:03IDC-ES{ANC350:6-Ax:0}Mtr.RBV",
+                self.db_mll_bsy:"XF:03IDC-ES{ANC350:6-Ax:1}Mtr.RBV",
                 self.db_sbz:"XF:03IDC-ES{ANC350:3-Ax:2}Mtr.RBV",
                 self.db_ssa2_x:"XF:03IDC-OP{Slt:SSA2-Ax:XAp}Mtr.RBV",
                 self.db_ssa2_y:"XF:03IDC-OP{Slt:SSA2-Ax:YAp}Mtr.RBV",
@@ -2640,7 +2644,15 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_mlls_to_downstream.clicked.connect(lambda:self._confirm_and_run("Move the MLLs downstream.", self.mll_to_downstream_))
         self.pb_mll_sample_in.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample in.", self.mll_sample_in_))
         self.pb_mll_sample_out.clicked.connect(lambda:self._confirm_and_run("Move the MLL sample out.", self.mll_sample_out_))
+        #mll osa / beam stop jog
+        for axis in ("osax", "osay", "bsx", "bsy"):
+            getattr(self, f"pb_mll_{axis}_pos").clicked.connect(lambda _=False, a=axis: self.move_mll_osa_bs(a))
+            getattr(self, f"pb_mll_{axis}_neg").clicked.connect(lambda _=False, a=axis: self.move_mll_osa_bs(a, neg_=True))
 
+    @show_error_message_box
+    def move_mll_osa_bs(self, axis, neg_=False):
+        motor = getattr(mllosa if axis.startswith("osa") else mllbs, axis)
+        self.move_motor_with_pv(getattr(self, f"db_move_mll_{axis}"), motor, 1, neg=neg_)
     @show_error_message_box
     def _confirm_and_run(self, description, action):
         choice = QMessageBox.question(

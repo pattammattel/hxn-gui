@@ -52,6 +52,22 @@
       "self.mll_bs_out_",
       "mll_bs_out"
     ],
+    "pb_mll_bsx_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_bsx_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_bsy_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_bsy_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
     "pb_mll_cam11_view": [
       "self.mll_to_cam11_view_",
       "mll_to_cam11_view",
@@ -76,6 +92,22 @@
     ],
     "pb_mll_osa_out": [
       "self.mll_osa_OUT"
+    ],
+    "pb_mll_osax_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_osax_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_osay_neg": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
+    ],
+    "pb_mll_osay_pos": [
+      "self.move_mll_osa_bs",
+      "self.move_motor_with_pv"
     ],
     "pb_mll_rot_align_start": [
       "self.mll_rot_alignment_",
