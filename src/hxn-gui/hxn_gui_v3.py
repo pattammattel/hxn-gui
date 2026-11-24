@@ -763,6 +763,15 @@ class Ui(QtWidgets.QMainWindow):
             return
         # Colour reflects the documented RE Manager manager_state values.
         busy_states = {"starting_queue", "executing_queue", "executing_task"}
+        # A tab's scan is over once QServer has been busy since Run and is idle again
+        # (finished, stopped after an angle, aborted or failed); reset that tab's scan controls.
+        for kind, tab in getattr(self, "json_tabs", {}).items():
+            if tab["running_json"] is None:
+                continue
+            if state in busy_states:
+                tab["seen_busy"] = True
+            elif state == "idle" and tab.get("seen_busy"):
+                self._json_scan_done(kind)
         caution_states = {"initializing", "creating_environment",
                           "closing_environment"}
         if state == "idle":
@@ -950,6 +959,7 @@ class Ui(QtWidgets.QMainWindow):
         self.json_progress = {}
         for kind in JSON_SCAN_TABS:
             progress = ScanProgress(kind)
+            progress.finished.connect(lambda k=kind: self._json_scan_done(k))
             self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_summary").layout().addWidget(progress)
             self.json_progress[kind] = progress
 
@@ -1338,8 +1348,9 @@ class Ui(QtWidgets.QMainWindow):
             self.statusbar.showMessage(f"{title} scan added to QServer queue: {json_path}")
 
     def _set_json_scan_running(self, kind, json_path):
-        # QServer reports no completion here, so controls stay on the last executed JSON.
+        # Reset to None by _json_scan_done when the angle log or QServer shows the scan has ended.
         self.json_tabs[kind]["running_json"] = json_path
+        self.json_tabs[kind]["seen_busy"] = False
         running = json_path is not None
         pause = self._jw(kind, "pb_pause_{}")
         pause.setEnabled(running)
@@ -1348,6 +1359,12 @@ class Ui(QtWidgets.QMainWindow):
         with QtCore.QSignalBlocker(pause):
             pause.setChecked(False)
             pause.setText("Pause")
+
+    def _json_scan_done(self, kind):
+        if self.json_tabs[kind]["running_json"] is None:
+            return
+        self._set_json_scan_running(kind, None)
+        self.statusbar.showMessage(f"{JSON_SCAN_TABS[kind]['title']} scan ended; scan controls reset.")
 
     def _set_json_scan_flag(self, kind, key, value):
         path = self.json_tabs[kind]["running_json"]

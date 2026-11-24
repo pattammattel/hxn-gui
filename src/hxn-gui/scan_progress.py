@@ -10,10 +10,13 @@ import time
 from datetime import datetime, timedelta
 
 from qtpy import QtCore, QtWidgets
+from qtpy.QtCore import Signal
 
 from live_xrf_stack import newest_log
 
-POLL_MS = 30 * 1000
+# Poll at 1/POLL_FRACTION of the measured time per angle, within these bounds; FIRST_POLL_MS until it is known.
+POLL_FRACTION = 5
+MIN_POLL_MS, MAX_POLL_MS, FIRST_POLL_MS = 2 * 1000, 30 * 1000, 5 * 1000
 
 
 def read_progress(log_path, skip_angles=()):
@@ -53,6 +56,7 @@ def _fmt(td):
 
 class ScanProgress(QtWidgets.QWidget):
     """Progress bar and text for the scan started from a tab; prefix names widgets for tooltips.json."""
+    finished = Signal()  # emitted once per followed scan, when the log shows every angle done
 
     def __init__(self, prefix, parent=None):
         super().__init__(parent)
@@ -71,11 +75,15 @@ class ScanProgress(QtWidgets.QWidget):
         layout.addWidget(self.label)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.refresh)
-        self.timer.start(POLL_MS)
+        self.timer.start(FIRST_POLL_MS)
+        self._cached = (None, None, None)  # (path, mtime, progress) so unchanged logs are not re-read
 
     def follow(self, pattern, newer_than, json_path=None):
         """Follow the newest log matching pattern written after newer_than; json_path supplies remove_angles."""
         self.log_pattern, self.newer_than, self.json_path, self.log_path = pattern, newer_than, json_path, None
+        self._cached = (None, None, None)
+        self._finished_sent = False
+        self.timer.start(FIRST_POLL_MS)
         self.bar.setRange(0, 1)
         self.bar.setValue(0)
         self.refresh()
@@ -87,19 +95,38 @@ class ScanProgress(QtWidgets.QWidget):
         except Exception:
             return []
 
+    def _set_poll(self, p):
+        if p["per_angle"] and p["current"] is not None:
+            ms = int(p["per_angle"].total_seconds() * 1000 / POLL_FRACTION)
+            ms = min(max(ms, MIN_POLL_MS), MAX_POLL_MS)
+        else:
+            ms = FIRST_POLL_MS if p["current"] is not None else MAX_POLL_MS
+        if self.timer.interval() != ms:
+            self.timer.setInterval(ms)
+
     def refresh(self):
         if self.log_pattern is None:
             return
         found = newest_log(self.log_pattern, self.newer_than)
         if found is None:
-            self.label.setText("Waiting for the first angle to finish (no angle log yet).")
+            self.label.setText("Waiting for the first angle to finish (no angle log yet).\n"
+                               f"Checking every {self.timer.interval() // 1000} s.")
             return
         self.log_path = found
         try:
-            p = read_progress(found, self._skip_angles())
+            mtime = os.path.getmtime(found)
+            if self._cached[:2] == (found, mtime):
+                p = self._cached[2]
+            else:
+                p = read_progress(found, self._skip_angles())
+                self._cached = (found, mtime, p)
         except Exception as exc:
             self.label.setText(f"Cannot read {os.path.basename(found)}: {exc}")
             return
+        self._set_poll(p)
+        if p["current"] is None and p["done"] and not self._finished_sent:
+            self._finished_sent = True
+            self.finished.emit()
         self.bar.setRange(0, max(p["total"], 1))
         self.bar.setValue(p["done"])
         lines = [f"Angles: {p['done']} done, {p['total'] - p['done']} remaining  ({os.path.basename(found)})"]
@@ -117,4 +144,5 @@ class ScanProgress(QtWidgets.QWidget):
             lines.append(f"Last angle finished: {p['last_done']:%H:%M}  ({_fmt(since)} ago)")
             if p["current"] is not None and p["per_angle"] and since > 3 * p["per_angle"]:
                 lines.append("No new angle for a while: the scan may be paused, stopped or waiting for beam.")
+        lines.append(f"Checking every {self.timer.interval() // 1000} s.")
         self.label.setText("\n".join(lines))
