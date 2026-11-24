@@ -526,6 +526,8 @@ class Ui(QtWidgets.QMainWindow):
         # Threaded heartbeat: a toggle that polls QServer and drives a status light.
         self.qserver_heartbeat_thread = None
         self.pb_qserver_heartbeat.toggled.connect(self.toggle_qserver_heartbeat)
+        # Show QServer status from startup; the button still turns it off.
+        self.pb_qserver_heartbeat.setChecked(True)
 
     @show_error_message_box
     def start_qserver(self):
@@ -4156,7 +4158,7 @@ class Ui(QtWidgets.QMainWindow):
         for name in ("scanStatus_thread", "liveWorker", "pump_update_worker",
                      "update_thread", "live_plot_worker_thread",
                      "points_update_thread", "pump_worker_thread", "vent_thread",
-                     "he_backfill_worker_thread", "thread"):
+                     "he_backfill_worker_thread", "thread", "qserver_heartbeat_thread"):
             self._stop_thread(getattr(self, name, None))
         for viewer in getattr(self, "json_live_views", {}).values():
             viewer.stop()
