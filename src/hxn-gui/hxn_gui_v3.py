@@ -847,6 +847,30 @@ class Ui(QtWidgets.QMainWindow):
             lambda: [self.update_json_scan_summary(k) for k in JSON_SCAN_TABS])
         self.json_scan_summary_timer.start(60000)
 
+        # Opening the Tomography tab copies the Data Acquisition fly-scan values into its 2D scan.
+        self._tomo_prefill_source = None
+        self.HXN_GUI_tabs.currentChanged.connect(self._prefill_tomo_from_flyscan)
+
+    def _prefill_tomo_from_flyscan(self, index):
+        if self.HXN_GUI_tabs.widget(index) is not self.tab_tomo or not self.rb_2d.isChecked():
+            return
+        source = {"det": self.cb_dets.currentText(),
+                  "x_start": self.x_start.value(), "x_end": self.x_end.value(), "x_num": self.x_step.value(),
+                  "y_start": self.y_start.value(), "y_end": self.y_end.value(), "y_num": self.y_step.value(),
+                  "exposure": self.dwell.value()}
+        # Copy only when the fly-scan values changed since the last copy, so tomo edits survive tab switches.
+        if source == self._tomo_prefill_source:
+            return
+        self._tomo_prefill_source = source
+        for key, value in source.items():
+            widget = getattr(self, f"tomo__fly2d_scan__{key}")
+            if key == "det":
+                if widget.findText(value) >= 0:
+                    widget.setCurrentText(value)
+            else:
+                widget.setValue(value)
+        self.statusbar.showMessage("Tomo 2D scan filled from the Data Acquisition fly-scan settings.")
+
     def _build_json_scan_tab(self, kind):
         defaults_path = JSON_SCAN_TABS[kind]["defaults"]
         with open(defaults_path, "r") as f:
@@ -1064,6 +1088,20 @@ class Ui(QtWidgets.QMainWindow):
             seconds += p["yalign"]["num"] * p["yalign"]["exposure"]
         return seconds
 
+    def flyscan_max_points(self):
+        # Limit on x_num * y_num for one fly scan (both microscopes), from microscope_profiles.json.
+        return int(self.microscope_profiles["flyscan_max_points"])
+
+    def _json_scan_point_errors(self, params):
+        """Messages for 2D fly scans in the plan that exceed flyscan_max_points(); empty if all fit."""
+        limit = self.flyscan_max_points()
+        maps = [("2D scan", params["fly2d_scan"])]
+        if params["align_2d_com"]["do_align"]:
+            maps.append(("2D COM alignment", params["align_2d_com"]))
+        return [f"{name}: {m['x_num']} x {m['y_num']} = {m['x_num'] * m['y_num']:,} points "
+                f"(limit {limit:,})"
+                for name, m in maps if m["x_num"] * m["y_num"] > limit]
+
     @staticmethod
     def _json_scan_angle_text(params):
         custom = params.get("custom_angle_list")
@@ -1084,6 +1122,10 @@ class Ui(QtWidgets.QMainWindow):
         custom = p.get("custom_angle_list")
         if (not custom and info["angle_step"] <= 0) or scan["x_num"] <= 0 or scan["y_num"] <= 0:
             summary.setPlainText("Angle step and 2D scan points must be greater than 0.")
+            return
+        too_many = self._json_scan_point_errors(p)
+        if too_many:
+            summary.setPlainText("Too many scan points:\n" + "\n".join(too_many))
             return
         angles = [a for a in self._json_scan_angles(kind, p) if a not in p["remove_angles"]]
         if not angles:
@@ -1245,6 +1287,9 @@ class Ui(QtWidgets.QMainWindow):
             raise NameError(f"{sender} is not defined in this session.")
         params = self.collect_json_scan_params(kind)
         names = params["fly_motors"] + [params["th_motor"], params["fly2d_scan"]["det"]]
+        too_many = self._json_scan_point_errors(params)
+        if too_many:
+            raise ValueError("Too many scan points:\n" + "\n".join(too_many))
         missing = [n for n in names if n not in globals()]
         if missing:
             raise ValueError(f"Not defined in this session: {missing}")
@@ -2172,8 +2217,8 @@ class Ui(QtWidgets.QMainWindow):
 
         self.text_scan_plan.setText(self.scan_plan)
 
-        if self.mot1_steps * self.mot2_steps >64000:
-                raise ValueError ("scan points cannot exceed 64k")
+        if self.mot1_steps * self.mot2_steps > self.flyscan_max_points():
+                raise ValueError (f"scan points cannot exceed {self.flyscan_max_points():,}")
         
         if self.det.endswith('merlin') and self.dwell_t<0.02:
             raise ValueError("Merlin detector cannot scan with dwell time below 20 ms.")
@@ -2267,8 +2312,8 @@ class Ui(QtWidgets.QMainWindow):
             scan_time = self.mot1_steps * self.mot2_steps * self.dwell_t / 60
 
             
-            if self.mot1_steps * self.mot2_steps >64000:
-                raise ValueError ("scan points cannot exceed 64k")
+            if self.mot1_steps * self.mot2_steps > self.flyscan_max_points():
+                raise ValueError (f"scan points cannot exceed {self.flyscan_max_points():,}")
 
             RM.item_add((BPlan("recover_pos_and_scan",
                             scan_name,

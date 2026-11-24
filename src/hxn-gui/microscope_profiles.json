@@ -1,5 +1,6 @@
 {
   "active": "MLL",
+  "flyscan_max_points": 64000,
   "ZP": {
     "pages": {
       "tabs_microscope_module": "tab_zp_module",
