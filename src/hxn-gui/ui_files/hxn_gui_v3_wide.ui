@@ -14792,6 +14792,12 @@ Plot
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tab_qserver_console">
+       <attribute name="title">
+        <string>QServer Console</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="tab_qserver_console_vbox"/>
+      </widget>
       <widget class="QWidget" name="beamline_contacts_tab">
        <attribute name="title">
         <string>Beamline Contacts</string>

@@ -35,3 +35,7 @@ Bugs found while writing tooltips ([tooltips.json](tooltips.json)). When you fix
 - [ ] `72-json-plans.py` `run_diff_json` passes `xalign/yalign["center_with"]` as `align_scan`'s `line_center_mode`; pass `["line_center_mode"]` so the Diffraction tab setting takes effect.
 - [ ] `run_diff_json` does not read `custom_angle_list`; the GUI summary assumes it replaces start/end/step.
 - [ ] `run_tomo_json` does not read `align_using_previous`; the Tomography group is only saved to the JSON.
+
+## Beamline setup
+
+- [ ] `run-queue-server` must start the RE Manager with `--zmq-publish-console ON`, then restart QServer; otherwise the QServer Console tab stays empty.
