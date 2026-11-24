@@ -48,7 +48,8 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
-from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_scan_extent
+from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_scan_extent
+from scan_progress import ScanProgress
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
@@ -945,6 +946,12 @@ class Ui(QtWidgets.QMainWindow):
                                     default_elems=self._live_plot_elems, parent=group)
             group.layout().addWidget(viewer)
             self.json_live_views[kind] = viewer
+        # Scan progress (angles done/remaining, finish estimate) under each tab's Scan Summary.
+        self.json_progress = {}
+        for kind in JSON_SCAN_TABS:
+            progress = ScanProgress(kind)
+            self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_summary").layout().addWidget(progress)
+            self.json_progress[kind] = progress
 
     @staticmethod
     def _fetch_xrf_stack(sid):
@@ -1318,12 +1325,14 @@ class Ui(QtWidgets.QMainWindow):
         send(json_path, execute=execute)
         if execute:
             self._set_json_scan_running(kind, json_path)
+            # The plan writes save_log_to/<scan_label>_startID<first_sid>.csv after each angle;
+            # first_sid is only known once it starts, so follow the newest match from now on.
+            pattern = os.path.join(params["save_log_to"],
+                                   f"{glob.escape(params['scan_label'])}_startID*.csv")
+            started = time.time()
+            self.json_progress[kind].follow(pattern, started, json_path)
             if kind in self.json_live_views:
-                # The plan writes save_log_to/<scan_label>_startID<first_sid>.csv after each angle;
-                # first_sid is only known once it starts, so follow the newest match from now on.
-                pattern = os.path.join(params["save_log_to"],
-                                       f"{glob.escape(params['scan_label'])}_startID*.csv")
-                self.json_live_views[kind].follow_log(pattern, newer_than=time.time())
+                self.json_live_views[kind].follow_log(pattern, newer_than=started)
             self.statusbar.showMessage(f"{title} scan sent to QServer for execution: {json_path}")
         else:
             self.statusbar.showMessage(f"{title} scan added to QServer queue: {json_path}")
