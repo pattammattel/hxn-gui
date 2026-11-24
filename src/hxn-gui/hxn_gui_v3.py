@@ -48,7 +48,7 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
-from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data
+from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_scan_extent
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
@@ -928,7 +928,9 @@ class Ui(QtWidgets.QMainWindow):
         broker = globals().get("db")
         if broker is None:
             raise NameError("db (databroker) is not defined in this session")
-        return get_all_xrf_roi_data(broker[sid])
+        hdr = broker[sid]
+        stack, elems = get_all_xrf_roi_data(hdr)
+        return stack, elems, get_scan_extent(hdr)
 
     def load_tooltips(self):
         # Tooltips are help text only, so a missing or broken file must not stop the GUI.

@@ -7,6 +7,7 @@ files; scans already saved are not fetched again. and shows four user-selected e
 with one shared slider.
 """
 import csv
+import json
 import glob
 import os
 
@@ -59,17 +60,34 @@ def newest_log(pattern, newer_than=None):
     return max(paths, key=os.path.getmtime) if paths else None
 
 
-def save_stack(path, stack, elems, sid, angle):
+def get_scan_extent(hdr):
+    """Scan area from the start document: dict x0, x1, y0, y1 (motor units) and axis labels, or None."""
+    start = hdr.start
+    try:
+        (x0, x1), (y0, y1) = start["scan_range"]
+    except Exception:
+        return None
+    motors = list(start.get("motors", []))
+    xlabel = motors[0] if len(motors) > 0 else "x"
+    ylabel = motors[1] if len(motors) > 1 else "y"
+    return {"x0": float(x0), "x1": float(x1), "y0": float(y0), "y1": float(y1),
+            "xlabel": str(xlabel), "ylabel": str(ylabel)}
+
+
+def save_stack(path, stack, elems, sid, angle, extent=None):
     """Write one scan's stack atomically, so a reader never sees a half-written file."""
     tmp = path + ".tmp"
     with open(tmp, "wb") as f:
-        np.savez(f, stack=np.asarray(stack, dtype=np.float32), elems=np.array(elems), sid=sid, angle=angle)
+        np.savez(f, stack=np.asarray(stack, dtype=np.float32), elems=np.array(elems), sid=sid, angle=angle,
+                 extent=json.dumps(extent))
     os.replace(tmp, path)
 
 
 def load_stack(path):
+    """Return (stack, elems, extent); extent is None for files saved without one."""
     with np.load(path) as data:
-        return data["stack"], [str(e) for e in data["elems"]]
+        extent = json.loads(str(data["extent"])) if "extent" in data.files else None
+        return data["stack"], [str(e) for e in data["elems"]], extent
 
 
 class StackLoader(QThread):
@@ -88,12 +106,13 @@ class StackLoader(QThread):
             path = os.path.join(self.save_dir, f"scan_{sid}.npz")
             try:
                 if os.path.isfile(path):
-                    _, elems = load_stack(path)
+                    _, elems, _ = load_stack(path)
                 else:
-                    stack, elems = self.fetch(sid)
-                    elems = list(elems)
+                    result = self.fetch(sid)  # (stack, elems) or (stack, elems, extent)
+                    stack, elems = result[0], list(result[1])
+                    extent = result[2] if len(result) > 2 else None
                     os.makedirs(self.save_dir, exist_ok=True)
-                    save_stack(path, stack, elems, sid, angle)
+                    save_stack(path, stack, elems, sid, angle, extent)
                     finite = np.isfinite(stack)
                     print(f"[LIVE STACK] scan {sid} @ {angle:.2f} deg: shape {np.shape(stack)}, "
                           f"{len(elems)} elements, {np.size(stack) - finite.sum()} non-finite values -> {path}")
@@ -135,10 +154,11 @@ class XrfStackViewer(QtWidgets.QWidget):
         grid.setContentsMargins(0, 0, 0, 0)
         self.views, self.combos = [], []
         for i in range(N_VIEWS):
-            view = pg.ImageView()
+            view = pg.ImageView(view=pg.PlotItem())
             view.setObjectName(f"iv_{self.prefix}_live_{i + 1}")
             view.ui.roiBtn.hide()
             view.ui.menuBtn.hide()
+            view.setColorMap(pg.colormap.get("viridis"))
             view.getView().setAspectLocked(True)
             view.getView().invertY(False)
             view.setMinimumSize(220, 220)
@@ -294,7 +314,8 @@ class XrfStackViewer(QtWidgets.QWidget):
 
     def _frame_stack(self, frame):
         if self._cache[0] != frame["path"]:
-            self._cache = (frame["path"], load_stack(frame["path"])[0])
+            stack, _, extent = load_stack(frame["path"])
+            self._cache = (frame["path"], (stack, extent))
         return self._cache[1]
 
     def _show_all(self):
@@ -314,7 +335,7 @@ class XrfStackViewer(QtWidgets.QWidget):
             self.views[i].clear()
             return
         try:
-            stack = self._frame_stack(frame)
+            stack, extent = self._frame_stack(frame)
         except Exception as exc:
             self.label_status.setText(f"Cannot read {frame['path']}: {exc}")
             self.views[i].clear()
@@ -328,8 +349,19 @@ class XrfStackViewer(QtWidgets.QWidget):
             hi = lo + 1.0
         image = np.nan_to_num(image, nan=lo, posinf=hi, neginf=lo)
         self.views[i].setToolTip(f"{elem}: {image.shape[1]} x {image.shape[0]} px, min {lo:.3g}, max {hi:.3g}")
-        # Fit the view only when the image size changes, so zoom survives slider moves.
-        refit = getattr(view, "_last_shape", None) != image.shape
-        view._last_shape = image.shape
+        ny, nx = image.shape
+        if extent:
+            pos = (extent["x0"], extent["y0"])
+            scale = ((extent["x1"] - extent["x0"]) / nx, (extent["y1"] - extent["y0"]) / ny)
+            labels = (f"{extent['xlabel']} (\u00b5m)", f"{extent['ylabel']} (\u00b5m)")
+        else:
+            pos, scale, labels = (0, 0), (1, 1), ("x (pixel)", "y (pixel)")
+        plot = view.getView()
+        plot.setLabel("bottom", labels[0])
+        plot.setLabel("left", labels[1])
+        # Fit the view only when the image area changes, so zoom survives slider moves.
+        key = (image.shape, pos, scale)
+        refit = getattr(view, "_last_shape", None) != key
+        view._last_shape = key
         # pyqtgraph images are (x, y); transpose the (row=y, col=x) array.
-        view.setImage(image.T, autoRange=refit, autoLevels=False, levels=(lo, hi))
+        view.setImage(image.T, autoRange=refit, autoLevels=False, levels=(lo, hi), pos=pos, scale=scale)
