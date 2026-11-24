@@ -48,6 +48,8 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
+from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_scan_extent
+from scan_progress import ScanProgress
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
@@ -249,6 +251,7 @@ class Ui(QtWidgets.QMainWindow):
         self.connect_alignment_tools()
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
+        self.build_json_live_views()
         self.load_tooltips()
         self.load_button_plans()
         self.build_json_scan_tabs()
@@ -398,6 +401,7 @@ class Ui(QtWidgets.QMainWindow):
             cb.addItems(list(self.fly_motor_dict))
             cb.blockSignals(False)
         self.cb_motor2.setCurrentIndex(1)
+        self.update_manual_roi_box(mode)
         self.statusbar.showMessage(f"Microscope mode: {mode}")
 
     def _make_window_responsive(self):
@@ -511,7 +515,6 @@ class Ui(QtWidgets.QMainWindow):
 
     def connect_advanced_scans(self):
         #advanced scans
-        self.pb_open_mll_tomo_widget.clicked.connect(lambda:self.open_mll_tomo_gui())
 
         #qserver connection controls
         self.pb_start_qserver.clicked.connect(lambda:self.start_qserver())
@@ -525,6 +528,8 @@ class Ui(QtWidgets.QMainWindow):
         # Threaded heartbeat: a toggle that polls QServer and drives a status light.
         self.qserver_heartbeat_thread = None
         self.pb_qserver_heartbeat.toggled.connect(self.toggle_qserver_heartbeat)
+        # Show QServer status from startup; the button still turns it off.
+        self.pb_qserver_heartbeat.setChecked(True)
 
     @show_error_message_box
     def start_qserver(self):
@@ -759,6 +764,15 @@ class Ui(QtWidgets.QMainWindow):
             return
         # Colour reflects the documented RE Manager manager_state values.
         busy_states = {"starting_queue", "executing_queue", "executing_task"}
+        # A tab's scan is over once QServer has been busy since Run and is idle again
+        # (finished, stopped after an angle, aborted or failed); reset that tab's scan controls.
+        for kind, tab in getattr(self, "json_tabs", {}).items():
+            if tab["running_json"] is None:
+                continue
+            if state in busy_states:
+                tab["seen_busy"] = True
+            elif state == "idle" and tab.get("seen_busy"):
+                self._json_scan_done(kind)
         caution_states = {"initializing", "creating_environment",
                           "closing_environment"}
         if state == "idle":
@@ -844,6 +858,30 @@ class Ui(QtWidgets.QMainWindow):
             lambda: [self.update_json_scan_summary(k) for k in JSON_SCAN_TABS])
         self.json_scan_summary_timer.start(60000)
 
+        # Opening the Tomography tab copies the Data Acquisition fly-scan values into its 2D scan.
+        self._tomo_prefill_source = None
+        self.HXN_GUI_tabs.currentChanged.connect(self._prefill_tomo_from_flyscan)
+
+    def _prefill_tomo_from_flyscan(self, index):
+        if self.HXN_GUI_tabs.widget(index) is not self.tab_tomo or not self.rb_2d.isChecked():
+            return
+        source = {"det": self.cb_dets.currentText(),
+                  "x_start": self.x_start.value(), "x_end": self.x_end.value(), "x_num": self.x_step.value(),
+                  "y_start": self.y_start.value(), "y_end": self.y_end.value(), "y_num": self.y_step.value(),
+                  "exposure": self.dwell.value()}
+        # Copy only when the fly-scan values changed since the last copy, so tomo edits survive tab switches.
+        if source == self._tomo_prefill_source:
+            return
+        self._tomo_prefill_source = source
+        for key, value in source.items():
+            widget = getattr(self, f"tomo__fly2d_scan__{key}")
+            if key == "det":
+                if widget.findText(value) >= 0:
+                    widget.setCurrentText(value)
+            else:
+                widget.setValue(value)
+        self.statusbar.showMessage("Tomo 2D scan filled from the Data Acquisition fly-scan settings.")
+
     def _build_json_scan_tab(self, kind):
         defaults_path = JSON_SCAN_TABS[kind]["defaults"]
         with open(defaults_path, "r") as f:
@@ -906,6 +944,35 @@ class Ui(QtWidgets.QMainWindow):
         # Rich text so Qt word-wraps long tooltips; the accessible description serves screen readers.
         widget.setToolTip(f"<p>{html.escape(text)}</p>")
         widget.setAccessibleDescription(text)
+
+    def build_json_live_views(self):
+        # Live XRF stack per JSON scan tab; a tab gets one if the .ui has a gb_<kind>_live placeholder.
+        self.json_live_views = {}
+        for kind in JSON_SCAN_TABS:
+            group = self.findChild(QtWidgets.QGroupBox, f"gb_{kind}_live")
+            if group is None:
+                continue
+            viewer = XrfStackViewer(kind, fetch=self._fetch_xrf_stack,
+                                    default_elems=self._live_plot_elems, parent=group)
+            group.layout().addWidget(viewer)
+            self.json_live_views[kind] = viewer
+        # Scan progress (angles done/remaining, finish estimate) under each tab's Scan Summary.
+        self.json_progress = {}
+        for kind in JSON_SCAN_TABS:
+            progress = ScanProgress(kind)
+            progress.finished.connect(lambda k=kind: self._json_scan_done(k))
+            self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_summary").layout().addWidget(progress)
+            self.json_progress[kind] = progress
+
+    @staticmethod
+    def _fetch_xrf_stack(sid):
+        # Runs in the loader thread; db comes from the bsui session.
+        broker = globals().get("db")
+        if broker is None:
+            raise NameError("db (databroker) is not defined in this session")
+        hdr = broker[sid]
+        stack, elems = get_all_xrf_roi_data(hdr)
+        return stack, elems, get_scan_extent(hdr)
 
     def load_tooltips(self):
         # Tooltips are help text only, so a missing or broken file must not stop the GUI.
@@ -1039,6 +1106,20 @@ class Ui(QtWidgets.QMainWindow):
             seconds += p["yalign"]["num"] * p["yalign"]["exposure"]
         return seconds
 
+    def flyscan_max_points(self):
+        # Limit on x_num * y_num for one fly scan (both microscopes), from microscope_profiles.json.
+        return int(self.microscope_profiles["flyscan_max_points"])
+
+    def _json_scan_point_errors(self, params):
+        """Messages for 2D fly scans in the plan that exceed flyscan_max_points(); empty if all fit."""
+        limit = self.flyscan_max_points()
+        maps = [("2D scan", params["fly2d_scan"])]
+        if params["align_2d_com"]["do_align"]:
+            maps.append(("2D COM alignment", params["align_2d_com"]))
+        return [f"{name}: {m['x_num']} x {m['y_num']} = {m['x_num'] * m['y_num']:,} points "
+                f"(limit {limit:,})"
+                for name, m in maps if m["x_num"] * m["y_num"] > limit]
+
     @staticmethod
     def _json_scan_angle_text(params):
         custom = params.get("custom_angle_list")
@@ -1059,6 +1140,10 @@ class Ui(QtWidgets.QMainWindow):
         custom = p.get("custom_angle_list")
         if (not custom and info["angle_step"] <= 0) or scan["x_num"] <= 0 or scan["y_num"] <= 0:
             summary.setPlainText("Angle step and 2D scan points must be greater than 0.")
+            return
+        too_many = self._json_scan_point_errors(p)
+        if too_many:
+            summary.setPlainText("Too many scan points:\n" + "\n".join(too_many))
             return
         angles = [a for a in self._json_scan_angles(kind, p) if a not in p["remove_angles"]]
         if not angles:
@@ -1220,6 +1305,9 @@ class Ui(QtWidgets.QMainWindow):
             raise NameError(f"{sender} is not defined in this session.")
         params = self.collect_json_scan_params(kind)
         names = params["fly_motors"] + [params["th_motor"], params["fly2d_scan"]["det"]]
+        too_many = self._json_scan_point_errors(params)
+        if too_many:
+            raise ValueError("Too many scan points:\n" + "\n".join(too_many))
         missing = [n for n in names if n not in globals()]
         if missing:
             raise ValueError(f"Not defined in this session: {missing}")
@@ -1248,13 +1336,22 @@ class Ui(QtWidgets.QMainWindow):
         send(json_path, execute=execute)
         if execute:
             self._set_json_scan_running(kind, json_path)
+            # The plan writes save_log_to/<scan_label>_startID<first_sid>.csv after each angle;
+            # first_sid is only known once it starts, so follow the newest match from now on.
+            pattern = os.path.join(params["save_log_to"],
+                                   f"{glob.escape(params['scan_label'])}_startID*.csv")
+            started = time.time()
+            self.json_progress[kind].follow(pattern, started, json_path)
+            if kind in self.json_live_views:
+                self.json_live_views[kind].follow_log(pattern, newer_than=started)
             self.statusbar.showMessage(f"{title} scan sent to QServer for execution: {json_path}")
         else:
             self.statusbar.showMessage(f"{title} scan added to QServer queue: {json_path}")
 
     def _set_json_scan_running(self, kind, json_path):
-        # QServer reports no completion here, so controls stay on the last executed JSON.
+        # Reset to None by _json_scan_done when the angle log or QServer shows the scan has ended.
         self.json_tabs[kind]["running_json"] = json_path
+        self.json_tabs[kind]["seen_busy"] = False
         running = json_path is not None
         pause = self._jw(kind, "pb_pause_{}")
         pause.setEnabled(running)
@@ -1263,6 +1360,12 @@ class Ui(QtWidgets.QMainWindow):
         with QtCore.QSignalBlocker(pause):
             pause.setChecked(False)
             pause.setText("Pause")
+
+    def _json_scan_done(self, kind):
+        if self.json_tabs[kind]["running_json"] is None:
+            return
+        self._set_json_scan_running(kind, None)
+        self.statusbar.showMessage(f"{JSON_SCAN_TABS[kind]['title']} scan ended; scan controls reset.")
 
     def _set_json_scan_flag(self, kind, key, value):
         path = self.json_tabs[kind]["running_json"]
@@ -2087,6 +2190,11 @@ class Ui(QtWidgets.QMainWindow):
         self.update_mosaic_estimate()
 
         self.cb_queue_use_curr_pos.stateChanged.connect(self.toggle_manual_roi_box)
+        # The MLL/ZP radios only show the active microscope; switch with the Microscope selector.
+        for rb in (self.rb_mll_manual_roi, self.rb_zp_manual_roi):
+            rb.setEnabled(False)
+        for slot in self._manual_roi_spec():
+            getattr(self, f"dsb_manual_roi_{slot}").setEnabled(not self.cb_queue_use_curr_pos.isChecked())
 
         self.pb_get_current_position.clicked.connect(self.fill_current_pos)
         
@@ -2141,8 +2249,8 @@ class Ui(QtWidgets.QMainWindow):
 
         self.text_scan_plan.setText(self.scan_plan)
 
-        if self.mot1_steps * self.mot2_steps >64000:
-                raise ValueError ("scan points cannot exceed 64k")
+        if self.mot1_steps * self.mot2_steps > self.flyscan_max_points():
+                raise ValueError (f"scan points cannot exceed {self.flyscan_max_points():,}")
         
         if self.det.endswith('merlin') and self.dwell_t<0.02:
             raise ValueError("Merlin detector cannot scan with dwell time below 20 ms.")
@@ -2157,54 +2265,44 @@ class Ui(QtWidgets.QMainWindow):
         self.text_scan_plan.selectAll()
         self.text_scan_plan.copy()
 
+    def _manual_roi_spec(self, mode=None):
+        # Box role (fine_x, ..., theta) -> {"motor", "unit", "min", "max", "decimals"} from microscope_profiles.json.
+        return self.microscope_profiles[mode or self.microscope_profiles["active"]]["manual_roi"]
+
+    def update_manual_roi_box(self, mode):
+        # Relabel and re-range the Manual ROI boxes for the microscope being activated.
+        self.rb_zp_manual_roi.setChecked(mode == "ZP")
+        self.rb_mll_manual_roi.setChecked(mode == "MLL")
+        for slot, spec in self._manual_roi_spec(mode).items():
+            getattr(self, f"label_manual_roi_{slot}").setText(spec["motor"].split(".")[-1])
+            box = getattr(self, f"dsb_manual_roi_{slot}")
+            box.setDecimals(spec["decimals"])
+            box.setRange(spec["min"], spec["max"])
+            box.setSuffix(f" {spec['unit']}")
+        if self.cb_queue_use_curr_pos.isChecked():
+            self.fill_current_pos()
+
     def get_manual_roi(self):
-
-        if self.motor1.startswith("ds"):
-            roi = get_current_position(zp_flag = False)
-        elif self.motor1.startswith("zp"):
-            roi = get_current_position(zp_flag = True)
-            roi['zpssx'] = self.dsb_zpssx_manual_roi.value()
-            roi['zpssy'] = self.dsb_zpssy_manual_roi.value()
-            roi['zpssz'] = self.dsb_zpssz_manual_roi.value()
-            roi['smarx'] = self.dsb_smarx_manual_roi.value()
-            roi['smary'] = self.dsb_smary_manual_roi.value()
-            roi['smarz'] = self.dsb_smarz_manual_roi.value()
-            roi['zp.zpz1'] = self.dsb_zpz1_manual_roi.value()
-            roi['zpsth'] = self.dsb_zpsth_manual_roi.value()
-
-        
+        # Start from the full current position (keeps motors with no box, e.g. zps.zpsx), then apply the boxes.
+        roi = get_current_position(zp_flag=self.microscope_profiles["active"] == "ZP")
+        for slot, spec in self._manual_roi_spec().items():
+            roi[spec["motor"]] = getattr(self, f"dsb_manual_roi_{slot}").value()
         return roi
-    
-    def toggle_manual_roi_box(self, state):
 
+    def toggle_manual_roi_box(self, state):
         # Lock the manual motor-position entries while "use current position" is on;
         # disabling the whole group box would also disable the checkbox itself.
         use_current = bool(state)
-        manual_roi_widgets = [
-            self.dsb_zpssx_manual_roi, self.dsb_zpssy_manual_roi, self.dsb_zpssz_manual_roi,
-            self.dsb_smarx_manual_roi, self.dsb_smary_manual_roi, self.dsb_smarz_manual_roi,
-            self.dsb_zpz1_manual_roi, self.dsb_zpsth_manual_roi,
-        ]
-        for widget in manual_roi_widgets:
-            widget.setEnabled(not use_current)
+        for slot in self._manual_roi_spec():
+            getattr(self, f"dsb_manual_roi_{slot}").setEnabled(not use_current)
         self.fill_current_pos()
 
-
+    @show_error_message_box
     def fill_current_pos(self):
-
-        roi = get_current_position(zp_flag = True) #TODO figure out mll later
-
-        if "zpssx" in roi:
-            self.dsb_zpssx_manual_roi.setValue(roi.get('zpssx', 0))
-            self.dsb_zpssy_manual_roi.setValue(roi.get('zpssy', 0))
-            self.dsb_zpssz_manual_roi.setValue(roi.get('zpssz', 0))
-            self.dsb_zpz1_manual_roi.setValue(roi.get('zp.zpz1', -25))
-            self.dsb_zpsth_manual_roi.setValue(roi.get('zpsth', 0))
-        if "smarx" in roi:
-            self.dsb_smarx_manual_roi.setValue(roi.get('smarx', 0))
-            self.dsb_smary_manual_roi.setValue(roi.get('smary', 0))
-            self.dsb_smarz_manual_roi.setValue(roi.get('smarz', 0))
-
+        roi = get_current_position(zp_flag=self.microscope_profiles["active"] == "ZP")
+        for slot, spec in self._manual_roi_spec().items():
+            if spec["motor"] in roi:
+                getattr(self, f"dsb_manual_roi_{slot}").setValue(roi[spec["motor"]])
 
     @show_error_message_box
     def send_to_queue(self):
@@ -2224,10 +2322,7 @@ class Ui(QtWidgets.QMainWindow):
 
         else:
             if self.cb_queue_use_curr_pos.isChecked():
-                if self.motor1.startswith("ds"):
-                    roi = get_current_position(zp_flag = False)
-                elif self.motor1.startswith("zp"):
-                    roi = get_current_position(zp_flag = True)
+                roi = get_current_position(zp_flag=self.microscope_profiles["active"] == "ZP")
             else:
                 roi = self.get_manual_roi()
                 
@@ -2236,8 +2331,8 @@ class Ui(QtWidgets.QMainWindow):
             scan_time = self.mot1_steps * self.mot2_steps * self.dwell_t / 60
 
             
-            if self.mot1_steps * self.mot2_steps >64000:
-                raise ValueError ("scan points cannot exceed 64k")
+            if self.mot1_steps * self.mot2_steps > self.flyscan_max_points():
+                raise ValueError (f"scan points cannot exceed {self.flyscan_max_points():,}")
 
             RM.item_add((BPlan("recover_pos_and_scan",
                             scan_name,
@@ -4129,8 +4224,10 @@ class Ui(QtWidgets.QMainWindow):
         for name in ("scanStatus_thread", "liveWorker", "pump_update_worker",
                      "update_thread", "live_plot_worker_thread",
                      "points_update_thread", "pump_worker_thread", "vent_thread",
-                     "he_backfill_worker_thread", "thread"):
+                     "he_backfill_worker_thread", "thread", "qserver_heartbeat_thread"):
             self._stop_thread(getattr(self, name, None))
+        for viewer in getattr(self, "json_live_views", {}).values():
+            viewer.stop()
 
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
@@ -4765,6 +4862,10 @@ class WorkerThread(QThread):
         print("finish emitted")
 
 if __name__ == "__main__":
+    # Name the terminal tab (xterm title escape; gnome-terminal and macOS Terminal honor it).
+    if sys.stdout.isatty():
+        sys.stdout.write("\033]0;HXN_GUI\007")
+        sys.stdout.flush()
     print("Starting HXN GUI application...")
     
     # Check for an existing instance to avoid the Singleton error

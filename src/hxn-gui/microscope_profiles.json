@@ -1,5 +1,6 @@
 {
   "active": "MLL",
+  "flyscan_max_points": 64000,
   "ZP": {
     "pages": {
       "tabs_microscope_module": "tab_zp_module",
@@ -11,7 +12,17 @@
       "cb_mll_theta_for_diff": false
     },
     "fly_motors": ["zpssx", "zpssy", "zpssz"],
-    "th_motor": "zpsth"
+    "th_motor": "zpsth",
+    "manual_roi": {
+      "fine_x": {"motor": "zpssx", "unit": "um", "min": -14, "max": 14, "decimals": 3},
+      "fine_y": {"motor": "zpssy", "unit": "um", "min": -14, "max": 14, "decimals": 3},
+      "fine_z": {"motor": "zpssz", "unit": "um", "min": -14, "max": 14, "decimals": 3},
+      "coarse_x": {"motor": "smarx", "unit": "um", "min": -6000, "max": 6000, "decimals": 2},
+      "coarse_y": {"motor": "smary", "unit": "um", "min": -6000, "max": 6000, "decimals": 2},
+      "coarse_z": {"motor": "smarz", "unit": "um", "min": -6000, "max": 6000, "decimals": 2},
+      "focus": {"motor": "zp.zpz1", "unit": "mm", "min": -45, "max": 10, "decimals": 2},
+      "theta": {"motor": "zpsth", "unit": "deg", "min": -100, "max": 100, "decimals": 2}
+    }
   },
   "MLL": {
     "pages": {
@@ -24,6 +35,16 @@
       "cb_mll_theta_for_diff": true
     },
     "fly_motors": ["dssx", "dssy", "dssz"],
-    "th_motor": "dsth"
+    "th_motor": "dsth",
+    "manual_roi": {
+      "fine_x": {"motor": "dssx", "unit": "um", "min": -15, "max": 15, "decimals": 3},
+      "fine_y": {"motor": "dssy", "unit": "um", "min": -15, "max": 15, "decimals": 3},
+      "fine_z": {"motor": "dssz", "unit": "um", "min": -15, "max": 15, "decimals": 3},
+      "coarse_x": {"motor": "dsx", "unit": "um", "min": -10000, "max": 10000, "decimals": 2},
+      "coarse_y": {"motor": "dsy", "unit": "um", "min": -10000, "max": 10000, "decimals": 2},
+      "coarse_z": {"motor": "dsz", "unit": "um", "min": -10000, "max": 10000, "decimals": 2},
+      "focus": {"motor": "sbz", "unit": "um", "min": -200, "max": 7000, "decimals": 1},
+      "theta": {"motor": "dsth", "unit": "deg", "min": -120, "max": 120, "decimals": 2}
+    }
   }
 }

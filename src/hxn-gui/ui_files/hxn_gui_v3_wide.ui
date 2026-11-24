@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>2005</width>
-    <height>1257</height>
+    <height>1249</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -6976,7 +6976,7 @@ QPushButton:pressed{
              </property>
             </widget>
            </item>
-           <item row="1" column="1" colspan="2">
+           <item row="1" column="0" colspan="3">
             <widget class="QLabel" name="label_scan_info_calc">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -7054,7 +7054,7 @@ font: 15pt &quot;Modern No. 20&quot;;
               </property>
               <layout class="QGridLayout" name="gb_queue_server_plan_grid">
                <item row="4" column="1">
-                <widget class="QLabel" name="label_queue_server_plan_smarx">
+                <widget class="QLabel" name="label_manual_roi_coarse_x">
                  <property name="text">
                   <string>smarx</string>
                  </property>
@@ -7074,7 +7074,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_zpssy_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_fine_y">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -7108,14 +7108,14 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="4" column="5">
-                <widget class="QLabel" name="label_queue_server_plan_smarz">
+                <widget class="QLabel" name="label_manual_roi_coarse_z">
                  <property name="text">
                   <string>smarz</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_zpz1_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_focus">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -7149,7 +7149,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="5" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_zpsth_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_theta">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -7183,35 +7183,35 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="5">
-                <widget class="QLabel" name="label_queue_server_plan_zpssz">
+                <widget class="QLabel" name="label_manual_roi_fine_z">
                  <property name="text">
                   <string>zpssz</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLabel" name="label_queue_server_plan_zpssx">
+                <widget class="QLabel" name="label_manual_roi_fine_x">
                  <property name="text">
                   <string>zpssx</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="1">
-                <widget class="QLabel" name="label_queue_server_plan_zpz1">
+                <widget class="QLabel" name="label_manual_roi_focus">
                  <property name="text">
                   <string>zpz1</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="3">
-                <widget class="QLabel" name="label_queue_server_plan_zpssy">
+                <widget class="QLabel" name="label_manual_roi_fine_y">
                  <property name="text">
                   <string>zpssy</string>
                  </property>
                 </widget>
                </item>
                <item row="4" column="4">
-                <widget class="QDoubleSpinBox" name="dsb_smary_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_coarse_y">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -7245,7 +7245,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="6">
-                <widget class="QDoubleSpinBox" name="dsb_zpssz_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_fine_z">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -7279,7 +7279,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="3" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_zpssx_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_fine_x">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -7313,21 +7313,21 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="4" column="3">
-                <widget class="QLabel" name="label_queue_server_plan_smary">
+                <widget class="QLabel" name="label_manual_roi_coarse_y">
                  <property name="text">
                   <string>smary</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="3">
-                <widget class="QLabel" name="label_queue_server_plan_zpsth">
+                <widget class="QLabel" name="label_manual_roi_theta">
                  <property name="text">
                   <string>zpsth</string>
                  </property>
                 </widget>
                </item>
                <item row="4" column="2">
-                <widget class="QDoubleSpinBox" name="dsb_smarx_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_coarse_x">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -7361,7 +7361,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                 </widget>
                </item>
                <item row="4" column="6">
-                <widget class="QDoubleSpinBox" name="dsb_smarz_manual_roi">
+                <widget class="QDoubleSpinBox" name="dsb_manual_roi_coarse_z">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -7402,9 +7402,6 @@ font: 15pt &quot;Modern No. 20&quot;;
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="toolTip">
-                  <string>select for 2D scan</string>
-                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -7412,7 +7409,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                   <string>MLL</string>
                  </property>
                  <property name="checkable">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                  <property name="checked">
                   <bool>false</bool>
@@ -7434,7 +7431,7 @@ font: 15pt &quot;Modern No. 20&quot;;
                   <string>ZP</string>
                  </property>
                  <property name="checkable">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                  <property name="checked">
                   <bool>false</bool>
@@ -13190,6 +13187,14 @@ Plot
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="9">
+         <widget class="QGroupBox" name="gb_tomo_live">
+          <property name="title">
+           <string>Live XRF Stack</string>
+          </property>
+          <layout class="QVBoxLayout" name="gb_tomo_live_vbox"/>
          </widget>
         </item>
         <item row="0" column="8">
