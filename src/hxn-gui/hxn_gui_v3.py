@@ -4794,6 +4794,10 @@ class WorkerThread(QThread):
         print("finish emitted")
 
 if __name__ == "__main__":
+    # Name the terminal tab (xterm title escape; gnome-terminal and macOS Terminal honor it).
+    if sys.stdout.isatty():
+        sys.stdout.write("\033]0;HXN_GUI\007")
+        sys.stdout.flush()
     print("Starting HXN GUI application...")
     
     # Check for an existing instance to avoid the Singleton error

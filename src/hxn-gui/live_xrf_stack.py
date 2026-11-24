@@ -1,7 +1,9 @@
 """Live XRF stack viewer for angle-series scans (tomography now, diffraction later).
 
 The plan rewrites its angle log (save_log_to/<scan_label>_startID<first_sid>.csv) after each angle,
-filling in the scan_id of that angle's 2D map. The viewer polls the log, loads new scans in a background thread, and shows four user-selected elements, sorted by angle,
+filling in the scan_id of that angle's 2D map. The viewer polls the log, loads new scans in a background thread,
+saves each as <log folder>/<prefix>_live_images/scan_<sid>.npz (stack, elems, angle), and displays from those
+files; scans already saved are not fetched again. and shows four user-selected elements, sorted by angle,
 with one shared slider.
 """
 import csv
@@ -57,24 +59,47 @@ def newest_log(pattern, newer_than=None):
     return max(paths, key=os.path.getmtime) if paths else None
 
 
+def save_stack(path, stack, elems, sid, angle):
+    """Write one scan's stack atomically, so a reader never sees a half-written file."""
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as f:
+        np.savez(f, stack=np.asarray(stack, dtype=np.float32), elems=np.array(elems), sid=sid, angle=angle)
+    os.replace(tmp, path)
+
+
+def load_stack(path):
+    with np.load(path) as data:
+        return data["stack"], [str(e) for e in data["elems"]]
+
+
 class StackLoader(QThread):
-    """Loads scans off the GUI thread; fetch(sid) -> (stack, elems)."""
-    loaded = Signal(int, float, object, object)
+    """Off the GUI thread: reuse save_dir/scan_<sid>.npz if present, else fetch(sid) and save it."""
+    loaded = Signal(int, float, str, object)
     failed = Signal(int, str)
 
-    def __init__(self, fetch, entries, parent=None):
+    def __init__(self, fetch, entries, save_dir, parent=None):
         super().__init__(parent)
-        self.fetch, self.entries = fetch, entries
+        self.fetch, self.entries, self.save_dir = fetch, entries, save_dir
 
     def run(self):
         for sid, angle in self.entries:
             if self.isInterruptionRequested():
                 return
+            path = os.path.join(self.save_dir, f"scan_{sid}.npz")
             try:
-                stack, elems = self.fetch(sid)
-                self.loaded.emit(sid, angle, stack, list(elems))
+                if os.path.isfile(path):
+                    _, elems = load_stack(path)
+                else:
+                    stack, elems = self.fetch(sid)
+                    elems = list(elems)
+                    os.makedirs(self.save_dir, exist_ok=True)
+                    save_stack(path, stack, elems, sid, angle)
+                    finite = np.isfinite(stack)
+                    print(f"[LIVE STACK] scan {sid} @ {angle:.2f} deg: shape {np.shape(stack)}, "
+                          f"{len(elems)} elements, {np.size(stack) - finite.sum()} non-finite values -> {path}")
+                self.loaded.emit(sid, angle, path, elems)
             except Exception as exc:
-                self.failed.emit(sid, str(exc))
+                self.failed.emit(sid, f"{type(exc).__name__}: {exc}")
 
 
 class XrfStackViewer(QtWidgets.QWidget):
@@ -92,7 +117,8 @@ class XrfStackViewer(QtWidgets.QWidget):
         self.prefix, self.fetch, self.default_elems = prefix, fetch, default_elems
         self.log_path = None
         self.log_pattern, self.log_newer_than = None, None
-        self.frames = []  # dicts: sid, angle, stack, elems; kept sorted by angle
+        self.frames = []  # dicts: sid, angle, path (.npz on disk), elems; kept sorted by angle
+        self._cache = (None, None)  # (path, stack) of the frame on screen
         self.failed = {}
         self.loader = None
         self._build()
@@ -160,6 +186,7 @@ class XrfStackViewer(QtWidgets.QWidget):
         self.stop()
         self.log_path = path
         self.frames, self.failed = [], {}
+        self._cache = (None, None)
         for view in self.views:
             view.clear()
             view._last_shape = None
@@ -199,16 +226,20 @@ class XrfStackViewer(QtWidgets.QWidget):
             return
         self.label_status.setText(f"Loading {len(new)} new scan(s)...")
         self.pb_update.setEnabled(False)
-        self.loader = StackLoader(self.fetch, new, self)
+        self.loader = StackLoader(self.fetch, new, self.save_dir(), self)
         self.loader.loaded.connect(self._add_frame)
         self.loader.failed.connect(self._failed)
         self.loader.finished.connect(self._load_finished)
         self.loader.start()
 
-    def _add_frame(self, sid, angle, stack, elems):
+    def save_dir(self):
+        """<log folder>/<prefix>_live_images, e.g. save_log_to/tomo_live_images."""
+        return os.path.join(os.path.dirname(os.path.abspath(self.log_path)), f"{self.prefix}_live_images")
+
+    def _add_frame(self, sid, angle, path, elems):
         self.failed.pop(sid, None)
         current = self._current_frame()
-        self.frames.append({"sid": sid, "angle": angle, "stack": stack, "elems": elems})
+        self.frames.append({"sid": sid, "angle": angle, "path": path, "elems": elems})
         self.frames.sort(key=lambda f: f["angle"])
         self._fill_combos(elems)
         self._refresh_slider(keep=current["sid"] if current else sid)
@@ -222,7 +253,8 @@ class XrfStackViewer(QtWidgets.QWidget):
         self._status("Updated.")
 
     def _status(self, what):
-        msg = f"{what} {len(self.frames)} angle(s) from {os.path.basename(self.log_path)}."
+        msg = (f"{what} {len(self.frames)} angle(s) from {os.path.basename(self.log_path)}; "
+               f"images in {self.save_dir()}.")
         if self.failed:
             msg += f" Failed (retried on next update): {sorted(self.failed)}"
         self.label_status.setText(msg)
@@ -260,6 +292,11 @@ class XrfStackViewer(QtWidgets.QWidget):
             return None
         return self.frames[min(self.slider.value(), len(self.frames) - 1)]
 
+    def _frame_stack(self, frame):
+        if self._cache[0] != frame["path"]:
+            self._cache = (frame["path"], load_stack(frame["path"])[0])
+        return self._cache[1]
+
     def _show_all(self):
         frame = self._current_frame()
         if frame is None:
@@ -276,10 +313,23 @@ class XrfStackViewer(QtWidgets.QWidget):
         if frame is None or elem not in frame["elems"]:
             self.views[i].clear()
             return
-        image = frame["stack"][frame["elems"].index(elem)]
+        try:
+            stack = self._frame_stack(frame)
+        except Exception as exc:
+            self.label_status.setText(f"Cannot read {frame['path']}: {exc}")
+            self.views[i].clear()
+            return
+        image = np.asarray(stack[frame["elems"].index(elem)], dtype=np.float32)
         view = self.views[i]
+        # NaN/inf would make pyqtgraph's auto contrast NaN and draw nothing; level from finite pixels.
+        finite = image[np.isfinite(image)]
+        lo, hi = (float(finite.min()), float(finite.max())) if finite.size else (0.0, 1.0)
+        if hi <= lo:
+            hi = lo + 1.0
+        image = np.nan_to_num(image, nan=lo, posinf=hi, neginf=lo)
+        self.views[i].setToolTip(f"{elem}: {image.shape[1]} x {image.shape[0]} px, min {lo:.3g}, max {hi:.3g}")
         # Fit the view only when the image size changes, so zoom survives slider moves.
         refit = getattr(view, "_last_shape", None) != image.shape
         view._last_shape = image.shape
         # pyqtgraph images are (x, y); transpose the (row=y, col=x) array.
-        view.setImage(image.T, autoRange=refit, autoLevels=True)
+        view.setImage(image.T, autoRange=refit, autoLevels=False, levels=(lo, hi))

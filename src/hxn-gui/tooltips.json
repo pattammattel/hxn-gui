@@ -254,7 +254,7 @@
     "gb_set_energy": "Change the X-ray energy. The estimated positions below update as you type, before anything moves.",
     "gb_ssa2": "SSA2, the secondary source aperture. Its gap sets the source size, which trades focus size against flux. All values in mm.",
     "gb_techniques": "Techniques used in this experiment. Each checked one gets its own folder when you create the user directory.",
-    "gb_tomo_live": "XRF maps from the running tomo scan, one image per angle, sorted by angle. New angles are read from the scan's angle log (CSV) every 10 minutes, or when you click Update Now.",
+    "gb_tomo_live": "XRF maps from the tomo scan, one image per angle, sorted by angle. New angles are read from the scan's angle log (CSV) every 10 minutes or on Update Now, saved as scan_<id>.npz in tomo_live_images next to the log, and displayed from there.",
     "gb_troubleshooting": "Recovery actions when the beam or the GUI is not behaving as expected.",
     "gb_upstream_cameras": "Upstream beam viewers. Move them out before measuring: they block or reduce the beam.",
     "gb_xrf_elements": "Choose which XRF elements are plotted during scans. Plotting only: the full XRF spectrum is always saved.",
