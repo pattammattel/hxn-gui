@@ -513,7 +513,6 @@ class Ui(QtWidgets.QMainWindow):
 
     def connect_advanced_scans(self):
         #advanced scans
-        self.pb_open_mll_tomo_widget.clicked.connect(lambda:self.open_mll_tomo_gui())
 
         #qserver connection controls
         self.pb_start_qserver.clicked.connect(lambda:self.start_qserver())
