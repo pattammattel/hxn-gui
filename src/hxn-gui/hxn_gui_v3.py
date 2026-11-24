@@ -401,6 +401,7 @@ class Ui(QtWidgets.QMainWindow):
             cb.addItems(list(self.fly_motor_dict))
             cb.blockSignals(False)
         self.cb_motor2.setCurrentIndex(1)
+        self.update_manual_roi_box(mode)
         self.statusbar.showMessage(f"Microscope mode: {mode}")
 
     def _make_window_responsive(self):
@@ -2189,6 +2190,11 @@ class Ui(QtWidgets.QMainWindow):
         self.update_mosaic_estimate()
 
         self.cb_queue_use_curr_pos.stateChanged.connect(self.toggle_manual_roi_box)
+        # The MLL/ZP radios only show the active microscope; switch with the Microscope selector.
+        for rb in (self.rb_mll_manual_roi, self.rb_zp_manual_roi):
+            rb.setEnabled(False)
+        for slot in self._manual_roi_spec():
+            getattr(self, f"dsb_manual_roi_{slot}").setEnabled(not self.cb_queue_use_curr_pos.isChecked())
 
         self.pb_get_current_position.clicked.connect(self.fill_current_pos)
         
@@ -2259,54 +2265,44 @@ class Ui(QtWidgets.QMainWindow):
         self.text_scan_plan.selectAll()
         self.text_scan_plan.copy()
 
+    def _manual_roi_spec(self, mode=None):
+        # Box role (fine_x, ..., theta) -> {"motor", "unit", "min", "max", "decimals"} from microscope_profiles.json.
+        return self.microscope_profiles[mode or self.microscope_profiles["active"]]["manual_roi"]
+
+    def update_manual_roi_box(self, mode):
+        # Relabel and re-range the Manual ROI boxes for the microscope being activated.
+        self.rb_zp_manual_roi.setChecked(mode == "ZP")
+        self.rb_mll_manual_roi.setChecked(mode == "MLL")
+        for slot, spec in self._manual_roi_spec(mode).items():
+            getattr(self, f"label_manual_roi_{slot}").setText(spec["motor"].split(".")[-1])
+            box = getattr(self, f"dsb_manual_roi_{slot}")
+            box.setDecimals(spec["decimals"])
+            box.setRange(spec["min"], spec["max"])
+            box.setSuffix(f" {spec['unit']}")
+        if self.cb_queue_use_curr_pos.isChecked():
+            self.fill_current_pos()
+
     def get_manual_roi(self):
-
-        if self.motor1.startswith("ds"):
-            roi = get_current_position(zp_flag = False)
-        elif self.motor1.startswith("zp"):
-            roi = get_current_position(zp_flag = True)
-            roi['zpssx'] = self.dsb_zpssx_manual_roi.value()
-            roi['zpssy'] = self.dsb_zpssy_manual_roi.value()
-            roi['zpssz'] = self.dsb_zpssz_manual_roi.value()
-            roi['smarx'] = self.dsb_smarx_manual_roi.value()
-            roi['smary'] = self.dsb_smary_manual_roi.value()
-            roi['smarz'] = self.dsb_smarz_manual_roi.value()
-            roi['zp.zpz1'] = self.dsb_zpz1_manual_roi.value()
-            roi['zpsth'] = self.dsb_zpsth_manual_roi.value()
-
-        
+        # Start from the full current position (keeps motors with no box, e.g. zps.zpsx), then apply the boxes.
+        roi = get_current_position(zp_flag=self.microscope_profiles["active"] == "ZP")
+        for slot, spec in self._manual_roi_spec().items():
+            roi[spec["motor"]] = getattr(self, f"dsb_manual_roi_{slot}").value()
         return roi
-    
-    def toggle_manual_roi_box(self, state):
 
+    def toggle_manual_roi_box(self, state):
         # Lock the manual motor-position entries while "use current position" is on;
         # disabling the whole group box would also disable the checkbox itself.
         use_current = bool(state)
-        manual_roi_widgets = [
-            self.dsb_zpssx_manual_roi, self.dsb_zpssy_manual_roi, self.dsb_zpssz_manual_roi,
-            self.dsb_smarx_manual_roi, self.dsb_smary_manual_roi, self.dsb_smarz_manual_roi,
-            self.dsb_zpz1_manual_roi, self.dsb_zpsth_manual_roi,
-        ]
-        for widget in manual_roi_widgets:
-            widget.setEnabled(not use_current)
+        for slot in self._manual_roi_spec():
+            getattr(self, f"dsb_manual_roi_{slot}").setEnabled(not use_current)
         self.fill_current_pos()
 
-
+    @show_error_message_box
     def fill_current_pos(self):
-
-        roi = get_current_position(zp_flag = True) #TODO figure out mll later
-
-        if "zpssx" in roi:
-            self.dsb_zpssx_manual_roi.setValue(roi.get('zpssx', 0))
-            self.dsb_zpssy_manual_roi.setValue(roi.get('zpssy', 0))
-            self.dsb_zpssz_manual_roi.setValue(roi.get('zpssz', 0))
-            self.dsb_zpz1_manual_roi.setValue(roi.get('zp.zpz1', -25))
-            self.dsb_zpsth_manual_roi.setValue(roi.get('zpsth', 0))
-        if "smarx" in roi:
-            self.dsb_smarx_manual_roi.setValue(roi.get('smarx', 0))
-            self.dsb_smary_manual_roi.setValue(roi.get('smary', 0))
-            self.dsb_smarz_manual_roi.setValue(roi.get('smarz', 0))
-
+        roi = get_current_position(zp_flag=self.microscope_profiles["active"] == "ZP")
+        for slot, spec in self._manual_roi_spec().items():
+            if spec["motor"] in roi:
+                getattr(self, f"dsb_manual_roi_{slot}").setValue(roi[spec["motor"]])
 
     @show_error_message_box
     def send_to_queue(self):
@@ -2326,10 +2322,7 @@ class Ui(QtWidgets.QMainWindow):
 
         else:
             if self.cb_queue_use_curr_pos.isChecked():
-                if self.motor1.startswith("ds"):
-                    roi = get_current_position(zp_flag = False)
-                elif self.motor1.startswith("zp"):
-                    roi = get_current_position(zp_flag = True)
+                roi = get_current_position(zp_flag=self.microscope_profiles["active"] == "ZP")
             else:
                 roi = self.get_manual_roi()
                 

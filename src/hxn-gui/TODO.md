@@ -23,7 +23,6 @@ Bugs found while writing tooltips ([tooltips.json](tooltips.json)). When you fix
 ## Input and features
 
 - [ ] `le_plot_sd` only accepts integers (`only_int_le`), but `plot_me` supports a range like `100,110`. Relax the validator.
-- [ ] Queue manual ROI (`get_manual_roi` / `fill_current_pos`) only handles ZP; MLL scans always use the current position.
 
 ## Buttons not connected
 
