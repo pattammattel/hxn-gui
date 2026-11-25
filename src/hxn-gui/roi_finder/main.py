@@ -55,7 +55,7 @@ USWDS_SUCCESS = "#00a91c"
 USWDS_ERROR = "#d54309"
 # Starting values for the "ROI Selection" tab (auto ROI finder).
 AUTO_ROI_DEFAULTS = {
-    "percentile": 0.0,    # pixels at or above this intensity percentile are "bright"
+    "percentile": 50.0,   # pixels at or above this intensity percentile are "bright"
     "smooth_px": 1,       # box-filter size before thresholding (1 = off)
     "join_gap_px": 0,     # bright regions closer than this are merged into one ROI
     "min_pixels": 40,     # regions with fewer bright pixels are ignored
