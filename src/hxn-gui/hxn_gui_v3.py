@@ -48,7 +48,7 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
-from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_scan_extent
+from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_diff_sum_map, get_scan_extent
 from scan_progress import ScanProgress
 from qserver_console import QServerConsole
 from qserver_queue import QServerQueue
@@ -966,8 +966,10 @@ class Ui(QtWidgets.QMainWindow):
             group = self.findChild(QtWidgets.QGroupBox, f"gb_{kind}_live")
             if group is None:
                 continue
-            viewer = XrfStackViewer(kind, fetch=self._fetch_xrf_stack,
-                                    default_elems=self._live_plot_elems, parent=group)
+            # Diffraction: view 1 shows the (slow) summed diffraction intensity instead of an element.
+            pinned = ("diff_sum", self._fetch_diff_sum) if kind == "diff" else None
+            viewer = XrfStackViewer(kind, fetch=self._fetch_xrf_stack, default_elems=self._live_plot_elems,
+                                    pinned=pinned, parent=group)
             group.layout().addWidget(viewer)
             self.json_live_views[kind] = viewer
         # Scan progress (angles done/remaining, finish estimate) under each tab's Scan Summary.
@@ -977,6 +979,16 @@ class Ui(QtWidgets.QMainWindow):
             progress.finished.connect(lambda k=kind: self._json_scan_done(k))
             self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_summary").layout().addWidget(progress)
             self.json_progress[kind] = progress
+
+    @staticmethod
+    def _fetch_diff_sum(sid):
+        # Runs in the loader thread; reads every detector frame, so it is slow for large maps.
+        broker = globals().get("db")
+        if broker is None:
+            raise NameError("db (databroker) is not defined in this session")
+        hdr = broker[sid]
+        image, _det = get_diff_sum_map(hdr)
+        return image, get_scan_extent(hdr)
 
     @staticmethod
     def _fetch_xrf_stack(sid):

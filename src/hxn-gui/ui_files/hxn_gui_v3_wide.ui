@@ -14737,6 +14737,14 @@ Plot
           </layout>
          </widget>
         </item>
+        <item row="2" column="0" colspan="9">
+         <widget class="QGroupBox" name="gb_diff_live">
+          <property name="title">
+           <string>Live Diffraction / XRF Stack</string>
+          </property>
+          <layout class="QVBoxLayout" name="gb_diff_live_vbox"/>
+         </widget>
+        </item>
         <item row="0" column="8">
          <widget class="QPushButton" name="pb_run_diff_json">
           <property name="styleSheet">
