@@ -55,7 +55,7 @@ USWDS_SUCCESS = "#00a91c"
 USWDS_ERROR = "#d54309"
 # Starting values for the "ROI Selection" tab (auto ROI finder).
 AUTO_ROI_DEFAULTS = {
-    "percentile": 92.0,   # pixels at or above this intensity percentile are "bright"
+    "percentile": 0.0,    # pixels at or above this intensity percentile are "bright"
     "smooth_px": 1,       # box-filter size before thresholding (1 = off)
     "join_gap_px": 0,     # bright regions closer than this are merged into one ROI
     "min_pixels": 40,     # regions with fewer bright pixels are ignored
@@ -805,7 +805,7 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
             box.valueChanged.connect(self._on_auto_roi_param_changed)
             return box
 
-        self.auto_percentile = spin("dsb_roi_auto_percentile", 50.0, 99.99, d["percentile"], 0.5, 2, " %")
+        self.auto_percentile = spin("dsb_roi_auto_percentile", 0.0, 99.99, d["percentile"], 0.5, 2, " %")
         self.auto_smooth = spin("sb_roi_auto_smooth", 1, 25, d["smooth_px"], 2, suffix=" px", special="off")
         self.auto_join_gap = spin("sb_roi_auto_join_gap", 0, 50, d["join_gap_px"], suffix=" px", special="off")
         self.auto_min_pixels = spin("sb_roi_auto_min_pixels", 1, 100000, d["min_pixels"], 5, suffix=" px")
