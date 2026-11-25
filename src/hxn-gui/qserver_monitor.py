@@ -1,8 +1,7 @@
 """QMonitor-style QServer tab built from the bluesky-widgets panels, plus the live console.
 
-Layout (as QMonitor's "Edit and Control Queue" view, without the Connect button):
-  top:    Environment | Queue | Plan Execution | RE Manager Status | extras (destroy env, save history)
-  bottom: [Plan Viewer/Editor over Queue] | [Running Plan over History] | [Console]
+The panels are placed into named placeholders in the .ui (see PANELS), laid out like QMonitor's
+"Edit and Control Queue" view, so they can be rearranged in Designer.
 The connection is automatic: a background thread polls QServer once a second, as QMonitor does after
 Connect, and keeps retrying while QServer is down.
 """
@@ -55,45 +54,43 @@ class StatusPoller(QThread):
                 self.msleep(100)
 
 
-class QServerMonitor(QtWidgets.QWidget):
+# Placeholder name in the .ui (tab_qserver_console) -> panel factory. Rearrange the placeholders in
+# Designer; a panel whose placeholder is missing is not shown.
+PANELS = ("qs_environment", "qs_queue_controls", "qs_execution", "qs_status", "qs_options",
+          "qs_plan_editor", "qs_plan_queue", "qs_running_plan", "qs_history", "qs_console")
+# The GUI's global button style has no padding, which squeezes short labels such as "Start".
+# Only the top-row panels: the plan/history tables use fixed-width buttons that padding would clip.
+BUTTON_STYLE = "QPushButton { padding: 3px 10px; min-width: 48px; }"
+PADDED_PANELS = ("qs_environment", "qs_queue_controls", "qs_execution")
+
+
+class QServerMonitor(QtCore.QObject):
     status_changed = Signal()  # model events come from the poller thread; delivered on the GUI thread
 
-    def __init__(self, rm=None, parent=None):
-        super().__init__(parent)
+    def __init__(self, gui, rm=None, parent=None):
+        super().__init__(parent or gui)
         self.model = RunEngineClient()  # default 0MQ addresses, same as the GUI's RM
         self.poller = None
+        self._rm = rm
         self._work_dir = os.path.expanduser("~")
         m = self.model
-
-        top = QtWidgets.QHBoxLayout()
-        for w in (QtReEnvironmentControls(m), QtReQueueControls(m), QtReExecutionControls(m), QtReStatusMonitor(m)):
-            top.addWidget(w)
-        top.addWidget(self._build_extras())
-        top.addStretch()
-
         editor, queue = QtRePlanEditor(m), QtRePlanQueue(m)
         queue.registered_item_editors.append(editor.edit_queue_item)  # double-click a plan to edit it
         self.console = QServerConsole()
-
-        def column(*widgets, sizes):
-            split = QtWidgets.QSplitter(Qt.Vertical)
-            for w in widgets:
-                split.addWidget(w)
-            split.setSizes(sizes)
-            return split
-
-        body = QtWidgets.QSplitter(Qt.Horizontal)
-        body.setObjectName("splitter_qserver")
-        body.addWidget(column(editor, queue, sizes=[1, 1]))
-        body.addWidget(column(QtReRunningPlan(m), QtRePlanHistory(m), sizes=[1, 2]))
-        body.addWidget(self.console)
-        body.setSizes([1, 1, 1])
-
-        layout = QtWidgets.QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addLayout(top)
-        layout.addWidget(body, 1)
-        self._rm = rm
+        panels = {
+            "qs_environment": QtReEnvironmentControls(m), "qs_queue_controls": QtReQueueControls(m),
+            "qs_execution": QtReExecutionControls(m), "qs_status": QtReStatusMonitor(m),
+            "qs_options": self._build_extras(), "qs_plan_editor": editor, "qs_plan_queue": queue,
+            "qs_running_plan": QtReRunningPlan(m), "qs_history": QtRePlanHistory(m), "qs_console": self.console,
+        }
+        for name, panel in panels.items():
+            holder = gui.findChild(QtWidgets.QWidget, name)
+            if holder is None or holder.layout() is None:
+                print(f"[QSERVER] no '{name}' placeholder with a layout in the .ui; panel not shown")
+                continue
+            holder.layout().addWidget(panel)
+            if name in PADDED_PANELS:
+                panel.setStyleSheet(BUTTON_STYLE)
         self.status_changed.connect(self._update_destroy_state)
         m.events.status_changed.connect(lambda event: self.status_changed.emit())
 
@@ -121,7 +118,7 @@ class QServerMonitor(QtWidgets.QWidget):
 
     def _save_history(self, fmt):
         path, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, "Save Plan History", os.path.join(self._work_dir, f"plan_history.{fmt}"),
+            self.pb_save_history, "Save Plan History", os.path.join(self._work_dir, f"plan_history.{fmt}"),
             f"{fmt.upper()} (*.{fmt});;All (*)")
         if not path:
             return
@@ -129,7 +126,7 @@ class QServerMonitor(QtWidgets.QWidget):
             self.model.save_plan_history_to_file(file_path=path, file_format=fmt)
             self._work_dir = os.path.dirname(path)
         except Exception as exc:
-            QtWidgets.QMessageBox.warning(self, "Save Plan History", f"Failed to save: {exc}")
+            QtWidgets.QMessageBox.warning(self.pb_save_history, "Save Plan History", f"Failed to save: {exc}")
 
     def start(self):
         self.model.clear_connection_status()

@@ -589,6 +589,11 @@ QPushButton:pressed{
 	background-color: rgb(0,255, 0); 
 	}
 
+QPushButton:disabled {
+	color: #565c65;
+	background-color: #dfe1e2;
+	}
+
 
 QRadioButton::indicator {
     border: 3px solid rgb(52, 59, 72);
@@ -14804,7 +14809,212 @@ Plot
        <attribute name="title">
         <string>QServer</string>
        </attribute>
-       <layout class="QVBoxLayout" name="tab_qserver_console_vbox"/>
+       <layout class="QVBoxLayout" name="tab_qserver_console_vbox">
+        <item>
+         <layout class="QHBoxLayout" name="qs_top_hbox">
+           <item>
+            <widget class="QWidget" name="qs_environment">
+             <layout class="QVBoxLayout" name="qs_environment_vbox">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="qs_queue_controls">
+             <layout class="QVBoxLayout" name="qs_queue_controls_vbox">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="qs_execution">
+             <layout class="QVBoxLayout" name="qs_execution_vbox">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="qs_status">
+             <layout class="QVBoxLayout" name="qs_status_vbox">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="qs_options">
+             <layout class="QVBoxLayout" name="qs_options_vbox">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="qs_top_hspacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitter_qserver">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QSplitter" name="splitter_qs_left">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="qs_plan_editor">
+            <layout class="QVBoxLayout" name="qs_plan_editor_vbox">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="qs_plan_queue">
+            <layout class="QVBoxLayout" name="qs_plan_queue_vbox">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QSplitter" name="splitter_qs_middle">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QWidget" name="qs_running_plan">
+            <layout class="QVBoxLayout" name="qs_running_plan_vbox">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="qs_history">
+            <layout class="QVBoxLayout" name="qs_history_vbox">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="qs_console">
+           <layout class="QVBoxLayout" name="qs_console_vbox">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="beamline_contacts_tab">
        <attribute name="title">

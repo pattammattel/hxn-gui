@@ -534,8 +534,7 @@ class Ui(QtWidgets.QMainWindow):
         # Show QServer status from startup; the button still turns it off.
         self.pb_qserver_heartbeat.setChecked(True)
         # QMonitor-style tab (bluesky-widgets panels) plus live console (needs --zmq-publish-console ON).
-        self.qserver_monitor = QServerMonitor(globals().get("RM"))
-        self.tab_qserver_console.layout().addWidget(self.qserver_monitor)
+        self.qserver_monitor = QServerMonitor(self, globals().get("RM"))
         self.qserver_monitor.start()
 
     @show_error_message_box
