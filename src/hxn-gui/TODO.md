@@ -39,3 +39,4 @@ Bugs found while writing tooltips ([tooltips.json](tooltips.json)). When you fix
 ## Beamline setup
 
 - [ ] `run-queue-server` must start the RE Manager with `--zmq-publish-console ON`, then restart QServer; otherwise the QServer Console tab stays empty.
+- [ ] ROI Planner tab: check image orientation on a real scan. XRF maps have appeared flipped before, which moves ROI coordinates. The planner uses `axisOrder="row-major"` on its own image (the global pyqtgraph setting is only changed when run standalone); the live Tomo/Diff viewers use the default column-major order and transpose. Mark an ROI on a known feature, send the plan, and confirm the fine scan lands on it; compare with the same scan in the live viewer.

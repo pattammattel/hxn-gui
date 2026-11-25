@@ -52,6 +52,7 @@ from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_diff_sum_ma
 from scan_progress import ScanProgress
 from qserver_console import QServerConsole
 from qserver_queue import QServerQueue
+from roi_planner_tab import add_roi_planner_tab
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
@@ -254,6 +255,7 @@ class Ui(QtWidgets.QMainWindow):
         self.connect_sample_pos_widgets()
         self.connect_advanced_scans()
         self.build_json_live_views()
+        self.roi_planner = add_roi_planner_tab(self, db=globals().get("db"), rm=globals().get("RM"))
         self.load_tooltips()
         self.load_button_plans()
         self.build_json_scan_tabs()
