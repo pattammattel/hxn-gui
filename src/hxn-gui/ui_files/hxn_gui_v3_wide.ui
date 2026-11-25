@@ -14802,7 +14802,7 @@ Plot
       </widget>
       <widget class="QWidget" name="tab_qserver_console">
        <attribute name="title">
-        <string>QServer Console</string>
+        <string>QServer</string>
        </attribute>
        <layout class="QVBoxLayout" name="tab_qserver_console_vbox"/>
       </widget>

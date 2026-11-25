@@ -19,7 +19,7 @@ libc = { family = "glibc", version = "2.28" }
 [tasks]
 hxn-gui-offline = { cmd = "python src/hxn-gui/hxn_gui_v3.py --offline", description = "Run HXN GUI in offline mode for testing (no hardware required)" }
 test-gui = { cmd = "python src/hxn-gui/simple_gui_for_testing.py", description = "Run simple GUI test to verify QtPy environment compatibility" }
-compile-ui = { cmd = "pyside6-uic src/hxn-gui/ui_files/hxn_gui_v3.ui -o src/hxn-gui/ui_files/hxn_gui_v3_ui.py && sed -i.bak 's/from PySide6\\./from qtpy./g' src/hxn-gui/ui_files/hxn_gui_v3_ui.py && rm src/hxn-gui/ui_files/hxn_gui_v3_ui.py.bak", description = "Compile Qt Designer .ui files to Python code with QtPy imports for faster loading" }
+compile-ui = { cmd = "pyuic6 src/hxn-gui/ui_files/hxn_gui_v3.ui -o src/hxn-gui/ui_files/hxn_gui_v3_ui.py && sed -i.bak 's/from PyQt6 import/from qtpy import/g' src/hxn-gui/ui_files/hxn_gui_v3_ui.py && rm src/hxn-gui/ui_files/hxn_gui_v3_ui.py.bak", description = "Compile Qt Designer .ui files to Python code with QtPy imports for faster loading" }
 
 # --- GLOBAL DEPENDENCIES (Common to both) ---
 
@@ -40,8 +40,10 @@ doct = ">=1.1.0,<2"
 pytz = ">=2025.2,<2026"
 xarray = ">=2026.2.0,<2027"
 qtpy = ">=2.4.3,<3"
-pyside6 = ">=6.11.0,<7"
 qt6-main = ">=6.11.1,<7"
+pyqt6 = ">=6.11.0,<7"
+bluesky-queueserver-api = ">=0.0.14,<0.0.15"
+bluesky-widgets = ">=0.0.18,<0.0.19"
 
 
 [pypi-dependencies]
