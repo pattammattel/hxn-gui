@@ -293,6 +293,7 @@
     "cb_roi_auto_live": "ROI Planner: run Find ROIs again whenever a value on this page changes. Replaces the current ROIs, including hand-drawn ones.",
     "pb_roi_auto_find": "ROI Planner: find ROIs in the displayed element with the values on this page. Replaces the current ROIs.",
     "pb_roi_auto_defaults": "ROI Planner: restore the default auto selection values.",
+    "pb_roi_start_queue": "ROI Planner: start the QServer queue. Everything in the queue runs in order, including items that were there before your ROI plans. Needs the QServer environment open.",
     "le_roi_elems": "All selected elements. These appear in the element menus elsewhere in the GUI (alignment, tomo, diffraction).",
     "le_sample_name": "Sample name. Saved in the scan metadata; scan names start as <sample>_1.",
     "le_sid_position_mll": "Scan ID for the buttons below. Negative numbers count back from the latest scan (-1 is the last).",

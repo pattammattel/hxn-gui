@@ -19,6 +19,7 @@ from qtpy import QtCore, QtGui, QtWidgets
 from hxntools.scan_info import get_scan_positions
 
 from . import context
+from .theme import apply_uswds_theme, USWDS_BASE_DARK, USWDS_BASE_DARKER, USWDS_BASE_LIGHTEST, USWDS_ERROR, USWDS_INK, USWDS_PRIMARY_VIVID, USWDS_SUCCESS, USWDS_WARNING
 from .qserver_utils import send_fly2d_recover_and_scan
 from .xrf_utils import get_all_xrf_roi_data, get_real_scan_geometry
 
@@ -37,22 +38,6 @@ class XRFScan:
 PHANTOM_SCAN_NUMBER = "0000"
 SCANNER_RANGE_LIMIT_UM = 14.0
 MAX_SCAN_POINTS = 64_000
-USWDS_INK = "#1b1b1b"
-USWDS_BASE_LIGHTEST = "#f0f0f0"
-USWDS_BASE_LIGHTER = "#dfe1e2"
-USWDS_BASE_LIGHT = "#a9aeb1"
-USWDS_BASE = "#71767a"
-USWDS_BASE_DARK = "#565c65"
-USWDS_BASE_DARKER = "#3d4551"
-USWDS_PRIMARY = "#005ea2"
-USWDS_PRIMARY_VIVID = "#0050d8"
-USWDS_PRIMARY_DARK = "#1a4480"
-USWDS_SECONDARY = "#d83933"
-USWDS_ACCENT_COOL = "#00bde3"
-USWDS_ACCENT_COOL_DARK = "#28a0cb"
-USWDS_WARNING = "#ffbe2e"
-USWDS_SUCCESS = "#00a91c"
-USWDS_ERROR = "#d54309"
 # Starting values for the "ROI Selection" tab (auto ROI finder).
 AUTO_ROI_DEFAULTS = {
     "percentile": 50.0,   # pixels at or above this intensity percentile are "bright"
@@ -426,116 +411,7 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         self.statusBar().showMessage("Load beamline XRF data or import external images to begin.")
 
     def _apply_uswds_theme(self) -> None:
-        self.setAutoFillBackground(True)
-        palette = self.palette()
-        palette.setColor(QtGui.QPalette.ColorRole.Window, QtGui.QColor(USWDS_BASE_LIGHTEST))
-        palette.setColor(QtGui.QPalette.ColorRole.WindowText, QtGui.QColor(USWDS_INK))
-        palette.setColor(QtGui.QPalette.ColorRole.Base, QtGui.QColor("#ffffff"))
-        palette.setColor(QtGui.QPalette.ColorRole.AlternateBase, QtGui.QColor(USWDS_BASE_LIGHTEST))
-        palette.setColor(QtGui.QPalette.ColorRole.Text, QtGui.QColor(USWDS_INK))
-        palette.setColor(QtGui.QPalette.ColorRole.Button, QtGui.QColor(USWDS_BASE_LIGHTEST))
-        palette.setColor(QtGui.QPalette.ColorRole.ButtonText, QtGui.QColor(USWDS_INK))
-        palette.setColor(QtGui.QPalette.ColorRole.Highlight, QtGui.QColor(USWDS_PRIMARY))
-        palette.setColor(QtGui.QPalette.ColorRole.HighlightedText, QtGui.QColor("#ffffff"))
-        palette.setColor(QtGui.QPalette.ColorRole.Link, QtGui.QColor(USWDS_PRIMARY_VIVID))
-        self.setPalette(palette)
-
-        self.setStyleSheet(
-            f"""
-            QMainWindow, QWidget {{
-                background-color: {USWDS_BASE_LIGHTEST};
-                color: {USWDS_INK};
-                font-size: 11px;
-            }}
-            QGroupBox {{
-                background-color: #ffffff;
-                border: 1px solid {USWDS_BASE_LIGHTER};
-                border-radius: 8px;
-                margin-top: 10px;
-                padding: 12px 10px 10px 10px;
-                font-weight: 600;
-            }}
-            QGroupBox::title {{
-                subcontrol-origin: margin;
-                left: 10px;
-                padding: 0 6px;
-                color: {USWDS_PRIMARY_DARK};
-                background-color: #ffffff;
-            }}
-            QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit, QTableWidget, QTabWidget::pane {{
-                background-color: #ffffff;
-                border: 1px solid {USWDS_BASE_LIGHT};
-                border-radius: 6px;
-                color: {USWDS_INK};
-            }}
-            QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
-                min-height: 26px;
-                padding: 3px 7px;
-            }}
-            QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus, QTextEdit:focus {{
-                border: 2px solid {USWDS_PRIMARY_VIVID};
-            }}
-            QPushButton {{
-                background-color: {USWDS_PRIMARY};
-                color: #ffffff;
-                border: 1px solid {USWDS_PRIMARY_DARK};
-                border-radius: 6px;
-                min-height: 28px;
-                padding: 4px 10px;
-                font-weight: 600;
-            }}
-            QPushButton:hover {{
-                background-color: {USWDS_PRIMARY_VIVID};
-            }}
-            QPushButton:pressed {{
-                background-color: {USWDS_PRIMARY_DARK};
-            }}
-            QPushButton:disabled {{
-                background-color: {USWDS_BASE_LIGHT};
-                border-color: {USWDS_BASE};
-                color: #ffffff;
-            }}
-            QTabBar::tab {{
-                background-color: {USWDS_BASE_LIGHTER};
-                color: {USWDS_BASE_DARKER};
-                border: 1px solid {USWDS_BASE_LIGHT};
-                border-bottom: none;
-                border-top-left-radius: 6px;
-                border-top-right-radius: 6px;
-                padding: 6px 10px;
-                margin-right: 4px;
-            }}
-            QTabBar::tab:selected {{
-                background-color: #ffffff;
-                color: {USWDS_PRIMARY_DARK};
-            }}
-            QHeaderView::section {{
-                background-color: {USWDS_PRIMARY_DARK};
-                color: #ffffff;
-                padding: 5px;
-                border: none;
-                font-weight: 600;
-            }}
-            QTableWidget {{
-                gridline-color: {USWDS_BASE_LIGHTER};
-                selection-background-color: {USWDS_ACCENT_COOL};
-                selection-color: {USWDS_INK};
-            }}
-            QTableWidget::item {{
-                padding: 4px;
-            }}
-            QRadioButton, QCheckBox {{
-                spacing: 8px;
-            }}
-            QStatusBar {{
-                background-color: {USWDS_BASE_DARKER};
-                color: #ffffff;
-            }}
-            QLabel {{
-                color: {USWDS_BASE_DARKER};
-            }}
-            """
-        )
+        apply_uswds_theme(self)
 
         self.plot.setBackground("#ffffff")
         plot_item = self.plot.getPlotItem()
@@ -720,9 +596,13 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         self.send_button = QtWidgets.QPushButton("Send scans")
         self.send_button.clicked.connect(self.send_plans)
         self.send_button.setEnabled(False)
+        self.start_queue_button = QtWidgets.QPushButton("Start queue")
+        self.start_queue_button.setObjectName("pb_roi_start_queue")
+        self.start_queue_button.clicked.connect(self.start_queue)
         right_form.addWidget(self.generate_button)
         right_form.addWidget(self.update_button)
         right_form.addWidget(self.send_button)
+        right_form.addWidget(self.start_queue_button)
 
         info_group = QtWidgets.QGroupBox("Scan info")
         info_layout = QtWidgets.QVBoxLayout(info_group)
@@ -1143,6 +1023,9 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         for row in range(self.plan_table.rowCount()):
             self._refresh_plan_row(row)
 
+    def _set_send_enabled(self, enabled: bool) -> None:
+        self.send_button.setEnabled(enabled)
+
     def _update_send_button_state(self) -> None:
         has_selected = False
         for row in range(self.plan_table.rowCount()):
@@ -1150,7 +1033,7 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
             if item is not None and item.checkState() == QtCore.Qt.CheckState.Checked:
                 has_selected = True
                 break
-        self.send_button.setEnabled(self.scan is not None and has_selected)
+        self._set_send_enabled(self.scan is not None and has_selected)
 
     def _on_plan_table_item_changed(self, item: QtWidgets.QTableWidgetItem):
         if item is None:
@@ -1205,16 +1088,16 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
     def add_roi(self, roi: pg.RectROI):
         self.rois.append(roi)
         roi.sigRemoveRequested.connect(lambda item=roi: self.remove_roi(item))
-        roi.sigRegionChangeFinished.connect(lambda: self.send_button.setEnabled(False))
+        roi.sigRegionChangeFinished.connect(lambda: self._set_send_enabled(False))
         self.manual_radio.setChecked(True)
-        self.send_button.setEnabled(False)
+        self._set_send_enabled(False)
         self.statusBar().showMessage(f"ROI {len(self.rois)} added.")
 
     def remove_roi(self, roi):
         if roi in self.rois:
             self.rois.remove(roi)
             self.view_box.removeItem(roi)
-            self.send_button.setEnabled(False)
+            self._set_send_enabled(False)
 
     def clear_rois(self):
         for roi in self.rois.copy():
@@ -1222,7 +1105,7 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         self.rois.clear()
         self.plans = []
         self.plan_table.setRowCount(0)
-        self.send_button.setEnabled(False)
+        self._set_send_enabled(False)
 
     def find_rois(self):
         """Threshold the displayed element and box each bright region (parameters: ROI Selection tab)."""
@@ -1297,6 +1180,47 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         self._update_send_button_state()
         self._refresh_plan_table()
 
+    def _show_send_summary(self, sent: list[dict], skipped: list[str]) -> None:
+        """Message box listing the plans that were sent and the flagged ones that were skipped."""
+        lines = [f"Added to queue: {len(sent)}"]
+        lines += [f"  ROI {p['roi']}: x {p['x_start_um']:.2f}..{p['x_stop_um']:.2f} µm, "
+                  f"y {p['y_start_um']:.2f}..{p['y_stop_um']:.2f} µm, {p['num_x']}x{p['num_y']} pts"
+                  for p in sent]
+        lines += ["", f"Skipped (flagged): {len(skipped)}"] + [f"  {m}" for m in skipped]
+        box = QtWidgets.QMessageBox.warning if skipped else QtWidgets.QMessageBox.information
+        if sent:
+            lines += ["", "Use Start queue (or the QServer tab) to run them."]
+        box(self, "Scan plans sent" if sent else "No scan plans sent", "\n".join(lines))
+
+    def _queue_item_count(self) -> int | None:
+        """Number of items waiting in the QServer queue, or None if QServer can't be reached."""
+        try:
+            return int(context.get_rm().status().get("items_in_queue", 0))
+        except Exception as exc:
+            print(f"[ROI PLANNER] could not read the queue status: {exc}")
+            return None
+
+    def start_queue(self):
+        """Start the QServer queue; everything in the queue runs, in queue order."""
+        try:
+            rm = context.get_rm()
+            status = rm.status()
+            if not status.get("worker_environment_exists", False):
+                QtWidgets.QMessageBox.warning(self, "Start queue", "The QServer environment is not open. Open it in the QServer tab first.")
+                return
+            if status.get("manager_state") != "idle":
+                QtWidgets.QMessageBox.information(self, "Start queue", f"QServer is busy ({status.get('manager_state')}); the queue is not started again.")
+                return
+            count = int(status.get("items_in_queue", 0))
+            if count == 0:
+                self.statusBar().showMessage("The queue is empty; nothing to start.")
+                return
+            rm.queue_start()
+            self.statusBar().showMessage(f"Queue started ({count} item(s)).")
+        except Exception:
+            import traceback
+            QtWidgets.QMessageBox.critical(self, "Could not start the queue", traceback.format_exc())
+
     def send_plans(self):
         plans: list[dict] = []
         invalid_messages: list[str] = []
@@ -1312,18 +1236,22 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
                 continue
             plans.append(plan)
 
-        if invalid_messages:
-            QtWidgets.QMessageBox.warning(
-                self,
-                "Cannot send selected scans",
-                "\n".join(invalid_messages),
-            )
-            self.statusBar().showMessage("Selected scan plan(s) were not sent.")
+        # flagged plans are skipped; the valid ones are still sent
+        if not plans:
+            self._show_send_summary([], invalid_messages)
+            self.statusBar().showMessage("No valid selected scan plans to send.")
             return
 
-        if not plans:
-            self.statusBar().showMessage("No selected scan plans to send.")
-            return
+        queued = self._queue_item_count()
+        if queued:
+            answer = QtWidgets.QMessageBox.question(
+                self, "Queue is not empty",
+                f"The QServer queue already has {queued} item(s).\n\n"
+                f"Your {len(plans)} plan(s) will be added after them, and starting the queue runs "
+                "those items first.\n\nAdd the plans anyway?")
+            if answer != QtWidgets.QMessageBox.StandardButton.Yes:
+                self.statusBar().showMessage("Sending cancelled; the queue was not changed.")
+                return
 
         try:
             chosen = self.detector_system.currentText()
@@ -1337,7 +1265,9 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
                 mot2=mot2,
                 zp_flag=zp_flag,
             )
-            self.statusBar().showMessage(f"Submitted {len(plans)} plan(s).")
+            skipped = f"; skipped {len(invalid_messages)} flagged" if invalid_messages else ""
+            self.statusBar().showMessage(f"Submitted {len(plans)} plan(s){skipped}.")
+            self._show_send_summary(plans, invalid_messages)
         except Exception:
             import traceback
             QtWidgets.QMessageBox.critical(

@@ -24,6 +24,7 @@ from bluesky_widgets.qt.run_engine_client import (
 )
 
 from qserver_console import QServerConsole
+from roi_finder.theme import apply_uswds_theme
 
 UPDATE_PERIOD_MS = 1000
 STOP_WAIT_MS = 6000  # one QServer request timeout plus margin
@@ -56,12 +57,11 @@ class StatusPoller(QThread):
 
 # Placeholder name in the .ui (tab_qserver_console) -> panel factory. Rearrange the placeholders in
 # Designer; a panel whose placeholder is missing is not shown.
+# bluesky-widgets gives these panels' buttons fixed widths; the theme's bold, padded buttons don't fit.
+COMPACT_PANELS = ("qs_plan_queue", "qs_running_plan", "qs_history")
+COMPACT_BUTTONS = "QPushButton { padding: 2px 1px; font-weight: normal; min-height: 22px; }"
 PANELS = ("qs_environment", "qs_queue_controls", "qs_execution", "qs_status", "qs_options",
           "qs_plan_editor", "qs_plan_queue", "qs_running_plan", "qs_history", "qs_console")
-# The GUI's global button style has no padding, which squeezes short labels such as "Start".
-# Only the top-row panels: the plan/history tables use fixed-width buttons that padding would clip.
-BUTTON_STYLE = "QPushButton { padding: 3px 10px; min-width: 48px; }"
-PADDED_PANELS = ("qs_environment", "qs_queue_controls", "qs_execution")
 
 
 class QServerMonitor(QtCore.QObject):
@@ -89,8 +89,11 @@ class QServerMonitor(QtCore.QObject):
                 print(f"[QSERVER] no '{name}' placeholder with a layout in the .ui; panel not shown")
                 continue
             holder.layout().addWidget(panel)
-            if name in PADDED_PANELS:
-                panel.setStyleSheet(BUTTON_STYLE)
+            if name in COMPACT_PANELS:
+                panel.setStyleSheet(COMPACT_BUTTONS)
+        tab = gui.findChild(QtWidgets.QWidget, "tab_qserver_console")
+        if tab is not None:
+            apply_uswds_theme(tab)  # same look as the ROI Planner tab
         self.status_changed.connect(self._update_destroy_state)
         m.events.status_changed.connect(lambda event: self.status_changed.emit())
 

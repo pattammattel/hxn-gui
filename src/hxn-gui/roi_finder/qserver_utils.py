@@ -52,6 +52,7 @@ def send_fly2d_recover_and_scan(
     ic1_count=550,
     scan_time_min=5.0,
     zp_flag=True,
+    execute_on_add=False,
 ):
     if isinstance(dets, str):
         det_names = [dets]
@@ -82,6 +83,10 @@ def send_fly2d_recover_and_scan(
         scan_time_min,
         zp_flag,
     )
-    context.get_rm().item_add(plan)
-    print(f"Added recovery + fly2d scan '{label}' to QServer queue.")
+    if execute_on_add:
+        context.get_rm().item_execute(plan)
+        print(f"Executing recovery + fly2d scan '{label}' now.")
+    else:
+        context.get_rm().item_add(plan)
+        print(f"Added recovery + fly2d scan '{label}' to QServer queue.")
 
