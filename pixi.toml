@@ -43,6 +43,7 @@ qtpy = ">=2.4.3,<3"
 qt6-main = ">=6.11.1,<7"
 pyqt6 = ">=6.11.0,<7"
 bluesky-queueserver-api = ">=0.0.14,<0.0.15"
+bluesky-widgets = ">=0.0.18,<0.0.19"
 
 
 [pypi-dependencies]
