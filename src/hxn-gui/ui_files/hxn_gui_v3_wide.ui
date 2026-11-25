@@ -14737,6 +14737,14 @@ Plot
           </layout>
          </widget>
         </item>
+        <item row="2" column="0" colspan="9">
+         <widget class="QGroupBox" name="gb_diff_live">
+          <property name="title">
+           <string>Live Diffraction / XRF Stack</string>
+          </property>
+          <layout class="QVBoxLayout" name="gb_diff_live_vbox"/>
+         </widget>
+        </item>
         <item row="0" column="8">
          <widget class="QPushButton" name="pb_run_diff_json">
           <property name="styleSheet">
@@ -14791,6 +14799,12 @@ Plot
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="tab_qserver_console">
+       <attribute name="title">
+        <string>QServer Console</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="tab_qserver_console_vbox"/>
       </widget>
       <widget class="QWidget" name="beamline_contacts_tab">
        <attribute name="title">

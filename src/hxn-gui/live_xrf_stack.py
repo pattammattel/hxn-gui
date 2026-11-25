@@ -10,6 +10,7 @@ import csv
 import json
 import glob
 import os
+import time
 
 import numpy as np
 import pyqtgraph as pg
@@ -74,6 +75,54 @@ def get_scan_extent(hdr):
             "xlabel": str(xlabel), "ylabel": str(ylabel)}
 
 
+IMAGE_KEYS = ("merlin1", "merlin2", "eiger2_image", "eiger1_image", "eiger1", "eiger2")
+
+
+def find_image_key(hdr):
+    """Name of the area-detector image stream in a scan (preferring the HXN detectors in IMAGE_KEYS)."""
+    found = []
+    for desc in hdr.descriptors:
+        for key, info in desc.get("data_keys", {}).items():
+            if len(info.get("shape") or []) >= 2:
+                found.append(key)
+    for key in IMAGE_KEYS:
+        if key in found:
+            return key
+    if found:
+        return found[0]
+    raise KeyError("no area-detector images in this scan")
+
+
+def get_diff_sum_map(hdr, det=None, norm="sclr1_ch4", threshold=(0, 1e6)):
+    """Diffraction intensity map (ny, nx): mean of each detector frame / monitor, as plot_img_sum in
+    53-viewer2d.py (pixels outside threshold set to 0). Frames are reduced one at a time, so memory stays small.
+
+    Returns (image, det).
+    """
+    det = det or find_image_key(hdr)
+    sums = []
+    for frame in hdr.data(det):
+        arr = np.asarray(frame, dtype=np.float32)
+        arr = np.where((arr < threshold[0]) | (arr > threshold[1]), 0, arr)
+        if arr.ndim > 2:  # several frames per event: one value per frame
+            sums.extend(arr.reshape(-1, arr.shape[-2], arr.shape[-1]).mean(axis=(1, 2)))
+        else:
+            sums.append(arr.mean())
+    tot = np.asarray(sums, dtype=np.float32)
+    if norm:
+        mon = np.asarray(list(hdr.data(norm)), dtype=np.float32).ravel()[:tot.size]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            tot = tot[:mon.size] / np.where(mon == 0, np.nan, mon)
+    start = hdr.start
+    try:
+        nx, ny = start["dimensions"] if "dimensions" in start else start["shape"]
+    except Exception:
+        nx, ny = tot.size, 1
+    frame = np.zeros(nx * ny, dtype=np.float32)  # unfinished scans: pad like plot_img_sum
+    frame[:min(tot.size, frame.size)] = tot[:frame.size]
+    return frame.reshape(ny, nx), det
+
+
 def save_stack(path, stack, elems, sid, angle, extent=None):
     """Write one scan's stack atomically, so a reader never sees a half-written file."""
     tmp = path + ".tmp"
@@ -90,16 +139,50 @@ def load_stack(path):
         return data["stack"], [str(e) for e in data["elems"]], extent
 
 
-class StackLoader(QThread):
-    """Off the GUI thread: reuse save_dir/scan_<sid>.npz if present, else fetch(sid) and save it."""
-    loaded = Signal(int, float, str, object)
-    failed = Signal(int, str)
+def pinned_path(save_dir, sid, label):
+    return os.path.join(save_dir, f"scan_{sid}_{label}.npz")
 
-    def __init__(self, fetch, entries, save_dir, parent=None):
+
+class StackLoader(QThread):
+    """Off the GUI thread: reuse save_dir/scan_<sid>.npz if present, else fetch(sid) and save it.
+
+    With pinned=(label, fetch), after all XRF stacks it computes the slow pinned map for each scan
+    (pinned fetch(sid) -> (image, extent)) into scan_<sid>_<label>.npz.
+    """
+    loaded = Signal(int, float, str, object)
+    pinned_loaded = Signal(int, str)
+    failed = Signal(int, str)
+    progress = Signal(str)
+
+    def __init__(self, fetch, entries, save_dir, pinned=None, parent=None):
         super().__init__(parent)
-        self.fetch, self.entries, self.save_dir = fetch, entries, save_dir
+        self.fetch, self.entries, self.save_dir, self.pinned = fetch, entries, save_dir, pinned
 
     def run(self):
+        self._load_xrf()
+        if self.pinned:
+            self._load_pinned()
+
+    def _load_pinned(self):
+        label, fetch = self.pinned
+        for n, (sid, angle) in enumerate(self.entries, 1):
+            if self.isInterruptionRequested():
+                return
+            path = pinned_path(self.save_dir, sid, label)
+            try:
+                if not os.path.isfile(path):
+                    self.progress.emit(f"Computing {label} for scan {sid} ({n}/{len(self.entries)}); this can take a while...")
+                    t0 = time.monotonic()
+                    image, extent = fetch(sid)
+                    os.makedirs(self.save_dir, exist_ok=True)
+                    save_stack(path, np.asarray(image)[None], [label], sid, angle, extent)
+                    print(f"[LIVE STACK] scan {sid} {label}: shape {np.shape(image)} in "
+                          f"{time.monotonic() - t0:.0f} s -> {path}")
+                self.pinned_loaded.emit(sid, path)
+            except Exception as exc:
+                self.failed.emit(sid, f"{label}: {type(exc).__name__}: {exc}")
+
+    def _load_xrf(self):
         for sid, angle in self.entries:
             if self.isInterruptionRequested():
                 return
@@ -131,9 +214,10 @@ class XrfStackViewer(QtWidgets.QWidget):
     fetch(sid) returns (stack, elems); default_elems() returns preferred element names.
     """
 
-    def __init__(self, prefix, fetch, default_elems=lambda: [], parent=None):
+    def __init__(self, prefix, fetch, default_elems=lambda: [], pinned=None, parent=None):
+        """pinned=(label, fetch): view 1 always shows that slow map (e.g. diff_sum) instead of an element."""
         super().__init__(parent)
-        self.prefix, self.fetch, self.default_elems = prefix, fetch, default_elems
+        self.prefix, self.fetch, self.default_elems, self.pinned = prefix, fetch, default_elems, pinned
         self.log_path = None
         self.log_pattern, self.log_newer_than = None, None
         self.frames = []  # dicts: sid, angle, path (.npz on disk), elems; kept sorted by angle
@@ -163,6 +247,9 @@ class XrfStackViewer(QtWidgets.QWidget):
             view.getView().invertY(False)
             view.setMinimumSize(220, 220)
             combo = self._name(QtWidgets.QComboBox(), f"cb_elem_{i + 1}")
+            if i == 0 and self.pinned:
+                combo.addItem(self.pinned[0])
+                combo.setEnabled(False)
             combo.currentTextChanged.connect(lambda _t, k=i: self._show_view(k))
             grid.addWidget(view, 0, i)
             grid.addWidget(combo, 1, i)
@@ -239,15 +326,17 @@ class XrfStackViewer(QtWidgets.QWidget):
         if not os.path.isfile(self.log_path):
             self.label_status.setText(f"Angle log not found: {self.log_path}")
             return
-        loaded = {f["sid"] for f in self.frames}
-        new = [e for e in read_angle_log(self.log_path) if e[0] not in loaded]
+        complete = {f["sid"] for f in self.frames if not self.pinned or f.get("pinned")}
+        new = [e for e in read_angle_log(self.log_path) if e[0] not in complete]
         if not new:
             self._status("Up to date.")
             return
         self.label_status.setText(f"Loading {len(new)} new scan(s)...")
         self.pb_update.setEnabled(False)
-        self.loader = StackLoader(self.fetch, new, self.save_dir(), self)
+        self.loader = StackLoader(self.fetch, new, self.save_dir(), self.pinned, self)
         self.loader.loaded.connect(self._add_frame)
+        self.loader.pinned_loaded.connect(self._add_pinned)
+        self.loader.progress.connect(self.label_status.setText)
         self.loader.failed.connect(self._failed)
         self.loader.finished.connect(self._load_finished)
         self.loader.start()
@@ -258,11 +347,21 @@ class XrfStackViewer(QtWidgets.QWidget):
 
     def _add_frame(self, sid, angle, path, elems):
         self.failed.pop(sid, None)
+        if any(f["sid"] == sid for f in self.frames):
+            return
         current = self._current_frame()
         self.frames.append({"sid": sid, "angle": angle, "path": path, "elems": elems})
         self.frames.sort(key=lambda f: f["angle"])
         self._fill_combos(elems)
         self._refresh_slider(keep=current["sid"] if current else sid)
+
+    def _add_pinned(self, sid, path):
+        frame = next((f for f in self.frames if f["sid"] == sid), None)
+        if frame is None:
+            return
+        frame["pinned"] = path
+        if frame is self._current_frame():
+            self._show_view(0)
 
     def _failed(self, sid, msg):
         self.failed[sid] = msg
@@ -288,9 +387,10 @@ class XrfStackViewer(QtWidgets.QWidget):
     def _fill_combos(self, elems):
         if [self.combos[0].itemText(i) for i in range(self.combos[0].count())] == elems:
             return
+        first = 1 if self.pinned else 0
         preferred = [e for e in self.default_elems() if e in elems]
-        picks = (preferred + [e for e in elems if e not in preferred])[:N_VIEWS]
-        for i, combo in enumerate(self.combos):
+        picks = (preferred + [e for e in elems if e not in preferred])[:N_VIEWS - first]
+        for i, combo in enumerate(self.combos[first:]):
             keep = combo.currentText()
             with QtCore.QSignalBlocker(combo):
                 combo.clear()
@@ -331,16 +431,28 @@ class XrfStackViewer(QtWidgets.QWidget):
     def _show_view(self, i):
         frame = self._current_frame()
         elem = self.combos[i].currentText()
-        if frame is None or elem not in frame["elems"]:
+        if frame is None:
             self.views[i].clear()
             return
         try:
-            stack, extent = self._frame_stack(frame)
+            if i == 0 and self.pinned:
+                if not frame.get("pinned"):
+                    self.views[i].clear()
+                    self.views[i].setToolTip(f"{elem} for scan {frame['sid']} is not computed yet.")
+                    return
+                stack, _, extent = load_stack(frame["pinned"])
+                image = stack[0]
+            elif elem in frame["elems"]:
+                stack, extent = self._frame_stack(frame)
+                image = stack[frame["elems"].index(elem)]
+            else:
+                self.views[i].clear()
+                return
         except Exception as exc:
-            self.label_status.setText(f"Cannot read {frame['path']}: {exc}")
+            self.label_status.setText(f"Cannot read data for scan {frame['sid']}: {exc}")
             self.views[i].clear()
             return
-        image = np.asarray(stack[frame["elems"].index(elem)], dtype=np.float32)
+        image = np.asarray(image, dtype=np.float32)
         view = self.views[i]
         # NaN/inf would make pyqtgraph's auto contrast NaN and draw nothing; level from finite pixels.
         finite = image[np.isfinite(image)]

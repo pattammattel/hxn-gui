@@ -48,8 +48,10 @@ HXNSampleExchanger = SampleExchangeProtocol()
 from utilities import *
 from element_lines import *
 from mll_tomo_gui import *
-from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_scan_extent
+from live_xrf_stack import XrfStackViewer, get_all_xrf_roi_data, get_diff_sum_map, get_scan_extent
 from scan_progress import ScanProgress
+from qserver_console import QServerConsole
+from qserver_queue import QServerQueue
 # from ui_files.hxn_gui_v3_ui import Ui_window  # Import compiled UI (fallback)
 ui_path = os.path.dirname(os.path.abspath(__file__))
 ui_file_path = os.path.join(ui_path, 'ui_files', 'hxn_gui_v3_wide.ui')
@@ -530,6 +532,18 @@ class Ui(QtWidgets.QMainWindow):
         self.pb_qserver_heartbeat.toggled.connect(self.toggle_qserver_heartbeat)
         # Show QServer status from startup; the button still turns it off.
         self.pb_qserver_heartbeat.setChecked(True)
+        # Live copy of the QServer terminal output (needs --zmq-publish-console ON).
+        # Left: plan queue (drag to reorder); right: live QServer terminal output.
+        self.qserver_queue = QServerQueue()
+        self.qserver_console = QServerConsole()
+        splitter = QtWidgets.QSplitter(Qt.Horizontal)
+        splitter.setObjectName("splitter_qserver")
+        splitter.addWidget(self.qserver_queue)
+        splitter.addWidget(self.qserver_console)
+        splitter.setSizes([1, 1])
+        self.tab_qserver_console.layout().addWidget(splitter)
+        self.qserver_queue.start(globals().get("RM"))
+        self.qserver_console.start(globals().get("RM"))
 
     @show_error_message_box
     def start_qserver(self):
@@ -952,8 +966,10 @@ class Ui(QtWidgets.QMainWindow):
             group = self.findChild(QtWidgets.QGroupBox, f"gb_{kind}_live")
             if group is None:
                 continue
-            viewer = XrfStackViewer(kind, fetch=self._fetch_xrf_stack,
-                                    default_elems=self._live_plot_elems, parent=group)
+            # Diffraction: view 1 shows the (slow) summed diffraction intensity instead of an element.
+            pinned = ("diff_sum", self._fetch_diff_sum) if kind == "diff" else None
+            viewer = XrfStackViewer(kind, fetch=self._fetch_xrf_stack, default_elems=self._live_plot_elems,
+                                    pinned=pinned, parent=group)
             group.layout().addWidget(viewer)
             self.json_live_views[kind] = viewer
         # Scan progress (angles done/remaining, finish estimate) under each tab's Scan Summary.
@@ -963,6 +979,16 @@ class Ui(QtWidgets.QMainWindow):
             progress.finished.connect(lambda k=kind: self._json_scan_done(k))
             self.findChild(QtWidgets.QGroupBox, f"groupBox_{kind}_summary").layout().addWidget(progress)
             self.json_progress[kind] = progress
+
+    @staticmethod
+    def _fetch_diff_sum(sid):
+        # Runs in the loader thread; reads every detector frame, so it is slow for large maps.
+        broker = globals().get("db")
+        if broker is None:
+            raise NameError("db (databroker) is not defined in this session")
+        hdr = broker[sid]
+        image, _det = get_diff_sum_map(hdr)
+        return image, get_scan_extent(hdr)
 
     @staticmethod
     def _fetch_xrf_stack(sid):
@@ -4228,6 +4254,9 @@ class Ui(QtWidgets.QMainWindow):
             self._stop_thread(getattr(self, name, None))
         for viewer in getattr(self, "json_live_views", {}).values():
             viewer.stop()
+        for name in ("qserver_console", "qserver_queue"):
+            if getattr(self, name, None) is not None:
+                getattr(self, name).stop()
 
     def closeEvent(self,event):
         reply = QMessageBox.question(self, 'Quit GUI', "Are you sure you want to close the window?")
