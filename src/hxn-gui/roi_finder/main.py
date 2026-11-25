@@ -53,6 +53,15 @@ USWDS_ACCENT_COOL_DARK = "#28a0cb"
 USWDS_WARNING = "#ffbe2e"
 USWDS_SUCCESS = "#00a91c"
 USWDS_ERROR = "#d54309"
+# Starting values for the "ROI Selection" tab (auto ROI finder).
+AUTO_ROI_DEFAULTS = {
+    "percentile": 92.0,   # pixels at or above this intensity percentile are "bright"
+    "smooth_px": 1,       # box-filter size before thresholding (1 = off)
+    "join_gap_px": 0,     # bright regions closer than this are merged into one ROI
+    "min_pixels": 40,     # regions with fewer bright pixels are ignored
+    "connectivity": 4,    # 4 = edge neighbours only, 8 = include diagonals
+    "max_rois": 0,        # keep only the N brightest regions (0 = keep all)
+}
 MANUAL_ROI_COLOR = USWDS_PRIMARY_VIVID
 AUTO_ROI_COLOR = USWDS_WARNING
 SUPPORTED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp"}
@@ -121,6 +130,89 @@ def _make_phantom_xrf_scan() -> XRFScan:
             image += 90 * np.exp(-((x-cx)**2 + (y-cy)**2) / (2 * width**2))
         stack.append(np.clip(image, 0, None))
     return XRFScan(np.asarray(stack), ["Fe_K", "Cr_K", "Mn_K"])
+
+
+def _box_smooth(image: np.ndarray, size: int) -> np.ndarray:
+    """Mean filter of size x size pixels (edges repeated). size <= 1 returns the image unchanged."""
+    if size <= 1:
+        return image
+    before = size // 2
+    padded = np.pad(image, ((before, size - 1 - before), (before, size - 1 - before)), mode="edge")
+    c = np.pad(padded.cumsum(0).cumsum(1), ((1, 0), (1, 0)))
+    return (c[size:, size:] - c[:-size, size:] - c[size:, :-size] + c[:-size, :-size]) / (size * size)
+
+
+def _grow_mask(mask: np.ndarray, pixels: int) -> np.ndarray:
+    """Grow True regions by `pixels` in every direction (square dilation)."""
+    grown = mask.copy()
+    for _ in range(pixels):
+        step = grown.copy()
+        step[1:, :] |= grown[:-1, :]; step[:-1, :] |= grown[1:, :]
+        step[:, 1:] |= step[:, :-1].copy(); step[:, :-1] |= step[:, 1:].copy()
+        grown = step
+    return grown
+
+
+def _components(mask: np.ndarray, connectivity: int = 4) -> list[tuple[np.ndarray, np.ndarray]]:
+    """Connected regions of mask as (ys, xs) index arrays, without requiring scipy/opencv."""
+    if connectivity == 8:
+        steps = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+    else:
+        steps = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    visited = np.zeros_like(mask, dtype=bool); height, width = mask.shape; regions = []
+    for sy, sx in np.argwhere(mask):
+        if visited[sy, sx]: continue
+        todo = deque([(sy, sx)]); visited[sy, sx] = True; xs = []; ys = []
+        while todo:
+            y, x = todo.popleft(); xs.append(x); ys.append(y)
+            for dy, dx in steps:
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < height and 0 <= nx < width and mask[ny, nx] and not visited[ny, nx]:
+                    visited[ny, nx] = True; todo.append((ny, nx))
+        regions.append((np.array(ys), np.array(xs)))
+    return regions
+
+
+def auto_roi_boxes(image: np.ndarray, params: dict | None = None) -> tuple[list[tuple[int, int, int, int]], float]:
+    """Find bright regions in one element map.
+
+    Args:
+        image: 2D map (rows = y, columns = x); NaNs are ignored.
+        params: keys of AUTO_ROI_DEFAULTS; missing keys use the defaults.
+
+    Returns:
+        ([(x, y, width, height), ...] in pixels, brightest region first; threshold intensity)
+
+    Example:
+        boxes, thr = auto_roi_boxes(img, {"percentile": 95, "min_pixels": 20})
+    """
+    p = {**AUTO_ROI_DEFAULTS, **(params or {})}
+    image = np.asarray(image, dtype=float)
+    finite = np.isfinite(image)
+    if not finite.any():
+        return [], float("nan")
+    # 1. smooth (NaNs replaced by the minimum so they never count as bright)
+    filled = np.where(finite, image, np.nanmin(image))
+    smoothed = _box_smooth(filled, int(p["smooth_px"]))
+    # 2. threshold
+    threshold = float(np.percentile(smoothed[finite], p["percentile"]))
+    # pixels at the map minimum are background, even when the percentile falls on it (sparse maps)
+    mask = finite & (smoothed >= threshold) & (smoothed > smoothed[finite].min())
+    # 3. regions: join nearby ones on a grown mask, but measure only the bright pixels
+    grouping = _grow_mask(mask, int(p["join_gap_px"])) if p["join_gap_px"] > 0 else mask
+    found = []
+    for ys, xs in _components(grouping, int(p["connectivity"])):
+        keep = mask[ys, xs]
+        ys, xs = ys[keep], xs[keep]
+        if len(ys) < p["min_pixels"]:
+            continue
+        box = (int(xs.min()), int(ys.min()), int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1))
+        found.append((float(filled[ys, xs].sum()), box))
+    # 4. brightest first, optionally only the top N
+    found.sort(key=lambda item: item[0], reverse=True)
+    if p["max_rois"] > 0:
+        found = found[:int(p["max_rois"])]
+    return [box for _, box in found], threshold
 
 
 def _roi_padding_um(roi_size_px: tuple[float, float], pixel_size_um: tuple[float, float], padding_fraction: float) -> tuple[float, float]:
@@ -561,6 +653,7 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         external_layout.addWidget(external_note)
         external_layout.addStretch(1)
         load_tabs.addTab(external_tab, "External Images")
+        load_tabs.addTab(self._build_auto_roi_tab(), "ROI Selection")
 
         form.addWidget(load_tabs)
 
@@ -655,7 +748,9 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         self.view_box.roiCreated.connect(self.add_roi)
         self.image_item = pg.ImageItem(axisOrder="row-major")
         self.view_box.addItem(self.image_item)
-        self.hover_label = pg.TextItem(text="", color="w", fill="k")
+        self.hover_label = pg.TextItem(text="", color=USWDS_INK, fill=pg.mkBrush(255, 255, 255, 230),
+                                       border=pg.mkPen(USWDS_BASE_DARK))
+        self.hover_label.setZValue(100)  # above ROIs
         self.hover_label.setVisible(False)
         self.view_box.addItem(self.hover_label)
         self.x_axis = RealCoordinateAxis("bottom")
@@ -690,6 +785,93 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         right.setSizes([620, 220])
         layout.addWidget(right, stretch=1)
         layout.addWidget(right_controls_scroll)
+
+    def _build_auto_roi_tab(self) -> QtWidgets.QWidget:
+        """Parameters for find_rois(), so the auto selection can be tuned per sample."""
+        d = AUTO_ROI_DEFAULTS
+        tab = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(tab)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(8)
+
+        def spin(name, lo, hi, value, step=1, decimals=None, suffix="", special=None):
+            box = QtWidgets.QDoubleSpinBox() if decimals else QtWidgets.QSpinBox()
+            if decimals:
+                box.setDecimals(decimals)
+            box.setRange(lo, hi); box.setSingleStep(step); box.setValue(value); box.setSuffix(suffix)
+            if special:
+                box.setSpecialValueText(special)  # shown at the minimum value
+            box.setObjectName(name)
+            box.valueChanged.connect(self._on_auto_roi_param_changed)
+            return box
+
+        self.auto_percentile = spin("dsb_roi_auto_percentile", 50.0, 99.99, d["percentile"], 0.5, 2, " %")
+        self.auto_smooth = spin("sb_roi_auto_smooth", 1, 25, d["smooth_px"], 2, suffix=" px", special="off")
+        self.auto_join_gap = spin("sb_roi_auto_join_gap", 0, 50, d["join_gap_px"], suffix=" px", special="off")
+        self.auto_min_pixels = spin("sb_roi_auto_min_pixels", 1, 100000, d["min_pixels"], 5, suffix=" px")
+        self.auto_max_rois = spin("sb_roi_auto_max_rois", 0, 500, d["max_rois"], special="all")
+        self.auto_connectivity = QtWidgets.QComboBox()
+        self.auto_connectivity.setObjectName("cb_roi_auto_connectivity")
+        self.auto_connectivity.addItem("4 (edges)", 4)
+        self.auto_connectivity.addItem("8 (edges + diagonals)", 8)
+        self.auto_connectivity.setCurrentIndex(self.auto_connectivity.findData(d["connectivity"]))
+        self.auto_connectivity.currentIndexChanged.connect(self._on_auto_roi_param_changed)
+
+        layout.addWidget(self._make_field_row("Threshold", self.auto_percentile))
+        layout.addWidget(self._make_field_row("Smoothing", self.auto_smooth))
+        layout.addWidget(self._make_field_row("Join gap", self.auto_join_gap))
+        layout.addWidget(self._make_field_row("Min size", self.auto_min_pixels))
+        layout.addWidget(self._make_field_row("Connectivity", self.auto_connectivity))
+        layout.addWidget(self._make_field_row("Max ROIs", self.auto_max_rois))
+
+        self.auto_live = QtWidgets.QCheckBox("Re-run Find ROIs when a value changes")
+        self.auto_live.setObjectName("cb_roi_auto_live")
+        layout.addWidget(self.auto_live)
+        buttons = QtWidgets.QHBoxLayout()
+        find_button = QtWidgets.QPushButton("Find ROIs")
+        find_button.setObjectName("pb_roi_auto_find")
+        find_button.clicked.connect(self.find_rois)
+        reset_button = QtWidgets.QPushButton("Defaults")
+        reset_button.setObjectName("pb_roi_auto_defaults")
+        reset_button.clicked.connect(self._reset_auto_roi_params)
+        buttons.addWidget(find_button)
+        buttons.addWidget(reset_button)
+        layout.addLayout(buttons)
+        self.auto_threshold_label = QtWidgets.QLabel("Threshold value: -")
+        self.auto_threshold_label.setWordWrap(True)
+        layout.addWidget(self.auto_threshold_label)
+        layout.addStretch(1)
+        return tab
+
+    def _auto_roi_params(self) -> dict:
+        return {
+            "percentile": self.auto_percentile.value(),
+            "smooth_px": self.auto_smooth.value(),
+            "join_gap_px": self.auto_join_gap.value(),
+            "min_pixels": self.auto_min_pixels.value(),
+            "connectivity": self.auto_connectivity.currentData(),
+            "max_rois": self.auto_max_rois.value(),
+        }
+
+    def _reset_auto_roi_params(self):
+        d = AUTO_ROI_DEFAULTS
+        widgets = (self.auto_percentile, self.auto_smooth, self.auto_join_gap,
+                   self.auto_min_pixels, self.auto_max_rois, self.auto_connectivity)
+        for w in widgets:
+            w.blockSignals(True)
+        self.auto_percentile.setValue(d["percentile"])
+        self.auto_smooth.setValue(d["smooth_px"])
+        self.auto_join_gap.setValue(d["join_gap_px"])
+        self.auto_min_pixels.setValue(d["min_pixels"])
+        self.auto_max_rois.setValue(d["max_rois"])
+        self.auto_connectivity.setCurrentIndex(self.auto_connectivity.findData(d["connectivity"]))
+        for w in widgets:
+            w.blockSignals(False)
+        self._on_auto_roi_param_changed()
+
+    def _on_auto_roi_param_changed(self, *_):
+        if self.auto_live.isChecked() and self.scan is not None:
+            self.find_rois()
 
     def _update_hover_coordinates(self, pos):
         if self.scan is None:
@@ -1043,35 +1225,20 @@ class ROIScanPlanner(QtWidgets.QMainWindow):
         self.send_button.setEnabled(False)
 
     def find_rois(self):
-        """Simple connected-component placeholder; replace with your CV method."""
+        """Threshold the displayed element and box each bright region (parameters: ROI Selection tab)."""
         if self.scan is None:
             self.statusBar().showMessage("Load XRF data first.")
             return
         self.clear_rois()
         image = self.scan.stack[self.element_combo.currentIndex()]
-        threshold = np.nanpercentile(image, 92)
-        mask = np.isfinite(image) & (image >= threshold)
-        for x, y, w, h in self._component_boxes(mask, min_pixels=40):
+        params = self._auto_roi_params()
+        boxes, threshold = auto_roi_boxes(image, params)
+        for x, y, w, h in boxes:
             roi = pg.RectROI((x, y), (w, h), pen=pg.mkPen(AUTO_ROI_COLOR, width=2), removable=True)
             self.view_box.addItem(roi); self.add_roi(roi)
         self.auto_radio.setChecked(True)
+        self.auto_threshold_label.setText(f"Threshold value: {threshold:.4g} ({params['percentile']:g} percentile)")
         self.statusBar().showMessage(f"Found {len(self.rois)} ROI(s) from {self.element_combo.currentText()}.")
-
-    @staticmethod
-    def _component_boxes(mask: np.ndarray, min_pixels: int) -> list[tuple[int, int, int, int]]:
-        """4-connected components without requiring scipy/opencv."""
-        visited = np.zeros_like(mask, dtype=bool); height, width = mask.shape; boxes = []
-        for sy, sx in np.argwhere(mask):
-            if visited[sy, sx]: continue
-            todo = deque([(sy, sx)]); visited[sy, sx] = True; count = 0; xs = []; ys = []
-            while todo:
-                y, x = todo.popleft(); count += 1; xs.append(x); ys.append(y)
-                for ny, nx in ((y-1,x), (y+1,x), (y,x-1), (y,x+1)):
-                    if 0 <= ny < height and 0 <= nx < width and mask[ny, nx] and not visited[ny, nx]:
-                        visited[ny, nx] = True; todo.append((ny, nx))
-            if count >= min_pixels:
-                boxes.append((min(xs), min(ys), max(xs)-min(xs)+1, max(ys)-min(ys)+1))
-        return boxes
 
     def generate_plans(self):
         if self.scan is None or not self.rois:
